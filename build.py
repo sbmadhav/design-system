@@ -168,13 +168,18 @@ page = f"""<!doctype html>
 
   /* Header: the cover */
   .hero {{ position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }}
-  .hero .md-wrap {{ display: grid; grid-template-columns: 1fr 1fr; align-items: end; min-height: 320px; gap: 24px; }}
+  .hero .md-wrap {{ display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; min-height: 360px; gap: 24px; }}
   .hero h1 {{ font-size: clamp(3.4rem, 9vw, 7rem); line-height: .92; letter-spacing: -.02em; padding: 56px 0 8px; }}
   .hero p {{ color: var(--ink-muted); margin: 6px 0 40px 4px; font-size: 15px; }}
-  .art {{ align-self: stretch; position: relative; min-height: 300px; }}
-  .art svg {{ position: absolute; inset: 0; width: 100%; height: 100%; }}
-  .art .sun {{ fill: var(--sun); }} .art .coral {{ fill: var(--coral); }} .art .teal {{ fill: var(--teal); }} .art .deep {{ fill: var(--edge); }} .art .sky {{ fill: var(--sky); }}
-  @media (max-width: 760px) {{ .hero .md-wrap {{ grid-template-columns: 1fr; }} .art {{ min-height: 200px; order: -1; }} .hero h1 {{ padding-top: 16px; }} }}
+  .portrait {{ position: relative; justify-self: center; width: min(320px, 70vw); aspect-ratio: 1; margin: 28px 0; }}
+  .portrait .blob {{ position: absolute; inset: 4%; border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%; background: var(--sun); animation: morph 12s ease-in-out infinite; }}
+  :root[data-theme="dark"] .portrait .blob {{ background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }}
+  @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) .portrait .blob {{ background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }} }}
+  .portrait img:not(.bolt) {{ position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: 50%; border: 5px solid var(--card); box-shadow: var(--shadow-card); }}
+  .portrait .bolt {{ position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(28,37,65,.25)); }}
+  @keyframes morph {{ 50% {{ border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; }} }}
+  @keyframes bob {{ 50% {{ transform: translateY(-10px) rotate(-3deg); }} }}
+  @media (max-width: 760px) {{ .hero .md-wrap {{ grid-template-columns: 1fr; }} .portrait {{ order: -1; margin: 24px 0 0; width: min(260px, 66vw); }} .hero h1 {{ padding-top: 16px; }} }}
 
   /* Color modes */
   .modes {{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }}
@@ -248,17 +253,11 @@ page = f"""<!doctype html>
       <h1>Madhav</h1>
       <p>Design system. Professional enough for recruiters, fun enough for kids.</p>
     </div>
-    <div class="art" aria-hidden="true">
-      <svg viewBox="0 0 480 300" preserveAspectRatio="xMaxYMax slice">
-        <rect class="sun" x="16" y="-24" width="168" height="300" rx="22"/>
-        <rect class="deep" x="200" y="108" width="176" height="168" rx="22"/>
-        <rect class="teal" x="392" y="44" width="120" height="232" rx="22"/>
-        <rect class="sky" x="200" y="68" width="120" height="24" rx="12"/>
-        <circle class="coral" cx="236" cy="248" r="12"/><circle class="coral" cx="268" cy="224" r="12"/>
-        <circle class="coral" cx="300" cy="202" r="12"/><circle class="coral" cx="332" cy="184" r="12"/>
-        <circle class="coral" cx="364" cy="170" r="12"/><circle class="coral" cx="396" cy="160" r="12"/>
-        <circle class="coral" cx="428" cy="154" r="12"/><circle class="coral" cx="152" cy="40" r="12"/>
-      </svg>
+    <div class="portrait" aria-hidden="true">
+      <div class="blob"></div>
+      <img src="/assets/profile.jpg" alt="" width="400" height="400">
+      <img class="bolt" src="icons/bolt.svg" alt="" width="160" height="170">
+    </div>
     </div>
   </div>
 </section>
