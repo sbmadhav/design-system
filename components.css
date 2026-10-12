@@ -1,0 +1,69 @@
+/* Madhav design system components. Load after tokens.css. Classes are prefixed md-.
+   Theme differences come from tokens (--display, --primary-bg, --glass), so nothing here needs a theme selector. */
+.md-root { font-family: var(--font-sans); color: var(--ink); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.md-root :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
+.md-card, .md-btn, .md-chip, .md-switch, .md-stat, .md-bubble { backdrop-filter: var(--glass); }
+
+/* Button */
+.md-btn { display: inline-flex; align-items: center; gap: var(--space-2); font: 700 15px/1.2 var(--font-sans); color: var(--ink); text-decoration: none; background: var(--card); border: 2px solid var(--edge); border-radius: var(--radius-pill); padding: 9px 18px; box-shadow: var(--shadow-ledge); cursor: pointer; transition: transform .12s, box-shadow .12s; }
+.md-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 0 var(--ledge); }
+.md-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ledge); }
+.md-btn--primary { background: var(--primary-bg); border-color: var(--primary-border); color: var(--on-accent); }
+.md-btn--sm { padding: 5px 12px; font-size: 13.5px; }
+.md-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.md-btn svg { width: 18px; height: 18px; }
+
+/* Chip (toggleable option) */
+.md-chip { border: 2px solid var(--edge); background: var(--card); color: var(--ink); border-radius: var(--radius-pill); padding: 8px 14px; font: 700 14.5px/1.2 var(--font-sans); cursor: pointer; transition: .15s; }
+.md-chip:hover { background: var(--sun); color: var(--on-accent); }
+.md-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* Tag (section label) */
+.md-tag { display: inline-block; font: 600 14px/1.3 var(--display); padding: 3px 12px; border-radius: var(--radius-pill); color: var(--on-accent); background: var(--sun); }
+.md-tag--sky { background: var(--sky); } .md-tag--coral { background: var(--coral); } .md-tag--plum { background: var(--plum); } .md-tag--teal { background: var(--teal); }
+
+/* Card */
+.md-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-5); box-shadow: var(--shadow-card); transition: transform .2s; }
+.md-card:hover { transform: translateY(-4px) rotate(-.4deg); }
+.md-card h3 { font: 600 20px/1.15 var(--display); margin: 0 0 6px; }
+.md-card p { margin: 0; color: var(--ink-muted); font-size: 15px; line-height: 1.5; }
+.md-icon-tile { width: 54px; height: 54px; border-radius: var(--radius-md); display: grid; place-items: center; margin-bottom: 14px; }
+.md-icon-tile img { width: 30px; height: 30px; }
+
+/* Stat */
+.md-stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 14px 18px; box-shadow: var(--shadow-card); }
+.md-stat .md-kicker { font: 700 12.5px/1.3 var(--font-sans); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted); }
+.md-stat .md-value { font: 700 35px/1.1 var(--display); }
+.md-stat p { margin: 2px 0 0; font-size: 14px; color: var(--ink-muted); }
+
+/* Switch (kid mode) */
+.md-switch { display: inline-flex; align-items: center; gap: 10px; border: 2px solid var(--edge); border-radius: var(--radius-pill); padding: 4px 6px 4px 12px; background: var(--card); color: var(--ink); font: 700 13.5px/1.2 var(--font-sans); cursor: pointer; }
+.md-switch .md-track { width: 44px; height: 24px; border-radius: 999px; background: var(--line); position: relative; transition: background .25s; }
+.md-switch .md-knob { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); transition: transform .25s cubic-bezier(.5,1.6,.5,1); }
+.md-switch[aria-checked="true"] .md-track { background: var(--sun); }
+.md-switch[aria-checked="true"] .md-knob { transform: translateX(20px); }
+
+/* Speech bubble (Bolt) */
+.md-bubble { position: relative; display: inline-block; max-width: 270px; background: var(--card); border: 2px solid var(--edge); border-radius: 18px; padding: 10px 14px; font: 700 14.5px/1.4 var(--font-sans); color: var(--ink); box-shadow: var(--shadow-ledge); }
+.md-bubble::after { content: ""; position: absolute; left: 28px; top: -11px; width: 18px; height: 18px; background: inherit; border-left: 2px solid var(--edge); border-top: 2px solid var(--edge); transform: rotate(45deg); }
+
+/* Page basics */
+.md-page { margin: 0; background: var(--page); background-attachment: fixed; color: var(--ink); font-family: var(--font-sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.md-page h1, .md-page h2, .md-page h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; margin: 0; }
+.md-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6); }
+@media (max-width: 600px) { .md-wrap { padding: 0 var(--space-4); } }
+.md-section { padding: var(--space-section) 0; }
+.md-band { background: color-mix(in srgb, var(--bg-alt) 72%, transparent); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.md-heading { font-size: clamp(1.9rem, 4vw, 2.7rem); margin-top: 10px !important; }
+.md-lede { color: var(--ink-muted); max-width: 40em; margin: 8px 0 var(--space-7); }
+.md-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+@media (max-width: 980px) { .md-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .md-grid { grid-template-columns: 1fr; } }
+.md-mono { font-family: var(--font-mono); font-size: .82em; }
+
+/* Kid mode: write both versions, body.kidmode swaps them */
+.kid { display: none; }
+body.kidmode .kid { display: revert; }
+body.kidmode .pro { display: none; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

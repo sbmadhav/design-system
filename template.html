@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page title · Madhav</title>
+<meta name="description" content="One sentence about this page.">
+<!-- Apply the saved color scheme before paint so there is no flash -->
+<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<meta name="theme-color" content="#FFF8EE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/components.css">
+<style>
+  /* Page-specific styles go here. Use tokens, never raw hex. */
+  .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
+  .top .md-wrap { display: flex; align-items: center; gap: 10px; height: 66px; }
+  .home { font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
+  .theme-btn { display: inline-grid; place-items: center; padding: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--edge); background: var(--card); color: var(--ink); cursor: pointer; font: 700 14px/1 var(--font-sans); }
+</style>
+</head>
+<body class="md-page md-root">
+
+<header class="top">
+  <div class="md-wrap">
+    <a class="home" href="/">Madhav</a>
+    <button class="theme-btn" id="themeBtn" aria-label="Switch color scheme"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg></button>
+    <button class="md-switch" id="kidBtn" role="switch" aria-checked="false"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button>
+  </div>
+</header>
+
+<main>
+  <section class="md-section">
+    <div class="md-wrap">
+      <span class="md-tag md-tag--plum"><span class="pro">New page</span><span class="kid">Something new</span></span>
+      <h2 class="md-heading"><span class="pro">Grown-up heading</span><span class="kid">Kid heading</span></h2>
+      <p class="md-lede"><span class="pro">One or two sentences for grown-ups.</span><span class="kid">One or two sentences a kid would enjoy.</span></p>
+      <div class="md-grid">
+        <article class="md-card"><h3>Card title</h3><p>Two short lines of description in ink-muted.</p></article>
+        <article class="md-card"><h3>Card title</h3><p>Two short lines of description in ink-muted.</p></article>
+        <div class="md-stat"><div class="md-kicker">Kicker</div><div class="md-value">42</div><p>One-line note</p></div>
+      </div>
+      <p style="margin-top:24px"><button class="md-btn md-btn--primary">Primary action</button> <button class="md-btn">Secondary</button></p>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                  set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+  // Color scheme: follow the system unless the visitor picked one
+  const root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
+  const sys = () => mq.matches ? 'dark' : 'light', eff = () => root.dataset.theme || sys();
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const next = eff() === 'dark' ? 'light' : 'dark';
+    if (next === sys()) { delete root.dataset.theme; store.set('theme', ''); } else { root.dataset.theme = next; store.set('theme', next); }
+  });
+  // Kid mode: shared with the home page through the same storage key
+  const kidBtn = document.getElementById('kidBtn');
+  const setKid = on => { document.body.classList.toggle('kidmode', on); kidBtn.setAttribute('aria-checked', String(on)); store.set('kidmode', on ? '1' : '0'); };
+  kidBtn.addEventListener('click', () => setKid(!document.body.classList.contains('kidmode')));
+  setKid(new URLSearchParams(location.search).has('kid') || store.get('kidmode') === '1');
+})();
+</script>
+</body>
+</html>

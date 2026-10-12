@@ -1,0 +1,108 @@
+/* Madhav design system tokens. Generated from tokens.json; edit that file, not this one.
+   Daybreak (light) is the default. Deep Space (dark) follows the system setting,
+   unless <html data-theme="light|dark"> overrides it. */
+
+:root {
+  --font-display: Fredoka, "Nunito Sans", system-ui, sans-serif;
+  --font-display-space: "Space Grotesk", "Nunito Sans", system-ui, sans-serif;
+  --font-sans: "Nunito Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-9: 48px;
+  --space-section: 72px;
+  --content-max: 1120px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+}
+
+:root {
+  --bg: #FFF8EE;
+  --bg-alt: #FDF0DC;
+  --card: #FFFFFF;
+  --ink: #1C2541;
+  --ink-muted: #5B6479;
+  --line: #EADFCC;
+  --edge: #1C2541;
+  --ledge: #1C2541;
+  --coral: #FF6B5B;
+  --teal: #1FA39A;
+  --sun: #FFC53D;
+  --sky: #5B8DEF;
+  --plum: #8E6BD8;
+  --on-accent: #1C2541;
+  --focus: var(--sky);
+  --shadow-card: 0 2px 0 rgba(28,37,65,.06), 0 12px 28px -12px rgba(28,37,65,.18);
+  --shadow-ledge: 0 3px 0 #1C2541;
+  --display: var(--font-display);
+  --primary-bg: var(--coral);
+  --primary-border: var(--edge);
+  --glass: none;
+  --fo: .32;
+  --page: radial-gradient(900px 500px at 90% -5%, rgba(255,197,61,.28), transparent 60%), radial-gradient(800px 600px at -10% 60%, rgba(91,141,239,.10), transparent 60%), linear-gradient(180deg, #FFF8EE, #FFF3E2);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07061A;
+    --bg-alt: #0D0B2A;
+    --card: rgba(22,19,58,.82);
+    --ink: #EEEAFF;
+    --ink-muted: #A7A2D8;
+    --line: #2D2766;
+    --edge: #7F6BFF;
+    --ledge: #FF4FD8;
+    --coral: #FF4FD8;
+    --teal: #22E6C8;
+    --sun: #C8FF45;
+    --sky: #48B6FF;
+    --plum: #A47BFF;
+    --on-accent: #07061A;
+    --focus: var(--sky);
+    --shadow-card: 0 0 0 1px rgba(127,107,255,.18), 0 18px 40px -18px rgba(255,79,216,.35);
+    --shadow-ledge: 0 3px 0 #FF4FD8;
+    --display: var(--font-display-space);
+    --primary-bg: linear-gradient(90deg, var(--coral), var(--plum));
+    --primary-border: transparent;
+    --glass: blur(8px);
+    --fo: .62;
+    --page: radial-gradient(1200px 700px at 85% -10%, rgba(164,123,255,.30), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(34,230,200,.16), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(255,79,216,.20), transparent 60%), #07061A;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #07061A;
+  --bg-alt: #0D0B2A;
+  --card: rgba(22,19,58,.82);
+  --ink: #EEEAFF;
+  --ink-muted: #A7A2D8;
+  --line: #2D2766;
+  --edge: #7F6BFF;
+  --ledge: #FF4FD8;
+  --coral: #FF4FD8;
+  --teal: #22E6C8;
+  --sun: #C8FF45;
+  --sky: #48B6FF;
+  --plum: #A47BFF;
+  --on-accent: #07061A;
+  --focus: var(--sky);
+  --shadow-card: 0 0 0 1px rgba(127,107,255,.18), 0 18px 40px -18px rgba(255,79,216,.35);
+  --shadow-ledge: 0 3px 0 #FF4FD8;
+  --display: var(--font-display-space);
+  --primary-bg: linear-gradient(90deg, var(--coral), var(--plum));
+  --primary-border: transparent;
+  --glass: blur(8px);
+  --fo: .62;
+  --page: radial-gradient(1200px 700px at 85% -10%, rgba(164,123,255,.30), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(34,230,200,.16), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(255,79,216,.20), transparent 60%), #07061A;
+  color-scheme: dark;
+}
