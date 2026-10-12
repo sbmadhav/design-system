@@ -357,6 +357,7 @@ page = f"""<!doctype html>
 }})();
 </script>
 <script src="/assets/explore.js" defer></script>
+<script src="/assets/analytics.js" defer></script>
 </body>
 </html>
 """
