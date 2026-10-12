@@ -15,10 +15,10 @@
 <link rel="stylesheet" href="/design-system/components.css">
 <style>
   /* Page-specific styles go here. Use tokens, never raw hex. */
+  @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } }
   .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
   .top .md-wrap { display: flex; align-items: center; gap: 10px; height: 66px; }
   .home { font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
-  .theme-btn { display: inline-grid; place-items: center; padding: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--edge); background: var(--card); color: var(--ink); cursor: pointer; font: 700 14px/1 var(--font-sans); }
 </style>
 </head>
 <body class="md-page md-root">
@@ -26,7 +26,9 @@
 <header class="top">
   <div class="md-wrap">
     <a class="home" href="/">Madhav</a>
-    <button class="theme-btn" id="themeBtn" aria-label="Switch color scheme"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg></button>
+    <div class="md-modes" role="group" aria-label="Color mode">
+      <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
+    </div>
     <button class="md-switch" id="kidBtn" role="switch" aria-checked="false"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button>
   </div>
 </header>
@@ -51,13 +53,16 @@
 (() => {
   const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
                   set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
-  // Color scheme: follow the system unless the visitor picked one
+  // Color mode: follow the system by default; Daybreak or Deep Space overrides and is remembered
   const root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
-  const sys = () => mq.matches ? 'dark' : 'light', eff = () => root.dataset.theme || sys();
-  document.getElementById('themeBtn').addEventListener('click', () => {
-    const next = eff() === 'dark' ? 'light' : 'dark';
-    if (next === sys()) { delete root.dataset.theme; store.set('theme', ''); } else { root.dataset.theme = next; store.set('theme', next); }
-  });
+  const modeBtns = document.querySelectorAll('.md-modes button');
+  const applyMode = mode => {
+    if (mode === 'system') delete root.dataset.theme; else root.dataset.theme = mode;
+    store.set('theme', mode === 'system' ? '' : mode);
+    modeBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  };
+  modeBtns.forEach(b => b.addEventListener('click', () => applyMode(b.dataset.mode)));
+  applyMode(root.dataset.theme || 'system');
   // Kid mode: shared with the home page through the same storage key
   const kidBtn = document.getElementById('kidBtn');
   const setKid = on => { document.body.classList.toggle('kidmode', on); kidBtn.setAttribute('aria-checked', String(on)); store.set('kidmode', on ? '1' : '0'); };

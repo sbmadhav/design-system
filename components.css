@@ -47,6 +47,12 @@
 .md-bubble { position: relative; display: inline-block; max-width: 270px; background: var(--card); border: 2px solid var(--edge); border-radius: 18px; padding: 10px 14px; font: 700 14.5px/1.4 var(--font-sans); color: var(--ink); box-shadow: var(--shadow-ledge); }
 .md-bubble::after { content: ""; position: absolute; left: 28px; top: -11px; width: 18px; height: 18px; background: inherit; border-left: 2px solid var(--edge); border-top: 2px solid var(--edge); transform: rotate(45deg); }
 
+/* Color mode picker: System (default) / Daybreak / Deep Space */
+.md-modes { display: inline-flex; border: 2px solid var(--edge); border-radius: var(--radius-pill); overflow: hidden; background: var(--card); backdrop-filter: var(--glass); flex: none; }
+.md-modes button { border: 0; background: none; color: var(--ink); font: 700 13.5px/1 var(--font-sans); padding: 8px 12px; cursor: pointer; }
+.md-modes button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+@media (max-width: 480px) { .md-modes button { padding: 8px 7px; font-size: 12px; } }
+
 /* Page basics */
 .md-page { margin: 0; background: var(--page); background-attachment: fixed; color: var(--ink); font-family: var(--font-sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 .md-page h1, .md-page h2, .md-page h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; margin: 0; }

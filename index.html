@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Madhav design system</title>
+<meta name="description" content="Color modes, type, spacing, components and guidelines for sbmadhav.com.">
+<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<meta name="theme-color" content="#FFF8EE">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
+  .top .md-wrap { display: flex; align-items: center; gap: 12px; height: 62px; }
+  .home { font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
+  .top nav a { color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }
+  .top nav a:hover { color: var(--ink); background: var(--bg-alt); }
+  @media (max-width: 760px) { .top nav { display: none; } }
+
+  /* Header: the cover */
+  .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .hero .md-wrap { display: grid; grid-template-columns: 1fr 1fr; align-items: end; min-height: 320px; gap: 24px; }
+  .hero h1 { font-size: clamp(3.4rem, 9vw, 7rem); line-height: .92; letter-spacing: -.02em; padding: 56px 0 8px; }
+  .hero p { color: var(--ink-muted); margin: 6px 0 40px 4px; font-size: 15px; }
+  .art { align-self: stretch; position: relative; min-height: 300px; }
+  .art svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .art .sun { fill: var(--sun); } .art .coral { fill: var(--coral); } .art .teal { fill: var(--teal); } .art .deep { fill: var(--edge); } .art .sky { fill: var(--sky); }
+  @media (max-width: 760px) { .hero .md-wrap { grid-template-columns: 1fr; } .art { min-height: 200px; order: -1; } .hero h1 { padding-top: 16px; } }
+
+  /* Color modes */
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 900px) { .modes { grid-template-columns: 1fr; } }
+  .mode { background: var(--page); color: var(--ink); border: 2px solid var(--edge); border-radius: var(--radius-xl); padding: 22px; box-shadow: var(--shadow-card); font-family: var(--font-sans); }
+  .mode h3 { font: 600 26px/1.1 var(--display); margin: 10px 0 4px; }
+  .mode-head { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; }
+  .mode-head p { margin: 0; color: var(--ink-muted); font-size: 15px; }
+  .mode-demo { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .sw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .sw { display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px; }
+  .chip-c { flex: none; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); }
+  .sw-t { display: flex; flex-direction: column; line-height: 1.25; font-size: 13.5px; min-width: 0; }
+  .sw-t .md-mono { color: var(--ink-muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .note { margin-top: 14px; color: var(--ink-muted); font-size: 15px; }
+
+  /* Type, spacing, radius */
+  .ty { display: grid; grid-template-columns: 260px 1fr; gap: 20px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+  .ty-meta { display: flex; flex-direction: column; font-size: 13.5px; color: var(--ink-muted); }
+  .ty-meta b { color: var(--ink); font-size: 15px; }
+  .ty-sample { overflow-wrap: anywhere; }
+  @media (max-width: 700px) { .ty { grid-template-columns: 1fr; gap: 6px; } }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+  .sp { display: grid; grid-template-columns: 120px 1fr 56px; gap: 10px; align-items: center; padding: 5px 0; }
+  .sp i { display: block; height: 14px; border-radius: 4px; background: var(--sky); }
+  .rds { display: flex; flex-wrap: wrap; gap: 14px; }
+  .rd { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; }
+  .rd i { width: 72px; height: 72px; background: var(--sun); border: 2px solid var(--edge); }
+  .rd .md-mono { color: var(--ink-muted); }
+
+  /* Components and icons */
+  .demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (max-width: 800px) { .comp-grid { grid-template-columns: 1fr; } }
+  .comp-grid .md-card { padding: 20px; }
+  .comp-grid h3 { margin-bottom: 12px; }
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+  .icons figure { margin: 0; background: #FFF8EE; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }
+  .icons figcaption { font-size: 12px; color: #5B6479; margin-top: 4px; }
+
+  /* Guidelines (rendered README) */
+  .guide { max-width: 820px; }
+  .guide h2 { font-size: 1.7rem; margin: 40px 0 10px !important; }
+  .guide h3 { font-size: 1.2rem; margin: 26px 0 6px !important; }
+  .guide table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 10px 0; display: block; overflow-x: auto; }
+  .guide th, .guide td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  .guide code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px 6px; border-radius: 6px; }
+  .guide pre { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; overflow-x: auto; }
+  .guide pre code { background: none; padding: 0; }
+  .guide blockquote { margin: 14px 0; padding: 10px 16px; border-radius: 14px; background: color-mix(in srgb, var(--coral) 12%, transparent); }
+  .guide a { color: var(--ink); }
+  footer { padding: 28px 0 40px; color: var(--ink-muted); font-size: 14px; }
+</style>
+</head>
+<body class="md-page md-root">
+
+<header class="top">
+  <div class="md-wrap">
+    <a class="home" href="/">Madhav</a>
+    <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
+    <div class="md-modes" role="group" aria-label="Color mode">
+      <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="md-wrap">
+    <div>
+      <h1>Madhav</h1>
+      <p>Design system. Professional enough for recruiters, fun enough for kids.</p>
+    </div>
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 480 300" preserveAspectRatio="xMaxYMax slice">
+        <rect class="sun" x="16" y="-24" width="168" height="300" rx="22"/>
+        <rect class="deep" x="200" y="108" width="176" height="168" rx="22"/>
+        <rect class="teal" x="392" y="44" width="120" height="232" rx="22"/>
+        <rect class="sky" x="200" y="68" width="120" height="24" rx="12"/>
+        <circle class="coral" cx="236" cy="248" r="12"/><circle class="coral" cx="268" cy="224" r="12"/>
+        <circle class="coral" cx="300" cy="202" r="12"/><circle class="coral" cx="332" cy="184" r="12"/>
+        <circle class="coral" cx="364" cy="170" r="12"/><circle class="coral" cx="396" cy="160" r="12"/>
+        <circle class="coral" cx="428" cy="154" r="12"/><circle class="coral" cx="152" cy="40" r="12"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<main>
+<section class="md-section" id="modes">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--plum">Color modes</span>
+    <h2 class="md-heading">Two modes, one system</h2>
+    <p class="md-lede">Pages follow the visitor's system setting by default. The mode switch overrides it and remembers the choice; picking System again goes back to following the device. Both modes are shown here side by side, whatever this page is set to.</p>
+    <div class="modes">
+<div class="mode mode-daybreak">
+  <div class="mode-head"><div><span class="md-tag">Daybreak</span><h3>Daybreak</h3><p>Light. Warm paper, sunny accents, Fredoka headings.</p></div>
+  <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
+  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#FFF8EE</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#FDF0DC</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">#FFFFFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#1C2541</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#5B6479</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#EADFCC</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#1C2541</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#1C2541</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#FF6B5B</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#1FA39A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#FFC53D</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#5B8DEF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#8E6BD8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#1C2541</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky</span></span></div></div>
+</div>
+<div class="mode mode-deep-space">
+  <div class="mode-head"><div><span class="md-tag">Deep Space</span><h3>Deep Space</h3><p>Dark. Neon night sky, glowing accents, Space Grotesk headings.</p></div>
+  <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
+  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#07061A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#0D0B2A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">rgba(22,19,58,.82)</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#EEEAFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#A7A2D8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#2D2766</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#7F6BFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#FF4FD8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#FF4FD8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#22E6C8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#C8FF45</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#48B6FF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#A47BFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#07061A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky</span></span></div></div>
+</div>
+    </div>
+    <p class="note">How it works: <code class="md-mono">tokens.css</code> sets Daybreak on <code class="md-mono">:root</code>, switches to Deep Space under <code class="md-mono">prefers-color-scheme: dark</code>, and lets <code class="md-mono">&lt;html data-theme="light|dark"&gt;</code> override both. Add <code class="md-mono">class="mode-daybreak"</code> or <code class="md-mono">class="mode-deep-space"</code> to pin any block to one mode.</p>
+  </div>
+</section>
+
+<section class="md-section md-band" id="type">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--sky">Typography</span>
+    <h2 class="md-heading">Type scale</h2>
+    <p class="md-lede">Headings use Fredoka in Daybreak and Space Grotesk in Deep Space through <code class="md-mono">var(--display)</code>. Body is Nunito Sans; code is JetBrains Mono.</p>
+    <div class="ty"><div class="ty-meta"><b>display-xl</b><span class="md-mono">70px / 1.1 / 600</span><span>Hero name only. clamp(2.6rem, 6vw, 4.4rem). Swap the family to display-space in Deep Space.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(70px,9vw);line-height:1.1;font-weight:600;letter-spacing:-0.01em;">Hi, I&#x27;m Madhav</div></div><div class="ty"><div class="ty-meta"><b>heading</b><span class="md-mono">43px / 1.1 / 600</span><span>Section titles. clamp(1.9rem, 4vw, 2.7rem).</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(43px,9vw);line-height:1.1;font-weight:600;letter-spacing:-0.01em;">Think first, then talk</div></div><div class="ty"><div class="ty-meta"><b>stat</b><span class="md-mono">35px / 1.1 / 700</span><span>Big numbers in stat tiles and scoreboards.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(35px,9vw);line-height:1.1;font-weight:700;">2 → 25</div></div><div class="ty"><div class="ty-meta"><b>title</b><span class="md-mono">24px / 1.1 / 600</span><span>Panel and result headings.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(24px,9vw);line-height:1.1;font-weight:600;">Capital One</div></div><div class="ty"><div class="ty-meta"><b>card-title</b><span class="md-mono">20px / 1.15 / 600</span><span>Card headings and section sub-heads.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(20px,9vw);line-height:1.15;font-weight:600;">Agentic AI</div></div><div class="ty"><div class="ty-meta"><b>lede</b><span class="md-mono">19px / 1.6 / 400</span><span>Hero and section intros, in ink-muted.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(19px,9vw);line-height:1.6;font-weight:400;">I teach computers how to listen, think, and help people.</div></div><div class="ty"><div class="ty-meta"><b>body</b><span class="md-mono">17px / 1.6 / 400</span><span>Default paragraph text.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(17px,9vw);line-height:1.6;font-weight:400;">Pick your building blocks, stay within budget, then launch.</div></div><div class="ty"><div class="ty-meta"><b>small</b><span class="md-mono">15px / 1.5 / 400</span><span>Card descriptions, post-mortem lines.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(15px,9vw);line-height:1.5;font-weight:400;">Background processing kept uploads instant.</div></div><div class="ty"><div class="ty-meta"><b>label</b><span class="md-mono">14px / 1.4 / 700</span><span>Buttons, chips, toggles, nav links (nav at 15px/600).</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(14px,9vw);line-height:1.4;font-weight:700;">Explain it like I&#x27;m 8</div></div><div class="ty"><div class="ty-meta"><b>kicker</b><span class="md-mono">12.5px / 1.3 / 700</span><span>Uppercase labels above stats and lists, in ink-muted.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(12.5px,9vw);line-height:1.3;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">BUGS FIXED</div></div><div class="ty"><div class="ty-meta"><b>code</b><span class="md-mono">14px / 1.6 / 500</span><span>Agent thoughts, code backdrops, costs, demo disclaimers.</span></div><div class="ty-sample" style="font-family:var(--font-mono);font-size:min(14px,9vw);line-height:1.6;font-weight:500;">{ route: &quot;billing&quot;, confidence: 0.93 }</div></div>
+  </div>
+</section>
+
+<section class="md-section">
+  <div class="md-wrap two">
+    <div><span class="md-tag md-tag--teal">Spacing</span><h2 class="md-heading" style="font-size:1.8rem">Spacing</h2><div style="margin-top:18px"><div class="sp"><span class="md-mono">space-1</span><i style="width:4px"></i><span class="md-mono">4px</span></div><div class="sp"><span class="md-mono">space-2</span><i style="width:8px"></i><span class="md-mono">8px</span></div><div class="sp"><span class="md-mono">space-3</span><i style="width:12px"></i><span class="md-mono">12px</span></div><div class="sp"><span class="md-mono">space-4</span><i style="width:16px"></i><span class="md-mono">16px</span></div><div class="sp"><span class="md-mono">space-5</span><i style="width:20px"></i><span class="md-mono">20px</span></div><div class="sp"><span class="md-mono">space-6</span><i style="width:24px"></i><span class="md-mono">24px</span></div><div class="sp"><span class="md-mono">space-7</span><i style="width:28px"></i><span class="md-mono">28px</span></div><div class="sp"><span class="md-mono">space-9</span><i style="width:48px"></i><span class="md-mono">48px</span></div><div class="sp"><span class="md-mono">space-section</span><i style="width:72px"></i><span class="md-mono">72px</span></div></div></div>
+    <div><span class="md-tag">Shape</span><h2 class="md-heading" style="font-size:1.8rem">Corners</h2><div class="rds" style="margin-top:18px"><div class="rd"><i style="border-radius:var(--radius-sm)"></i><b>radius-sm</b><span class="md-mono">12px</span></div><div class="rd"><i style="border-radius:var(--radius-md)"></i><b>radius-md</b><span class="md-mono">16px</span></div><div class="rd"><i style="border-radius:var(--radius-lg)"></i><b>radius-lg</b><span class="md-mono">22px</span></div><div class="rd"><i style="border-radius:var(--radius-xl)"></i><b>radius-xl</b><span class="md-mono">28px</span></div><div class="rd"><i style="border-radius:var(--radius-pill)"></i><b>radius-pill</b><span class="md-mono">999px</span></div></div></div>
+  </div>
+</section>
+
+<section class="md-section md-band" id="components">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--coral">Components</span>
+    <h2 class="md-heading">Components</h2>
+    <p class="md-lede">Live, from <code class="md-mono">components.css</code>. Switch modes at the top to see each one change.</p>
+    <div class="comp-grid">
+      <div class="md-card"><h3>Button</h3><div class="demo"><button class="md-btn md-btn--primary">See how my agents think</button><button class="md-btn">Squash some bugs</button><button class="md-btn md-btn--sm">Undo</button></div></div>
+      <div class="md-card"><h3>Chip</h3><div class="demo"><button class="md-chip" aria-pressed="true">The Ticket Drop</button><button class="md-chip" aria-pressed="false">The App Went Viral</button></div></div>
+      <div class="md-card"><h3>Tag</h3><div class="demo"><span class="md-tag">About</span><span class="md-tag md-tag--sky">Brain Lab</span><span class="md-tag md-tag--coral">Bug Hunt</span><span class="md-tag md-tag--plum">Design Lab</span><span class="md-tag md-tag--teal">Journey</span></div></div>
+      <div class="md-card"><h3>Switch</h3><div class="demo"><button class="md-switch" role="switch" aria-checked="false" id="demoSwitch"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button></div></div>
+      <div class="md-card"><h3>Stat</h3><div class="demo"><div class="md-stat"><div class="md-kicker">Years building</div><div class="md-value">17</div><p>Since 2009</p></div><div class="md-stat"><div class="md-kicker">AI squad</div><div class="md-value">2 → 25</div><p>Engineers, QA, design</p></div></div></div>
+      <div class="md-card"><h3>Bubble</h3><div class="demo" style="padding-top:12px"><div class="md-bubble">Hi, I'm Bolt. I route requests so the big model does not have to.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="md-section">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--teal">Icons</span>
+    <h2 class="md-heading">Icons and mascot</h2>
+    <p class="md-lede">32 by 32 line icons with 2.4px round strokes. Files live in <code class="md-mono">icons/</code>.</p>
+    <div class="icons"><figure><img src="icons/agent.svg" alt="" width="40" height="40"><figcaption>agent</figcaption></figure><figure><img src="icons/bank.svg" alt="" width="40" height="40"><figcaption>bank</figcaption></figure><figure><img src="icons/book.svg" alt="" width="40" height="40"><figcaption>book</figcaption></figure><figure><img src="icons/briefcase.svg" alt="" width="40" height="40"><figcaption>briefcase</figcaption></figure><figure><img src="icons/bug.svg" alt="" width="40" height="40"><figcaption>bug</figcaption></figure><figure><img src="icons/code.svg" alt="" width="40" height="40"><figcaption>code</figcaption></figure><figure><img src="icons/coin.svg" alt="" width="40" height="40"><figcaption>coin</figcaption></figure><figure><img src="icons/hardware.svg" alt="" width="40" height="40"><figcaption>hardware</figcaption></figure><figure><img src="icons/health.svg" alt="" width="40" height="40"><figcaption>health</figcaption></figure><figure><img src="icons/house.svg" alt="" width="40" height="40"><figcaption>house</figcaption></figure><figure><img src="icons/idea.svg" alt="" width="40" height="40"><figcaption>idea</figcaption></figure><figure><img src="icons/interface.svg" alt="" width="40" height="40"><figcaption>interface</figcaption></figure><figure><img src="icons/mystery.svg" alt="" width="40" height="40"><figcaption>mystery</figcaption></figure><figure><img src="icons/shield.svg" alt="" width="40" height="40"><figcaption>shield</figcaption></figure><figure><img src="icons/sneaker.svg" alt="" width="40" height="40"><figcaption>sneaker</figcaption></figure><figure><img src="icons/sound.svg" alt="" width="40" height="40"><figcaption>sound</figcaption></figure><figure><img src="icons/star.svg" alt="" width="40" height="40"><figcaption>star</figcaption></figure><figure><img src="icons/voice.svg" alt="" width="40" height="40"><figcaption>voice</figcaption></figure><figure><img src="icons/bolt.svg" alt="Bolt the robot" width="40" height="42"><figcaption>bolt</figcaption></figure></div>
+  </div>
+</section>
+
+<section class="md-section md-band" id="guide">
+  <div class="md-wrap">
+    <span class="md-tag">Guidelines</span>
+    <h2 class="md-heading">How to use it</h2>
+    <div class="guide">
+<p>The design system behind sbmadhav.com: professional enough for recruiters, fun enough for kids. Every new page should feel like part of the same site, in both color schemes, in both grown-up and kid mode.</p>
+<h2>Start a new page</h2>
+<ol>
+<li>Copy <a href="template.html"><code>template.html</code></a> to the new page's folder (for example <code>/projects/index.html</code>).</li>
+<li>Keep its <code>&lt;head&gt;</code> as is: the theme script, the Google Fonts link, <code>/design-system/tokens.css</code> and <code>/design-system/components.css</code>, in that order.</li>
+<li>Write every piece of copy twice: <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>.</li>
+<li>Build from the components below; add page-specific styles with tokens only (<code>var(--coral)</code>, <code>var(--space-6)</code>, <code>var(--radius-lg)</code>), never raw hex.</li>
+<li>Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.</li>
+</ol>
+<h2>Files</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tokens.json</code></td>
+<td>The source of truth: every color (both schemes), type style, spacing step, radius and shadow, each with a usage note.</td>
+</tr>
+<tr>
+<td><code>tokens.css</code></td>
+<td>The same tokens as CSS custom properties, with Daybreak as default and Deep Space for <code>prefers-color-scheme: dark</code> or <code>data-theme="dark"</code>. Generated by <code>build.py</code>.</td>
+</tr>
+<tr>
+<td><code>components.css</code></td>
+<td>The <code>md-</code> components plus page basics (<code>md-page</code>, <code>md-wrap</code>, <code>md-section</code>, <code>md-band</code>, <code>md-grid</code>) and the kid-mode <code>.pro</code> / <code>.kid</code> swap.</td>
+</tr>
+<tr>
+<td><code>template.html</code></td>
+<td>A starter page wired up with the color mode picker and kid mode.</td>
+</tr>
+<tr>
+<td><code>index.html</code></td>
+<td>The reference page at /design-system/: color modes side by side, type, spacing, live components, icons and these guidelines. Generated.</td>
+</tr>
+<tr>
+<td><code>build.py</code></td>
+<td>Regenerates <code>tokens.css</code> and <code>index.html</code> from <code>tokens.json</code> and this README: <code>python3 design-system/build.py</code>.</td>
+</tr>
+<tr>
+<td><code>icons/</code></td>
+<td>The 18 line icons and Bolt the mascot as SVG files.</td>
+</tr>
+</tbody>
+</table>
+<p>The interactive version of this system, with live previews of every component, is kept privately in Claude.</p>
+<h2>Principles</h2>
+<ul>
+<li><strong>Two audiences, one page.</strong> Every piece of copy has a grown-up version and a kid version. The layout never changes between them; only the words do.</li>
+<li><strong>Two schemes, two personalities.</strong> Daybreak (light) is a warm, sunny paper notebook. Deep Space (dark) is a neon night sky. They should surprise people with how different they feel, while every component stays in the same place.</li>
+<li><strong>Friendly, never childish.</strong> Rounded shapes, chunky borders and a solid "ledge" under controls make things feel touchable. Restraint in copy and layout keeps it professional.</li>
+<li><strong>Play is opt-in.</strong> Music, motion and games never start on their own. Everything respects reduced-motion settings.</li>
+<li><strong>Show, then tell.</strong> Prefer an interactive demo (Brain Lab, Design Lab) over a paragraph that explains an idea.</li>
+</ul>
+<h2>Content fundamentals</h2>
+<ul>
+<li><strong>Voice:</strong> first person, warm, plain words, dry humor in grown-up mode ("Zero-defect release. Principal engineer energy."), wonder in kid mode ("Whoa! We just blasted into deep space!").</li>
+<li><strong>Never use em dashes.</strong> Use a period, comma or colon instead.</li>
+<li><strong>Short.</strong> Ledes are one or two sentences. Card descriptions fit in two lines.</li>
+<li><strong>Grown-up copy</strong> names real things: titles, metrics, technologies. <strong>Kid copy</strong> names what it does: "builds robot helpers for a really big bank."</li>
+<li><strong>Sentence case</strong> for headings and buttons. Uppercase only for kickers (<code>kicker</code> style).</li>
+<li><strong>Numbers</strong> in stats are big and specific: <code>17</code>, <code>2 → 25</code>, <code>+25%</code>, <code>$70M+</code>.</li>
+</ul>
+<h2>Color</h2>
+<p>Use tokens, never raw hex. Each token has a Daybreak and a Deep Space value; switching scheme swaps every value at once.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Token</th>
+<th>Daybreak</th>
+<th>Deep Space</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Page ground</td>
+<td><code>bg</code></td>
+<td>warm cream</td>
+<td>near-black indigo</td>
+</tr>
+<tr>
+<td>Section bands</td>
+<td><code>bg-alt</code></td>
+<td>peach</td>
+<td>deep indigo</td>
+</tr>
+<tr>
+<td>Cards</td>
+<td><code>card</code></td>
+<td>white</td>
+<td>translucent indigo (blur behind)</td>
+</tr>
+<tr>
+<td>Text</td>
+<td><code>ink</code> / <code>ink-muted</code></td>
+<td>navy / slate</td>
+<td>lavender white / lilac</td>
+</tr>
+<tr>
+<td>Control border</td>
+<td><code>edge</code></td>
+<td>navy</td>
+<td>violet</td>
+</tr>
+<tr>
+<td>Control ledge</td>
+<td><code>ledge</code> (in <code>shadow-ledge</code>)</td>
+<td>navy</td>
+<td>hot pink</td>
+</tr>
+<tr>
+<td>Signature</td>
+<td><code>coral</code></td>
+<td>coral</td>
+<td>hot pink</td>
+</tr>
+<tr>
+<td>Success</td>
+<td><code>teal</code></td>
+<td>teal</td>
+<td>aqua</td>
+</tr>
+<tr>
+<td>Highlight</td>
+<td><code>sun</code></td>
+<td>gold</td>
+<td>lime</td>
+</tr>
+<tr>
+<td>Info, focus</td>
+<td><code>sky</code></td>
+<td>blue</td>
+<td>electric blue</td>
+</tr>
+<tr>
+<td>Play</td>
+<td><code>plum</code></td>
+<td>purple</td>
+<td>violet</td>
+</tr>
+<tr>
+<td>Text on accent fills</td>
+<td><code>on-accent</code></td>
+<td>navy</td>
+<td>near-black</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Page background</strong> is a gradient, not a flat fill: a soft sun glow top right and a faint sky glow left in Daybreak; violet, aqua and pink nebulae in Deep Space. It ships as <code>--page</code> in <code>tokens.css</code>; use <code>background: var(--page); background-attachment: fixed;</code> on <code>body</code>.</p>
+<p><strong>Accent rules</strong>
+- In Daybreak, <code>coral</code> and <code>teal</code> are fills only. As text on cream they fail contrast (2.7:1 and 2.9:1). In Deep Space every accent works as text.
+- Text on any accent fill uses <code>on-accent</code>, never white. White on coral is 2.8:1, on teal 3.1:1, on sky 3.2:1: all fail.
+- No more than five colors in one composition. One accent leads; others support.
+- Section tags take one accent each: <code>sun</code> for About, <code>sky</code> for Brain Lab, <code>coral</code> for Bug Hunt, <code>plum</code> for games, <code>teal</code> for Journey.</p>
+<blockquote>
+<p><strong>Known issue on the live site:</strong> the primary buttons and some section tags currently use white text on coral, teal, sky and plum in Daybreak, which fails WCAG AA. New pages use <code>on-accent</code>. The live page should be updated to match.</p>
+</blockquote>
+<h2>Typography</h2>
+<p>Four families, all from Google Fonts:</p>
+<pre><code class="language-html">&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&amp;family=JetBrains+Mono:wght@500&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+</code></pre>
+<ul>
+<li><strong>Display</strong> is Fredoka in Daybreak and <strong>Space Grotesk in Deep Space.</strong> <code>tokens.css</code> swaps it through one variable, <code>--display</code>; every heading uses <code>font-family: var(--display)</code>. This font swap is a big part of why the two schemes feel so different.</li>
+<li><strong>Nunito Sans</strong> for all body text, buttons and labels.</li>
+<li><strong>JetBrains Mono</strong> for agent thoughts, code, costs and disclaimers.</li>
+<li>Headings are weight 600, tracked in slightly (-0.01em; -0.025em in Deep Space). Body is 17px at 1.6.</li>
+<li>Highlight one word in a hero heading with a <code>sun</code> underline band (Daybreak) or a coral-to-teal gradient fill (Deep Space). Use it once per page.</li>
+</ul>
+<h2>Layout and spacing</h2>
+<ul>
+<li>Content max width <code>content-max</code> (1120px), gutter <code>space-6</code> (24px), <code>space-4</code> (16px) on phones.</li>
+<li>Every section: <code>space-section</code> (72px) top and bottom padding; alternate plain sections with <code>bg-alt</code> bands that have a 1px <code>line</code> top and bottom.</li>
+<li>Section header: a tag, a <code>heading</code>, then a <code>lede</code> in <code>ink-muted</code> at most 40em wide, then <code>space-7</code> (28px) before content.</li>
+<li>Cards in grids: 4 across on desktop, 2 under 980px, 1 under 560px.</li>
+<li>No horizontal scroll at 390px. The sticky header collapses its nav links under 1180px and keeps the scheme, music and kid-mode controls.</li>
+</ul>
+<h2>Shape and depth</h2>
+<ul>
+<li>Radius ladder: <code>radius-sm</code> 12, <code>radius-md</code> 16, <code>radius-lg</code> 22, <code>radius-xl</code> 28, <code>radius-pill</code>.</li>
+<li>Raised controls (buttons, chips, palette blocks, game boards) get a 2px <code>edge</code> border and a solid <code>shadow-ledge</code>. They lift on hover and press down on click.</li>
+<li>Cards and panels get a 1px <code>line</code> border, <code>shadow-card</code>, and lift 4px with a tiny tilt (-0.4deg) on hover.</li>
+<li>Deep Space adds <code>backdrop-filter: blur(8px)</code> to cards and controls so the starfield shows through softly.</li>
+</ul>
+<h2>Motion</h2>
+<ul>
+<li>Gentle and looping: Bolt bobs (3.4s), planets drift (45 to 130s per crossing), stars twinkle, the hero blob morphs (12s).</li>
+<li>Springy UI: toggles and level nodes use <code>cubic-bezier(.5,1.6,.5,1)</code>.</li>
+<li>Sections fade up 18px on first scroll into view.</li>
+<li><code>prefers-reduced-motion: reduce</code> turns all of it off. Nothing essential may depend on motion.</li>
+</ul>
+<h2>Interaction patterns</h2>
+<ul>
+<li><strong>Kid mode:</strong> write both versions side by side as <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>; <code>body.kidmode</code> swaps them. Remember the choice; <code>?kid</code> in the URL starts in kid mode.</li>
+<li><strong>Color modes:</strong> Daybreak (light) and Deep Space (dark). Pages follow the visitor's system setting by default. The <code>md-modes</code> picker (System, Daybreak, Deep Space) overrides it and saves <code>light</code> or <code>dark</code>; System clears the override. Set <code>data-theme</code> from a tiny inline script in <code>&lt;head&gt;</code> to avoid a flash. Pin any block to one mode with <code>class="mode-daybreak"</code> or <code>class="mode-deep-space"</code>.</li>
+<li><strong>Bolt</strong> (the robot mascot) reacts to actions in a speech bubble under him. A tap-hint pill and a halo show until the first click.</li>
+<li><strong>Music</strong> is generated in the browser, never auto-plays, and pauses when the tab is hidden. Games may take over the music while they run and give it back after.</li>
+</ul>
+<h2>Iconography</h2>
+<ul>
+<li>Inline SVG <code>&lt;symbol&gt;</code> sprites on a 32×32 grid, 2.4px round-capped strokes, no fills except small solid details; stroke uses <code>currentColor</code> in code.</li>
+<li>Shown on icon tiles: a 54px <code>radius-md</code> tile filled with the accent at 18% and the icon in the full accent.</li>
+<li>Illustrations (planets, rockets, astronaut, Bolt) use flat fills with a 3 to 5px navy outline.</li>
+<li>No emoji in the UI. No brand logos of other companies.</li>
+</ul>
+<h2>Accessibility</h2>
+<ul>
+<li>Text meets 4.5:1 in both schemes: <code>ink</code> and <code>ink-muted</code> on <code>bg</code>, <code>bg-alt</code> and <code>card</code>.</li>
+<li>Focus: <code>outline: 3px solid var(--sky); outline-offset: 3px</code>.</li>
+<li>Toggles use <code>role="switch"</code> and <code>aria-checked</code>; chips and toggle buttons use <code>aria-pressed</code>; live results use <code>aria-live="polite"</code>.</li>
+<li>Every game and animation has a still, keyboard-usable path.</li>
+</ul>
+<h2>Components</h2>
+<h3>Button</h3>
+<p>Classes: <code>md-btn</code>, <code>md-btn--primary</code>, <code>md-btn--sm</code>.</p>
+<p>A pill with a 2px edge and a solid ledge underneath that lifts on hover and presses down on click.</p>
+<ul>
+<li><strong>Primary</strong> (<code>md-btn md-btn--primary</code>): one per view, the main call to action. Coral in Daybreak; a coral-to-plum gradient in Deep Space. Label in <code>on-accent</code>.</li>
+<li><strong>Secondary</strong> (<code>md-btn</code>): card background. Use for every other action.</li>
+<li><strong>Small</strong> (<code>md-btn--sm</code>): inside tools and games (Undo, Clear, Reset).</li>
+<li>Labels are verbs in sentence case and can have kid and grown-up versions ("See how my agents think" / "Peek inside a robot brain").</li>
+<li>Icons go before the label at 18px.</li>
+<li>The consumer provides the label, the click handler and <code>disabled</code> when the action is not available.</li>
+</ul>
+<h3>Chip</h3>
+<p>Classes: <code>md-chip</code> with <code>aria-pressed</code>.</p>
+<p>A pill-shaped choice for picking one option from a small set: Brain Lab questions, Design Lab scenarios.</p>
+<ul>
+<li>Use <code>aria-pressed="true"</code> on the selected chip; it fills with <code>ink</code> and its text flips to <code>bg</code>.</li>
+<li>Hover fills with <code>sun</code> and <code>on-accent</code> text.</li>
+<li>Keep labels under about 30 characters; they wrap as a row with <code>space-2</code> gaps.</li>
+</ul>
+<h3>Tag</h3>
+<p>Classes: <code>md-tag</code>, <code>md-tag--sky|coral|plum|teal</code>.</p>
+<p>The small colored label that opens every section, above the heading.</p>
+<ul>
+<li>One accent per section: <code>sun</code> (default), <code>sky</code>, <code>coral</code>, <code>plum</code>, <code>teal</code>. Pick by meaning: play is plum, debugging is coral, thinking is sky, career is teal.</li>
+<li>Text is <code>on-accent</code> in the display face at 14px. It can have kid and grown-up versions ("Architect Mode" / "Code Quest").</li>
+<li>One tag per section; never inline in body text.</li>
+</ul>
+<h3>Card</h3>
+<p>Classes: <code>md-card</code>, <code>md-icon-tile</code>.</p>
+<p>The default container: white (Daybreak) or translucent indigo (Deep Space), 1px <code>line</code> border, <code>radius-lg</code>, <code>shadow-card</code>, <code>space-5</code> padding.</p>
+<ul>
+<li>Optional icon tile on top: 54px, <code>radius-md</code>, filled with the card's accent at 18% (<code>color-mix(in srgb, var(--teal) 18%, transparent)</code>) with the icon in the accent color.</li>
+<li>Heading in <code>card-title</code>; description in <code>small</code>, <code>ink-muted</code>, two lines or fewer.</li>
+<li>Lifts 4px and tilts -0.4deg on hover. Use in grids of 2 to 4.</li>
+</ul>
+<h3>Stat</h3>
+<p>Classes: <code>md-stat</code> with <code>md-kicker</code>, <code>md-value</code>, <code>p</code>.</p>
+<p>A metric tile: kicker label, a big number in the <code>stat</code> style, and an optional one-line note.</p>
+<ul>
+<li>Numbers are specific and short (<code>17</code>, <code>2 → 25</code>, <code>$70M+</code>). Put the unit in the number, not the label.</li>
+<li>Use 2 to 4 in a row. Scoreboards in games use the same tile.</li>
+<li>The note is <code>ink-muted</code> at 14px; give kid mode its own wording.</li>
+</ul>
+<h3>Switch</h3>
+<p>Classes: <code>md-switch</code> with <code>md-track</code> and <code>md-knob</code>, <code>role="switch"</code>.</p>
+<p>The on/off pill used for kid mode, with a springy knob.</p>
+<ul>
+<li><code>role="switch"</code> and <code>aria-checked</code> carry the state; the track fills with <code>sun</code> when on.</li>
+<li>The label names the mode, not the action. Shorten it on phones ("Kid mode").</li>
+<li>Turning kid mode on swaps every <code>.pro</code> span for its <code>.kid</code> twin and gets a confetti burst.</li>
+</ul>
+<h3>Bubble</h3>
+<p>Classes: <code>md-bubble</code>.</p>
+<p>Bolt's speech bubble: card background, 2px <code>edge</code>, 18px corners, ledge shadow and a pointer toward the speaker.</p>
+<ul>
+<li>Place it under Bolt with the pointer up, never over content or photos.</li>
+<li>One or two short sentences, in the current mode's voice. Auto-hide after about 4 seconds.</li>
+<li>Announce it with <code>role="status"</code> and <code>aria-live="polite"</code>.</li>
+</ul>
+<h2>Icons</h2>
+<p>The line icons from sbmadhav.com, exported from its inline SVG sprite. 32×32 grid, 2.4px round-capped strokes, drawn here in <code>ink</code> navy (#1C2541).</p>
+<ul>
+<li>On the site they live in a <code>&lt;svg&gt;&lt;defs&gt;&lt;symbol&gt;</code> sprite and use <code>currentColor</code>, so they take the accent color of their tile or text. Copy the paths into a sprite rather than loading the files in <code>icons/</code> with <code>&lt;img&gt;</code> when the color must change.</li>
+<li>Pair each with a meaning, not a decoration: agent (agentic AI), voice, interface, shield (responsible AI), briefcase (consulting), hardware, sneaker, health, bank, mystery (what's next), bug, star (goal or current level).</li>
+</ul>
+<h2>Mascot</h2>
+<p>Bolt, the site's original robot mascot: teal body, cream face, coral antenna and cheeks, gold chest, navy outlines.</p>
+<ul>
+<li>Bolt speaks through the Bubble component and reacts to what people do (switching schemes, playing music, winning games).</li>
+<li>Keep Bolt's colors fixed in both schemes; in Deep Space add a soft violet glow (<code>drop-shadow(0 0 12px rgba(164,123,255,.55))</code>).</li>
+<li>Never put words on Bolt or change his shape; poses come from small transforms (bob, tilt, eyes following the pointer).</li>
+</ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="md-wrap">Generated by <code class="md-mono">build.py</code> from <code class="md-mono">tokens.json</code> and <code class="md-mono">README.md</code>. <a href="/" style="color:var(--ink);font-weight:700">Back to sbmadhav.com</a></div></footer>
+
+<script>
+(() => {
+  const root = document.documentElement, meta = document.querySelector('meta[name="theme-color"]');
+  const mq = matchMedia('(prefers-color-scheme: dark)');
+  const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                  set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
+  const btns = document.querySelectorAll('.md-modes button');
+  function apply(mode) {
+    if (mode === 'system') delete root.dataset.theme; else root.dataset.theme = mode;
+    store.set('theme', mode === 'system' ? '' : mode);
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+    const dark = mode === 'dark' || (mode === 'system' && mq.matches);
+    meta.setAttribute('content', dark ? '#07061A' : '#FFF8EE');
+  }
+  btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
+  mq.addEventListener('change', () => { if (!root.dataset.theme) apply('system'); });
+  apply(root.dataset.theme || 'system');
+  const sw = document.getElementById('demoSwitch');
+  sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true')));
+})();
+</script>
+</body>
+</html>
