@@ -17,11 +17,12 @@
 <link rel="stylesheet" href="/design-system/components.css">
 <style>
   /* Page-specific styles go here. Use tokens, never raw hex. */
-  @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } .home { font-size: 0; gap: 0; } }
+  @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } }
   .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
   .top .md-wrap { display: flex; align-items: center; gap: 10px; height: 66px; }
   .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
   .home svg { width: 32px; height: 32px; flex: none; }
+  @media (max-width: 480px) { .home { font-size: 0; gap: 0; } }
 </style>
 </head>
 <body class="md-page md-root">
