@@ -7,6 +7,8 @@
 <meta name="description" content="Color modes, type, spacing, components and guidelines for sbmadhav.com.">
 <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <meta name="theme-color" content="#FFF8EE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%231FA39A'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23FF6B5B'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -15,7 +17,8 @@
 <style>
   .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
   .top .md-wrap { display: flex; align-items: center; gap: 12px; height: 62px; }
-  .home { font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
+  .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
+  .home svg { width: 30px; height: 30px; flex: none; }
   .top nav a { color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }
   .top nav a:hover { color: var(--ink); background: var(--bg-alt); }
   @media (max-width: 760px) { .top nav { display: none; } }
@@ -93,7 +96,7 @@
 
 <header class="top">
   <div class="md-wrap">
-    <a class="home" href="/">Madhav</a>
+    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
     <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
@@ -138,28 +141,38 @@
 <div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#1FA39A</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#FFC53D</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#5B8DEF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#8E6BD8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#A88EEA</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral-strong)"></span><span class="sw-t"><b>coral-strong</b><span class="md-mono">#B83A2B</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal-strong)"></span><span class="sw-t"><b>teal-strong</b><span class="md-mono">#0F6E68</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun-strong)"></span><span class="sw-t"><b>sun-strong</b><span class="md-mono">#7A5600</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#2F5BBE</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#6646B8</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#1C2541</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky</span></span></div></div>
+<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div></div>
 </div>
 <div class="mode mode-deep-space">
-  <div class="mode-head"><div><span class="md-tag">Deep Space</span><h3>Deep Space</h3><p>Dark. Neon night sky, glowing accents, Space Grotesk headings.</p></div>
+  <div class="mode-head"><div><span class="md-tag">Deep Space</span><h3>Deep Space</h3><p>Dark. Calm night sky, soft accents, Space Grotesk headings.</p></div>
   <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
-  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#07061A</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#0D0B2A</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">rgba(22,19,58,.82)</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#EEEAFF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#A7A2D8</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#2D2766</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#7F6BFF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#FF4FD8</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#FF4FD8</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#22E6C8</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#C8FF45</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#48B6FF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#A47BFF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#07061A</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky</span></span></div></div>
+  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#0A0B18</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#11132A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">rgba(23,26,49,.88)</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#EDEEFA</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#A9AECB</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#2A2E4A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#7C86C4</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#4D4F8C</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#FF8F87</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#45D9C3</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#D6F075</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#73BCFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#B6A4F7</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral-strong)"></span><span class="sw-t"><b>coral-strong</b><span class="md-mono">#FF8F87</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal-strong)"></span><span class="sw-t"><b>teal-strong</b><span class="md-mono">#45D9C3</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun-strong)"></span><span class="sw-t"><b>sun-strong</b><span class="md-mono">#D6F075</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#73BCFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#B6A4F7</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#0A0B18</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div></div>
 </div>
     </div>
     <p class="note">How it works: <code class="md-mono">tokens.css</code> sets Daybreak on <code class="md-mono">:root</code>, switches to Deep Space under <code class="md-mono">prefers-color-scheme: dark</code>, and lets <code class="md-mono">&lt;html data-theme="light|dark"&gt;</code> override both. Add <code class="md-mono">class="mode-daybreak"</code> or <code class="md-mono">class="mode-deep-space"</code> to pin any block to one mode.</p>
@@ -279,7 +292,7 @@
 <li><strong>Numbers</strong> in stats are big and specific: <code>17</code>, <code>2 → 25</code>, <code>+25%</code>, <code>$70M+</code>.</li>
 </ul>
 <h2>Color</h2>
-<p>Use tokens, never raw hex. Each token has a Daybreak and a Deep Space value; switching scheme swaps every value at once.</p>
+<p>Use tokens, never raw hex. Each token has a Daybreak and a Deep Space value; switching scheme swaps every value at once. Every pairing below meets WCAG 2.1 AA in both modes: 4.5:1 for text, 3:1 for control borders, focus rings, icons and chart marks.</p>
 <table>
 <thead>
 <tr>
@@ -294,67 +307,79 @@
 <td>Page ground</td>
 <td><code>bg</code></td>
 <td>warm cream</td>
-<td>near-black indigo</td>
+<td>near-black ink blue</td>
 </tr>
 <tr>
 <td>Section bands</td>
 <td><code>bg-alt</code></td>
 <td>peach</td>
-<td>deep indigo</td>
+<td>deep ink blue</td>
 </tr>
 <tr>
 <td>Cards</td>
 <td><code>card</code></td>
 <td>white</td>
-<td>translucent indigo (blur behind)</td>
+<td>dark slate, slightly translucent (blur behind)</td>
 </tr>
 <tr>
 <td>Text</td>
 <td><code>ink</code> / <code>ink-muted</code></td>
 <td>navy / slate</td>
-<td>lavender white / lilac</td>
+<td>soft white / cool gray</td>
+</tr>
+<tr>
+<td>Hairlines (decorative)</td>
+<td><code>line</code></td>
+<td>sand</td>
+<td>slate</td>
 </tr>
 <tr>
 <td>Control border</td>
 <td><code>edge</code></td>
 <td>navy</td>
-<td>violet</td>
+<td>periwinkle</td>
 </tr>
 <tr>
 <td>Control ledge</td>
 <td><code>ledge</code> (in <code>shadow-ledge</code>)</td>
 <td>navy</td>
-<td>hot pink</td>
+<td>muted indigo</td>
 </tr>
 <tr>
-<td>Signature</td>
+<td>Signature fill</td>
 <td><code>coral</code></td>
 <td>coral</td>
-<td>hot pink</td>
+<td>soft coral</td>
 </tr>
 <tr>
-<td>Success</td>
+<td>Success fill</td>
 <td><code>teal</code></td>
 <td>teal</td>
 <td>aqua</td>
 </tr>
 <tr>
-<td>Highlight</td>
+<td>Highlight fill</td>
 <td><code>sun</code></td>
 <td>gold</td>
-<td>lime</td>
+<td>soft lime</td>
 </tr>
 <tr>
-<td>Info, focus</td>
+<td>Info fill</td>
 <td><code>sky</code></td>
 <td>blue</td>
-<td>electric blue</td>
+<td>light blue</td>
 </tr>
 <tr>
-<td>Play</td>
+<td>Play fill</td>
 <td><code>plum</code></td>
-<td>purple</td>
-<td>violet</td>
+<td>lavender</td>
+<td>soft lavender</td>
+</tr>
+<tr>
+<td>Text, icons, marks</td>
+<td><code>coral-strong</code>, <code>teal-strong</code>, <code>sun-strong</code>, <code>sky-strong</code>, <code>plum-strong</code></td>
+<td>deep shades</td>
+<td>same as the fill</td>
 </tr>
 <tr>
 <td>Text on accent fills</td>
@@ -362,17 +387,120 @@
 <td>navy</td>
 <td>near-black</td>
 </tr>
+<tr>
+<td>Focus ring</td>
+<td><code>focus</code></td>
+<td>alias of <code>sky-strong</code></td>
+<td>alias of <code>sky-strong</code></td>
+</tr>
 </tbody>
 </table>
-<p><strong>Page background</strong> is a gradient, not a flat fill: a soft sun glow top right and a faint sky glow left in Daybreak; violet, aqua and pink nebulae in Deep Space. It ships as <code>--page</code> in <code>tokens.css</code>; use <code>background: var(--page); background-attachment: fixed;</code> on <code>body</code>.</p>
+<p><strong>Page background</strong> is a gradient, not a flat fill: a soft sun glow top right and a faint sky glow left in Daybreak; faint lavender, aqua and coral haze in Deep Space. It ships as <code>--page</code> in <code>tokens.css</code>; use <code>background: var(--page); background-attachment: fixed;</code> on <code>body</code>.</p>
+<h3>How the colors stay accessible</h3>
+<p>The system follows the approach Stripe describes in <a href="https://stripe.com/blog/accessible-color-systems">Designing accessible color systems</a>: every hue gets the same few lightness levels, so any color at a given level has the same contrast as every other hue at that level. Pick a level by job, not by hue, and contrast takes care of itself.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Tokens</th>
+<th>Job</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fill</td>
+<td><code>coral</code>, <code>teal</code>, <code>sun</code>, <code>sky</code>, <code>plum</code></td>
+<td>Buttons, tags, chips, highlights, tile backgrounds</td>
+<td>Always carries <code>on-accent</code> text (at least 4.6:1). Never text on <code>bg</code>.</td>
+</tr>
+<tr>
+<td>Strong</td>
+<td><code>*-strong</code></td>
+<td>Text, links, icons, chart marks, status labels</td>
+<td>At least 4.5:1 on <code>bg</code>, <code>bg-alt</code> and <code>card</code>.</td>
+</tr>
+<tr>
+<td>Soft</td>
+<td><code>color-mix(in srgb, var(--x) 14%, var(--card))</code></td>
+<td>Tinted panels, badges, icon tiles</td>
+<td>Text on it is <code>ink</code> or the matching <code>*-strong</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Measured contrast (Daybreak / Deep Space, on <code>bg</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Pairing</th>
+<th>Daybreak</th>
+<th>Deep Space</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ink</code></td>
+<td>14.3</td>
+<td>17.0</td>
+</tr>
+<tr>
+<td><code>ink-muted</code></td>
+<td>5.6</td>
+<td>8.9</td>
+</tr>
+<tr>
+<td><code>coral-strong</code></td>
+<td>5.4</td>
+<td>8.9</td>
+</tr>
+<tr>
+<td><code>teal-strong</code></td>
+<td>5.8</td>
+<td>11.1</td>
+</tr>
+<tr>
+<td><code>sun-strong</code></td>
+<td>6.3</td>
+<td>15.4</td>
+</tr>
+<tr>
+<td><code>sky-strong</code></td>
+<td>5.9</td>
+<td>9.7</td>
+</tr>
+<tr>
+<td><code>plum-strong</code></td>
+<td>6.4</td>
+<td>9.0</td>
+</tr>
+<tr>
+<td><code>edge</code> (controls)</td>
+<td>14.3</td>
+<td>5.6</td>
+</tr>
+<tr>
+<td><code>focus</code></td>
+<td>5.9</td>
+<td>9.7</td>
+</tr>
+<tr>
+<td><code>on-accent</code> on the lightest fill / darkest fill</td>
+<td>9.6 / 4.7</td>
+<td>15.4 / 8.9</td>
+</tr>
+</tbody>
+</table>
+<p><strong>State rules</strong>
+- <strong>Hover:</strong> buttons lift (transform and a deeper ledge); colors stay the same. Chips fill with <code>sun</code> and switch text to <code>on-accent</code>. Links keep their color and gain an underline.
+- <strong>Pressed or selected:</strong> fill with <code>ink</code>, text flips to <code>bg</code> (14.3:1 / 17.0:1).
+- <strong>Focus:</strong> 3px <code>focus</code> outline with a 3px offset, on every interactive element.
+- <strong>Disabled:</strong> 45% opacity. Disabled controls are exempt from contrast rules, but never rely on disabled styling alone to explain why something is unavailable.</p>
 <p><strong>Accent rules</strong>
-- In Daybreak, <code>coral</code> and <code>teal</code> are fills only. As text on cream they fail contrast (2.7:1 and 2.9:1). In Deep Space every accent works as text.
-- Text on any accent fill uses <code>on-accent</code>, never white. White on coral is 2.8:1, on teal 3.1:1, on sky 3.2:1: all fail.
+- Fills carry <code>on-accent</code> text; text, icons and chart marks use <code>*-strong</code>. White text on any fill fails and is not allowed.
+- Deep Space is calm by default: purple and pink appear as soft lavender (<code>plum</code>) and soft coral (<code>coral</code>) accents, not as neon glows or gradients. Use <code>plum</code> sparingly, never as the lead accent.
 - No more than five colors in one composition. One accent leads; others support.
-- Section tags take one accent each: <code>sun</code> for About, <code>sky</code> for Brain Lab, <code>coral</code> for Bug Hunt, <code>plum</code> for games, <code>teal</code> for Journey.</p>
-<blockquote>
-<p><strong>Known issue on the live site:</strong> the primary buttons and some section tags currently use white text on coral, teal, sky and plum in Daybreak, which fails WCAG AA. New pages use <code>on-accent</code>. The live page should be updated to match.</p>
-</blockquote>
+- Section tags take one accent each: <code>sun</code> for About, <code>sky</code> for Brain Lab, <code>coral</code> for Bug Hunt, <code>plum</code> for games, <code>teal</code> for Journey.
+- <code>line</code> is decorative. A control's boundary must come from <code>edge</code> (or a fill with at least 3:1 against its ground).</p>
 <h2>Typography</h2>
 <p>Four families, all from Google Fonts:</p>
 <pre><code class="language-html">&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&amp;family=JetBrains+Mono:wght@500&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
@@ -457,9 +585,9 @@
 </ul>
 <h3>Card</h3>
 <p>Classes: <code>md-card</code>, <code>md-icon-tile</code>.</p>
-<p>The default container: white (Daybreak) or translucent indigo (Deep Space), 1px <code>line</code> border, <code>radius-lg</code>, <code>shadow-card</code>, <code>space-5</code> padding.</p>
+<p>The default container: white (Daybreak) or dark slate (Deep Space), 1px <code>line</code> border, <code>radius-lg</code>, <code>shadow-card</code>, <code>space-5</code> padding.</p>
 <ul>
-<li>Optional icon tile on top: 54px, <code>radius-md</code>, filled with the card's accent at 18% (<code>color-mix(in srgb, var(--teal) 18%, transparent)</code>) with the icon in the accent color.</li>
+<li>Optional icon tile on top: 54px, <code>radius-md</code>, filled with the card's accent at 18% (<code>color-mix(in srgb, var(--teal) 18%, transparent)</code>) with the icon in the matching <code>*-strong</code> color.</li>
 <li>Heading in <code>card-title</code>; description in <code>small</code>, <code>ink-muted</code>, two lines or fewer.</li>
 <li>Lifts 4px and tilts -0.4deg on hover. Use in grids of 2 to 4.</li>
 </ul>
@@ -497,7 +625,7 @@
 <p>Bolt, the site's original robot mascot: teal body, cream face, coral antenna and cheeks, gold chest, navy outlines.</p>
 <ul>
 <li>Bolt speaks through the Bubble component and reacts to what people do (switching schemes, playing music, winning games).</li>
-<li>Keep Bolt's colors fixed in both schemes; in Deep Space add a soft violet glow (<code>drop-shadow(0 0 12px rgba(164,123,255,.55))</code>).</li>
+<li>Keep Bolt's colors fixed in both schemes; in Deep Space add a faint glow (<code>drop-shadow(0 0 10px rgba(182,164,247,.22))</code>).</li>
 <li>Never put words on Bolt or change his shape; poses come from small transforms (bob, tilt, eyes following the pointer).</li>
 </ul>
     </div>
@@ -519,7 +647,7 @@
     store.set('theme', mode === 'system' ? '' : mode);
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
     const dark = mode === 'dark' || (mode === 'system' && mq.matches);
-    meta.setAttribute('content', dark ? '#07061A' : '#FFF8EE');
+    meta.setAttribute('content', dark ? '#0A0B18' : '#FFF8EE');
   }
   btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
   mq.addEventListener('change', () => { if (!root.dataset.theme) apply('system'); });

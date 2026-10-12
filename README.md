@@ -43,32 +43,65 @@ The interactive version of this system, with live previews of every component, i
 
 ## Color
 
-Use tokens, never raw hex. Each token has a Daybreak and a Deep Space value; switching scheme swaps every value at once.
+Use tokens, never raw hex. Each token has a Daybreak and a Deep Space value; switching scheme swaps every value at once. Every pairing below meets WCAG 2.1 AA in both modes: 4.5:1 for text, 3:1 for control borders, focus rings, icons and chart marks.
 
 | Role | Token | Daybreak | Deep Space |
 |---|---|---|---|
-| Page ground | `bg` | warm cream | near-black indigo |
-| Section bands | `bg-alt` | peach | deep indigo |
-| Cards | `card` | white | translucent indigo (blur behind) |
-| Text | `ink` / `ink-muted` | navy / slate | lavender white / lilac |
-| Control border | `edge` | navy | violet |
-| Control ledge | `ledge` (in `shadow-ledge`) | navy | hot pink |
-| Signature | `coral` | coral | hot pink |
-| Success | `teal` | teal | aqua |
-| Highlight | `sun` | gold | lime |
-| Info, focus | `sky` | blue | electric blue |
-| Play | `plum` | purple | violet |
+| Page ground | `bg` | warm cream | near-black ink blue |
+| Section bands | `bg-alt` | peach | deep ink blue |
+| Cards | `card` | white | dark slate, slightly translucent (blur behind) |
+| Text | `ink` / `ink-muted` | navy / slate | soft white / cool gray |
+| Hairlines (decorative) | `line` | sand | slate |
+| Control border | `edge` | navy | periwinkle |
+| Control ledge | `ledge` (in `shadow-ledge`) | navy | muted indigo |
+| Signature fill | `coral` | coral | soft coral |
+| Success fill | `teal` | teal | aqua |
+| Highlight fill | `sun` | gold | soft lime |
+| Info fill | `sky` | blue | light blue |
+| Play fill | `plum` | lavender | soft lavender |
+| Text, icons, marks | `coral-strong`, `teal-strong`, `sun-strong`, `sky-strong`, `plum-strong` | deep shades | same as the fill |
 | Text on accent fills | `on-accent` | navy | near-black |
+| Focus ring | `focus` | alias of `sky-strong` | alias of `sky-strong` |
 
-**Page background** is a gradient, not a flat fill: a soft sun glow top right and a faint sky glow left in Daybreak; violet, aqua and pink nebulae in Deep Space. It ships as `--page` in `tokens.css`; use `background: var(--page); background-attachment: fixed;` on `body`.
+**Page background** is a gradient, not a flat fill: a soft sun glow top right and a faint sky glow left in Daybreak; faint lavender, aqua and coral haze in Deep Space. It ships as `--page` in `tokens.css`; use `background: var(--page); background-attachment: fixed;` on `body`.
+
+### How the colors stay accessible
+
+The system follows the approach Stripe describes in [Designing accessible color systems](https://stripe.com/blog/accessible-color-systems): every hue gets the same few lightness levels, so any color at a given level has the same contrast as every other hue at that level. Pick a level by job, not by hue, and contrast takes care of itself.
+
+| Level | Tokens | Job | Rule |
+|---|---|---|---|
+| Fill | `coral`, `teal`, `sun`, `sky`, `plum` | Buttons, tags, chips, highlights, tile backgrounds | Always carries `on-accent` text (at least 4.6:1). Never text on `bg`. |
+| Strong | `*-strong` | Text, links, icons, chart marks, status labels | At least 4.5:1 on `bg`, `bg-alt` and `card`. |
+| Soft | `color-mix(in srgb, var(--x) 14%, var(--card))` | Tinted panels, badges, icon tiles | Text on it is `ink` or the matching `*-strong`. |
+
+Measured contrast (Daybreak / Deep Space, on `bg`):
+
+| Pairing | Daybreak | Deep Space |
+|---|---|---|
+| `ink` | 14.3 | 17.0 |
+| `ink-muted` | 5.6 | 8.9 |
+| `coral-strong` | 5.4 | 8.9 |
+| `teal-strong` | 5.8 | 11.1 |
+| `sun-strong` | 6.3 | 15.4 |
+| `sky-strong` | 5.9 | 9.7 |
+| `plum-strong` | 6.4 | 9.0 |
+| `edge` (controls) | 14.3 | 5.6 |
+| `focus` | 5.9 | 9.7 |
+| `on-accent` on the lightest fill / darkest fill | 9.6 / 4.7 | 15.4 / 8.9 |
+
+**State rules**
+- **Hover:** buttons lift (transform and a deeper ledge); colors stay the same. Chips fill with `sun` and switch text to `on-accent`. Links keep their color and gain an underline.
+- **Pressed or selected:** fill with `ink`, text flips to `bg` (14.3:1 / 17.0:1).
+- **Focus:** 3px `focus` outline with a 3px offset, on every interactive element.
+- **Disabled:** 45% opacity. Disabled controls are exempt from contrast rules, but never rely on disabled styling alone to explain why something is unavailable.
 
 **Accent rules**
-- In Daybreak, `coral` and `teal` are fills only. As text on cream they fail contrast (2.7:1 and 2.9:1). In Deep Space every accent works as text.
-- Text on any accent fill uses `on-accent`, never white. White on coral is 2.8:1, on teal 3.1:1, on sky 3.2:1: all fail.
+- Fills carry `on-accent` text; text, icons and chart marks use `*-strong`. White text on any fill fails and is not allowed.
+- Deep Space is calm by default: purple and pink appear as soft lavender (`plum`) and soft coral (`coral`) accents, not as neon glows or gradients. Use `plum` sparingly, never as the lead accent.
 - No more than five colors in one composition. One accent leads; others support.
 - Section tags take one accent each: `sun` for About, `sky` for Brain Lab, `coral` for Bug Hunt, `plum` for games, `teal` for Journey.
-
-> **Known issue on the live site:** the primary buttons and some section tags currently use white text on coral, teal, sky and plum in Daybreak, which fails WCAG AA. New pages use `on-accent`. The live page should be updated to match.
+- `line` is decorative. A control's boundary must come from `edge` (or a fill with at least 3:1 against its ground).
 
 ## Typography
 
@@ -166,9 +199,9 @@ The small colored label that opens every section, above the heading.
 
 Classes: `md-card`, `md-icon-tile`.
 
-The default container: white (Daybreak) or translucent indigo (Deep Space), 1px `line` border, `radius-lg`, `shadow-card`, `space-5` padding.
+The default container: white (Daybreak) or dark slate (Deep Space), 1px `line` border, `radius-lg`, `shadow-card`, `space-5` padding.
 
-- Optional icon tile on top: 54px, `radius-md`, filled with the card's accent at 18% (`color-mix(in srgb, var(--teal) 18%, transparent)`) with the icon in the accent color.
+- Optional icon tile on top: 54px, `radius-md`, filled with the card's accent at 18% (`color-mix(in srgb, var(--teal) 18%, transparent)`) with the icon in the matching `*-strong` color.
 - Heading in `card-title`; description in `small`, `ink-muted`, two lines or fewer.
 - Lifts 4px and tilts -0.4deg on hover. Use in grids of 2 to 4.
 
@@ -214,5 +247,5 @@ The line icons from sbmadhav.com, exported from its inline SVG sprite. 32×32 gr
 Bolt, the site's original robot mascot: teal body, cream face, coral antenna and cheeks, gold chest, navy outlines.
 
 - Bolt speaks through the Bubble component and reacts to what people do (switching schemes, playing music, winning games).
-- Keep Bolt's colors fixed in both schemes; in Deep Space add a soft violet glow (`drop-shadow(0 0 12px rgba(164,123,255,.55))`).
+- Keep Bolt's colors fixed in both schemes; in Deep Space add a faint glow (`drop-shadow(0 0 10px rgba(182,164,247,.22))`).
 - Never put words on Bolt or change his shape; poses come from small transforms (bob, tilt, eyes following the pointer).

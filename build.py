@@ -24,9 +24,9 @@ THEME_EXTRA = {
         "page": "radial-gradient(900px 500px at 90% -5%, rgba(255,197,61,.28), transparent 60%), radial-gradient(800px 600px at -10% 60%, rgba(91,141,239,.10), transparent 60%), linear-gradient(180deg, #FFF8EE, #FFF3E2)",
     },
     "deep-space": {
-        "display": "var(--font-display-space)", "primary-bg": "linear-gradient(90deg, var(--coral), var(--plum))", "primary-border": "transparent",
-        "glass": "blur(8px)", "fo": ".62",
-        "page": "radial-gradient(1200px 700px at 85% -10%, rgba(164,123,255,.30), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(34,230,200,.16), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(255,79,216,.20), transparent 60%), #07061A",
+        "display": "var(--font-display-space)", "primary-bg": "var(--coral)", "primary-border": "transparent",
+        "glass": "blur(8px)", "fo": ".45",
+        "page": "radial-gradient(1200px 700px at 85% -10%, rgba(182,164,247,.12), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(69,217,195,.07), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(255,143,135,.06), transparent 60%), #0A0B18",
     },
 }
 
@@ -105,7 +105,7 @@ def swatches(theme):
 
 def mode_panel(theme):
     label = THEMES[theme]
-    sub = "Light. Warm paper, sunny accents, Fredoka headings." if theme == "daybreak" else "Dark. Neon night sky, glowing accents, Space Grotesk headings."
+    sub = "Light. Warm paper, sunny accents, Fredoka headings." if theme == "daybreak" else "Dark. Calm night sky, soft accents, Space Grotesk headings."
     return f"""<div class="mode mode-{theme}">
   <div class="mode-head"><div><span class="md-tag">{label}</span><h3>{label}</h3><p>{sub}</p></div>
   <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
@@ -153,6 +153,8 @@ page = f"""<!doctype html>
 <meta name="description" content="Color modes, type, spacing, components and guidelines for sbmadhav.com.">
 <script>try{{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}}catch(e){{}}</script>
 <meta name="theme-color" content="#FFF8EE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%231FA39A'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23FF6B5B'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -161,7 +163,8 @@ page = f"""<!doctype html>
 <style>
   .top {{ position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }}
   .top .md-wrap {{ display: flex; align-items: center; gap: 12px; height: 62px; }}
-  .home {{ font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }}
+  .home {{ display: inline-flex; align-items: center; gap: 10px; font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }}
+  .home svg {{ width: 30px; height: 30px; flex: none; }}
   .top nav a {{ color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }}
   .top nav a:hover {{ color: var(--ink); background: var(--bg-alt); }}
   @media (max-width: 760px) {{ .top nav {{ display: none; }} }}
@@ -239,7 +242,7 @@ page = f"""<!doctype html>
 
 <header class="top">
   <div class="md-wrap">
-    <a class="home" href="/">Madhav</a>
+    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
     <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
@@ -342,7 +345,7 @@ page = f"""<!doctype html>
     store.set('theme', mode === 'system' ? '' : mode);
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
     const dark = mode === 'dark' || (mode === 'system' && mq.matches);
-    meta.setAttribute('content', dark ? '#07061A' : '#FFF8EE');
+    meta.setAttribute('content', dark ? '#0A0B18' : '#FFF8EE');
   }}
   btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
   mq.addEventListener('change', () => {{ if (!root.dataset.theme) apply('system'); }});

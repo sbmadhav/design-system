@@ -8,6 +8,8 @@
 <!-- Apply the saved color scheme before paint so there is no flash -->
 <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
 <meta name="theme-color" content="#FFF8EE">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%231FA39A'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23FF6B5B'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -18,14 +20,15 @@
   @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } }
   .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
   .top .md-wrap { display: flex; align-items: center; gap: 10px; height: 66px; }
-  .home { font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
+  .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
+  .home svg { width: 32px; height: 32px; flex: none; }
 </style>
 </head>
 <body class="md-page md-root">
 
 <header class="top">
   <div class="md-wrap">
-    <a class="home" href="/">Madhav</a>
+    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
     </div>
