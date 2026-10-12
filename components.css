@@ -53,6 +53,15 @@
 .md-modes button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 @media (max-width: 480px) { .md-modes button { padding: 8px 7px; font-size: 12px; } }
 
+/* Explore menu button (the menu itself comes from /assets/explore.js) */
+.xp-btn{display:inline-flex;align-items:center;gap:8px;flex:none;height:40px;padding:0 14px 0 10px;border:2px solid var(--edge);border-radius:999px;background:var(--card);color:var(--ink);font:700 14px/1 "Nunito Sans",system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--ledge);transition:transform .12s,box-shadow .12s}
+.xp-btn:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--ledge)}
+.xp-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ledge)}
+.xp-btn svg{width:20px;height:20px}
+.xp-btn .xp-dots i{transition:transform .3s cubic-bezier(.5,1.6,.5,1)}
+.xp-btn:hover .xp-dots i:nth-child(2){transform:translate(1px,-1px)}
+@media (max-width:600px){.xp-btn{padding:0;width:40px;justify-content:center}.xp-btn .xp-lbl{display:none}}
+
 /* Page basics */
 .md-page { margin: 0; background: var(--page); background-attachment: fixed; color: var(--ink); font-family: var(--font-sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 .md-page h1, .md-page h2, .md-page h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; letter-spacing: -.01em; margin: 0; }

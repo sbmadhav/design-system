@@ -21,7 +21,8 @@
   .home svg { width: 30px; height: 30px; flex: none; }
   .top nav a { color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }
   .top nav a:hover { color: var(--ink); background: var(--bg-alt); }
-  @media (max-width: 760px) { .top nav { display: none; } }
+  @media (max-width: 1000px) { .top nav { display: none; } }
+  @media (max-width: 480px) { .home { display: none; } .top .md-wrap { justify-content: flex-end; } }
 
   /* Header: the cover */
   .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -98,6 +99,7 @@
   <div class="md-wrap">
     <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
     <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
+    <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
     </div>
@@ -232,6 +234,7 @@
 <li>Keep its <code>&lt;head&gt;</code> as is: the theme script, the Google Fonts link, <code>/design-system/tokens.css</code> and <code>/design-system/components.css</code>, in that order.</li>
 <li>Write every piece of copy twice: <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>.</li>
 <li>Build from the components below; add page-specific styles with tokens only (<code>var(--coral)</code>, <code>var(--space-6)</code>, <code>var(--radius-lg)</code>), never raw hex.</li>
+<li>Add the page to the Explore menu: one entry in <code>PAGES</code> at the top of <code>/assets/explore.js</code> (path, icon, grown-up and kid title and one-line description).</li>
 <li>Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.</li>
 </ol>
 <h2>Files</h2>
@@ -538,6 +541,7 @@
 <ul>
 <li><strong>Kid mode:</strong> write both versions side by side as <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>; <code>body.kidmode</code> swaps them. Remember the choice; <code>?kid</code> in the URL starts in kid mode.</li>
 <li><strong>Color modes:</strong> Daybreak (light) and Deep Space (dark). Pages follow the visitor's system setting by default. The <code>md-modes</code> picker (System, Daybreak, Deep Space) overrides it and saves <code>light</code> or <code>dark</code>; System clears the override. Set <code>data-theme</code> from a tiny inline script in <code>&lt;head&gt;</code> to avoid a flash. Pin any block to one mode with <code>class="mode-daybreak"</code> or <code>class="mode-deep-space"</code>.</li>
+<li><strong>Explore menu:</strong> every page has an Explore button (Star map in kid mode) that opens a panel listing every page as a card, jump links to the home page's sections, and LinkedIn, GitHub and Install app. It slides in from the right on desktop and up from the bottom on phones. The page list lives in one place, <code>/assets/explore.js</code>.</li>
 <li><strong>Bolt</strong> (the robot mascot) reacts to actions in a speech bubble under him. A tap-hint pill and a halo show until the first click.</li>
 <li><strong>Music</strong> is generated in the browser, never auto-plays, and pauses when the tab is hidden. Games may take over the music while they run and give it back after.</li>
 </ul>
@@ -656,5 +660,6 @@
   sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true')));
 })();
 </script>
+<script src="/assets/explore.js" defer></script>
 </body>
 </html>

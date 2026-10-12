@@ -8,7 +8,8 @@ The design system behind sbmadhav.com: professional enough for recruiters, fun e
 2. Keep its `<head>` as is: the theme script, the Google Fonts link, `/design-system/tokens.css` and `/design-system/components.css`, in that order.
 3. Write every piece of copy twice: `<span class="pro">…</span><span class="kid">…</span>`.
 4. Build from the components below; add page-specific styles with tokens only (`var(--coral)`, `var(--space-6)`, `var(--radius-lg)`), never raw hex.
-5. Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.
+5. Add the page to the Explore menu: one entry in `PAGES` at the top of `/assets/explore.js` (path, icon, grown-up and kid title and one-line description).
+6. Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.
 
 ## Files
 
@@ -143,6 +144,7 @@ Four families, all from Google Fonts:
 
 - **Kid mode:** write both versions side by side as `<span class="pro">…</span><span class="kid">…</span>`; `body.kidmode` swaps them. Remember the choice; `?kid` in the URL starts in kid mode.
 - **Color modes:** Daybreak (light) and Deep Space (dark). Pages follow the visitor's system setting by default. The `md-modes` picker (System, Daybreak, Deep Space) overrides it and saves `light` or `dark`; System clears the override. Set `data-theme` from a tiny inline script in `<head>` to avoid a flash. Pin any block to one mode with `class="mode-daybreak"` or `class="mode-deep-space"`.
+- **Explore menu:** every page has an Explore button (Star map in kid mode) that opens a panel listing every page as a card, jump links to the home page's sections, and LinkedIn, GitHub and Install app. It slides in from the right on desktop and up from the bottom on phones. The page list lives in one place, `/assets/explore.js`.
 - **Bolt** (the robot mascot) reacts to actions in a speech bubble under him. A tap-hint pill and a halo show until the first click.
 - **Music** is generated in the browser, never auto-plays, and pauses when the tab is hidden. Games may take over the music while they run and give it back after.
 

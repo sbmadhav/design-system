@@ -167,7 +167,8 @@ page = f"""<!doctype html>
   .home svg {{ width: 30px; height: 30px; flex: none; }}
   .top nav a {{ color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }}
   .top nav a:hover {{ color: var(--ink); background: var(--bg-alt); }}
-  @media (max-width: 760px) {{ .top nav {{ display: none; }} }}
+  @media (max-width: 1000px) {{ .top nav {{ display: none; }} }}
+  @media (max-width: 480px) {{ .home {{ display: none; }} .top .md-wrap {{ justify-content: flex-end; }} }}
 
   /* Header: the cover */
   .hero {{ position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }}
@@ -244,6 +245,7 @@ page = f"""<!doctype html>
   <div class="md-wrap">
     <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
     <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
+    <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
     </div>
@@ -354,6 +356,7 @@ page = f"""<!doctype html>
   sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true')));
 }})();
 </script>
+<script src="/assets/explore.js" defer></script>
 </body>
 </html>
 """

@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="/design-system/components.css">
 <style>
   /* Page-specific styles go here. Use tokens, never raw hex. */
-  @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } }
+  @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } .home { font-size: 0; gap: 0; } }
   .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
   .top .md-wrap { display: flex; align-items: center; gap: 10px; height: 66px; }
   .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
@@ -29,6 +29,7 @@
 <header class="top">
   <div class="md-wrap">
     <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
+    <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
     </div>
@@ -73,5 +74,6 @@
   setKid(new URLSearchParams(location.search).has('kid') || store.get('kidmode') === '1');
 })();
 </script>
+<script src="/assets/explore.js" defer></script>
 </body>
 </html>
