@@ -271,3 +271,24 @@ Bolt, the site's original robot mascot: teal body, cream face, coral antenna and
 - Bolt speaks through the Bubble component and reacts to what people do (switching schemes, playing music, winning games).
 - Keep Bolt's colors fixed in both schemes; in Deep Space add a faint glow (`drop-shadow(0 0 10px rgba(182,164,247,.22))`).
 - Never put words on Bolt or change his shape; poses come from small transforms (bob, tilt, eyes following the pointer).
+
+<!-- repo-only -->
+<!-- Everything below this line is left out of the reference page by build.py. -->
+
+## About this repo
+
+Part of [sbmadhav.com](https://sbmadhav.com). GitHub Pages publishes this repo (branch `main`) as a project site, and the user site's custom domain puts it at https://sbmadhav.com/design-system/. Pages from [sbmadhav/sbmadhav.github.io](https://github.com/sbmadhav/sbmadhav.github.io), [sbmadhav/vedic-math](https://github.com/sbmadhav/vedic-math) and [sbmadhav/state-of-voice-agents](https://github.com/sbmadhav/state-of-voice-agents) load its CSS by absolute URL. Local setup, the build and the checks are under "This repo" above.
+
+`main` is protected: every change from someone else arrives as a pull request, needs the owner's review and passing checks, and nothing merges without approval.
+
+### Contributing
+
+Accessibility fixes, bug fixes and clearer guidelines are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to propose a change, and [SECURITY.md](SECURITY.md) to report a security problem privately.
+
+### License
+
+The code and guidelines in this repo are released under the [MIT License](LICENSE). The fonts it declares are self-hosted by sbmadhav.github.io and keep their own license, the SIL Open Font License 1.1.
+
+### Thank you, Claude
+
+Built with Claude: much of this design system was designed and written together with Claude, Anthropic's AI assistant, through Claude Code. Thank you, Claude.
