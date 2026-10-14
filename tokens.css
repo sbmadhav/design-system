@@ -3,6 +3,13 @@
    Default: follow the visitor's system setting (prefers-color-scheme).
    Override: <html data-theme="light"> or <html data-theme="dark">, saved by the page's toggle. */
 
+/* Self-hosted fonts in /assets/fonts (no third-party requests) */
+@font-face { font-family: Fredoka; font-style: normal; font-weight: 600; font-display: swap; src: url(/assets/fonts/fredoka-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: Fredoka; font-style: normal; font-weight: 700; font-display: swap; src: url(/assets/fonts/fredoka-latin-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Nunito Sans"; font-style: normal; font-weight: 200 1000; font-display: swap; src: url(/assets/fonts/nunito-sans-latin-wght-normal.woff2) format("woff2-variations"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 300 700; font-display: swap; src: url(/assets/fonts/space-grotesk-latin-wght-normal.woff2) format("woff2-variations"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url(/assets/fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2"); }
+
 :root {
   --font-display: Fredoka, "Nunito Sans", system-ui, sans-serif;
   --font-display-space: "Space Grotesk", "Nunito Sans", system-ui, sans-serif;
