@@ -233,7 +233,7 @@
 <li>Keep its <code>&lt;head&gt;</code> as is: the theme script, the font preloads, <code>/design-system/tokens.css</code> and <code>/design-system/components.css</code>, in that order. Never add a Google Fonts link; <code>tokens.css</code> already declares the self-hosted faces.</li>
 <li>Write every piece of copy twice: <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>.</li>
 <li>Build from the components below; add page-specific styles with tokens only (<code>var(--coral)</code>, <code>var(--space-6)</code>, <code>var(--radius-lg)</code>), never raw hex.</li>
-<li>Add the page to the Explore menu: one entry in <code>PAGES</code> at the top of <code>/assets/explore.js</code> (path, icon, grown-up and kid title and one-line description).</li>
+<li>Add the page to the Explore menu: one entry in <code>PAGES</code> at the top of <code>/assets/explore.js</code> in the sbmadhav.github.io repo (path, icon, grown-up and kid title and one-line description).</li>
 <li>Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.</li>
 </ol>
 <h2>Files</h2>
@@ -267,7 +267,7 @@
 </tr>
 <tr>
 <td><code>build.py</code></td>
-<td>Regenerates <code>tokens.css</code> and <code>index.html</code> from <code>tokens.json</code> and this README: <code>python3 design-system/build.py</code>.</td>
+<td>Regenerates <code>tokens.css</code> and <code>index.html</code> from <code>tokens.json</code> and this README: <code>python3 build.py</code>.</td>
 </tr>
 <tr>
 <td><code>icons/</code></td>
@@ -275,6 +275,15 @@
 </tr>
 </tbody>
 </table>
+<h3>This repo</h3>
+<p>The design system lives in its own repo, <a href="https://github.com/sbmadhav/design-system">sbmadhav/design-system</a>, and GitHub Pages publishes it as a project site. Under the user site's custom domain that is <strong>sbmadhav.com/design-system/</strong>, the same URLs every page already links. <code>_config.yml</code> keeps <code>README.md</code>, <code>CLAUDE.md</code> and <code>build.py</code> out of the published site; <code>tokens.json</code> is published so other repos can read it.</p>
+<ul>
+<li><strong>Build.</strong> <code>pip install markdown</code>, then <code>python3 build.py</code>. Commit <code>tokens.css</code> and <code>index.html</code> with the change that produced them.</li>
+<li><strong>Checks.</strong> A pre-commit hook in <code>.githooks/</code> and the workflow in <code>.github/workflows/build.yml</code> both run <code>build.py</code> and fail if it changed a file. Enable the hook once per clone: <code>git config core.hooksPath .githooks</code>.</li>
+<li><strong>Shared files from the site.</strong> Fonts (<code>/assets/fonts/</code>), the profile photo, the app icon, the Explore menu (<code>/assets/explore.js</code>) and analytics (<code>/assets/analytics.js</code>) are served by the sbmadhav.github.io repo. Keep those paths there.</li>
+<li><strong>Preview locally.</strong> Absolute <code>/assets/</code> and <code>/design-system/</code> paths need the whole site. Put this repo next to a sbmadhav.github.io checkout, link it in with <code>ln -s ../design-system sbmadhav.github.io/design-system</code>, then run <code>python3 -m http.server 8000</code> in sbmadhav.github.io and open http://localhost:8000/design-system/.</li>
+<li><strong>The site's color check.</strong> The home page inlines its colors for a fast first paint. sbmadhav.github.io keeps a pinned copy of <code>tokens.json</code> and compares against it; after changing a color here, refresh that copy there with <code>python3 scripts/check-tokens.py --refresh</code>.</li>
+</ul>
 <p>The interactive version of this system, with live previews of every component, is kept privately in Claude.</p>
 <h2>Principles</h2>
 <ul>
@@ -539,7 +548,7 @@
 </tr>
 </tbody>
 </table>
-<p>To add a weight, put the WOFF2 file in <code>/assets/fonts/</code> and add it to <code>FONT_FACES</code> in <code>build.py</code>.</p>
+<p>To add a weight, put the WOFF2 file in <code>/assets/fonts/</code> (in the sbmadhav.github.io repo) and add it to <code>FONT_FACES</code> in <code>build.py</code>.</p>
 <ul>
 <li><strong>Display</strong> is Fredoka in Daybreak and <strong>Space Grotesk in Deep Space.</strong> <code>tokens.css</code> swaps it through one variable, <code>--display</code>; every heading uses <code>font-family: var(--display)</code>. This font swap is a big part of why the two schemes feel so different.</li>
 <li><strong>Nunito Sans</strong> for all body text, buttons and labels.</li>

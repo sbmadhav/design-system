@@ -1,0 +1,7 @@
+# GitHub Pages publishes this repo as a project site: sbmadhav.com/design-system/.
+# Plain files, no theme or layouts. Keep repo-only files out of the published site.
+# tokens.json stays published so other repos (the site's color check) can read it.
+exclude:
+  - CLAUDE.md
+  - README.md
+  - build.py

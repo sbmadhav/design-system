@@ -8,7 +8,7 @@ The design system behind sbmadhav.com: professional enough for recruiters, fun e
 2. Keep its `<head>` as is: the theme script, the font preloads, `/design-system/tokens.css` and `/design-system/components.css`, in that order. Never add a Google Fonts link; `tokens.css` already declares the self-hosted faces.
 3. Write every piece of copy twice: `<span class="pro">…</span><span class="kid">…</span>`.
 4. Build from the components below; add page-specific styles with tokens only (`var(--coral)`, `var(--space-6)`, `var(--radius-lg)`), never raw hex.
-5. Add the page to the Explore menu: one entry in `PAGES` at the top of `/assets/explore.js` (path, icon, grown-up and kid title and one-line description).
+5. Add the page to the Explore menu: one entry in `PAGES` at the top of `/assets/explore.js` in the sbmadhav.github.io repo (path, icon, grown-up and kid title and one-line description).
 6. Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.
 
 ## Files
@@ -20,8 +20,18 @@ The design system behind sbmadhav.com: professional enough for recruiters, fun e
 | `components.css` | The `md-` components plus page basics (`md-page`, `md-wrap`, `md-section`, `md-band`, `md-grid`) and the kid-mode `.pro` / `.kid` swap. |
 | `template.html` | A starter page wired up with the color mode picker and kid mode. |
 | `index.html` | The reference page at /design-system/: color modes side by side, type, spacing, live components, icons and these guidelines. Generated. |
-| `build.py` | Regenerates `tokens.css` and `index.html` from `tokens.json` and this README: `python3 design-system/build.py`. |
+| `build.py` | Regenerates `tokens.css` and `index.html` from `tokens.json` and this README: `python3 build.py`. |
 | `icons/` | The 18 line icons and Bolt the mascot as SVG files. |
+
+### This repo
+
+The design system lives in its own repo, [sbmadhav/design-system](https://github.com/sbmadhav/design-system), and GitHub Pages publishes it as a project site. Under the user site's custom domain that is **sbmadhav.com/design-system/**, the same URLs every page already links. `_config.yml` keeps `README.md`, `CLAUDE.md` and `build.py` out of the published site; `tokens.json` is published so other repos can read it.
+
+- **Build.** `pip install markdown`, then `python3 build.py`. Commit `tokens.css` and `index.html` with the change that produced them.
+- **Checks.** A pre-commit hook in `.githooks/` and the workflow in `.github/workflows/build.yml` both run `build.py` and fail if it changed a file. Enable the hook once per clone: `git config core.hooksPath .githooks`.
+- **Shared files from the site.** Fonts (`/assets/fonts/`), the profile photo, the app icon, the Explore menu (`/assets/explore.js`) and analytics (`/assets/analytics.js`) are served by the sbmadhav.github.io repo. Keep those paths there.
+- **Preview locally.** Absolute `/assets/` and `/design-system/` paths need the whole site. Put this repo next to a sbmadhav.github.io checkout, link it in with `ln -s ../design-system sbmadhav.github.io/design-system`, then run `python3 -m http.server 8000` in sbmadhav.github.io and open http://localhost:8000/design-system/.
+- **The site's color check.** The home page inlines its colors for a fast first paint. sbmadhav.github.io keeps a pinned copy of `tokens.json` and compares against it; after changing a color here, refresh that copy there with `python3 scripts/check-tokens.py --refresh`.
 
 The interactive version of this system, with live previews of every component, is kept privately in Claude.
 
@@ -120,7 +130,7 @@ Four families, self-hosted as WOFF2 in `/assets/fonts/` so pages make no third-p
 | Nunito Sans | `nunito-sans-latin-wght-normal.woff2` | 200 to 1000 (variable) |
 | JetBrains Mono | `jetbrains-mono-latin-500-normal.woff2` | 500 |
 
-To add a weight, put the WOFF2 file in `/assets/fonts/` and add it to `FONT_FACES` in `build.py`.
+To add a weight, put the WOFF2 file in `/assets/fonts/` (in the sbmadhav.github.io repo) and add it to `FONT_FACES` in `build.py`.
 
 - **Display** is Fredoka in Daybreak and **Space Grotesk in Deep Space.** `tokens.css` swaps it through one variable, `--display`; every heading uses `font-family: var(--display)`. This font swap is a big part of why the two schemes feel so different.
 - **Nunito Sans** for all body text, buttons and labels.

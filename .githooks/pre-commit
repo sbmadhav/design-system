@@ -1,0 +1,28 @@
+#!/bin/sh
+# Pre-commit check for the design system. Enable once per clone:
+#   git config core.hooksPath .githooks
+# Skip in an emergency with: git commit --no-verify
+#
+# Regenerate tokens.css and index.html; fail if that changed anything,
+# so the regenerated files get staged with the commit.
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+fail() {
+  printf '\npre-commit: %s\n' "$1" >&2
+  exit 1
+}
+
+python3 -c 'import markdown' 2>/dev/null || fail "build.py needs the markdown package: pip3 install markdown"
+
+# Fingerprint of unstaged changes before and after the build
+before=$(git diff --binary --no-ext-diff | git hash-object --stdin)
+python3 build.py >/dev/null || fail "build.py failed"
+after=$(git diff --binary --no-ext-diff | git hash-object --stdin)
+
+if [ "$before" != "$after" ]; then
+  git diff --stat >&2
+  fail "build.py regenerated files (listed above). Review them, git add them, and commit again."
+fi
+
+exit 0

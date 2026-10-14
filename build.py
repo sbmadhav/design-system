@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the design system's generated files from its sources.
 
-    python3 design-system/build.py
+    python3 build.py
 
 Reads  tokens.json, README.md
 Writes tokens.css   (CSS custom properties, Daybreak default, Deep Space for dark)
