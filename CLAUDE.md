@@ -22,4 +22,10 @@ Tokens, components, a page template and the reference page for sbmadhav.com. Git
 
 - Pre-commit hook in `.githooks/pre-commit`; enable it with `git config core.hooksPath .githooks`. It runs `build.py` and fails if that changed a file (stage the regenerated files and commit again).
 - `.github/workflows/build.yml` runs the same check on pushes and pull requests to `main`.
-- `_config.yml` keeps `README.md`, `CLAUDE.md` and `build.py` out of the published site.
+- `_config.yml` keeps `README.md`, `CLAUDE.md`, `build.py` and `e2e/` out of the published site.
+
+## End-to-end tests
+
+- Every change that affects behavior updates or adds the matching Playwright test in `e2e/` in the same commit; run `cd e2e && npx playwright test` before pushing.
+- Run them with `cd e2e && npm ci && npx playwright test` (first time: `npx playwright install chromium webkit`). They test the live site, https://sbmadhav.com/design-system/, by default; set `BASE_URL` to test another host. A push to `main` lands before Pages deploys, so the workflow `.github/workflows/e2e.yml` waits for the deploy, then runs them; it also runs daily.
+- Known live accessibility issues are `test.fixme` entries in `e2e/tests/a11y.spec.ts` (`KNOWN`); remove the entry when fixing one.

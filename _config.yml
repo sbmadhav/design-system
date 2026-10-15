@@ -5,3 +5,4 @@ exclude:
   - CLAUDE.md
   - README.md
   - build.py
+  - e2e/

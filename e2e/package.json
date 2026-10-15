@@ -1,0 +1,13 @@
+{
+  "name": "design-system-e2e",
+  "private": true,
+  "description": "End-to-end tests for sbmadhav.com/design-system/ against the live site (or BASE_URL)",
+  "scripts": {
+    "test": "playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.64.1"
+  }
+}
