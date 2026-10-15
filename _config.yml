@@ -9,3 +9,4 @@ exclude:
   - LICENSE
   - LICENSE-CONTENT.md
   - build.py
+  - e2e/

@@ -1,0 +1,72 @@
+name: E2E
+
+# Playwright end-to-end tests (e2e/) against the live site, sbmadhav.com/design-system/.
+# On a push to main, first wait until GitHub Pages serves the pushed files.
+
+on:
+  schedule:
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Site to test (default https://sbmadhav.com)"
+        required: false
+        default: ""
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: e2e
+    env:
+      BASE_URL: ${{ inputs.base_url || 'https://sbmadhav.com' }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Wait for the Pages deploy
+        if: github.event_name == 'push'
+        working-directory: .
+        run: |
+          files="tokens.css components.css index.html"
+          for i in $(seq 1 45); do
+            pending=""
+            for f in $files; do
+              want=$(sha256sum "$f" | cut -d' ' -f1)
+              got=$(curl -fsSL "$BASE_URL/design-system/$f?deploy-check=$GITHUB_SHA-$i" | sha256sum | cut -d' ' -f1) || got=""
+              [ "$want" = "$got" ] || pending="$pending $f"
+            done
+            if [ -z "$pending" ]; then echo "Live site matches $GITHUB_SHA"; exit 0; fi
+            echo "Attempt $i: waiting for$pending"
+            sleep 20
+          done
+          echo "::warning::Live files still differ from $GITHUB_SHA after about 15 minutes ($pending). Testing what is live."
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium webkit
+
+      - run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report
+          retention-days: 14

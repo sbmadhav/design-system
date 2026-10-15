@@ -48,10 +48,17 @@ To preview with fonts and the site chrome, put this repo next to a [sbmadhav.git
 | Check | Command |
 |---|---|
 | Generated files are current | `python3 build.py && git diff --exit-code` |
+| End-to-end tests | `cd e2e && npm ci && npx playwright test` |
 
 `tokens.json` and `README.md` are the sources; `tokens.css` and `index.html` are generated. Never edit the generated files by hand. Run `python3 build.py` and commit what it changes with your change. The pre-commit hook and CI both run this check.
 
 If you change a color, say so in the pull request: the home page in sbmadhav.github.io keeps inline copies of the colors, and the owner updates them there.
+
+## Tests
+
+Every change that affects behavior updates or adds the matching Playwright test in `e2e/` in the same commit. Run `cd e2e && npx playwright test` before pushing (first time: `npm ci && npx playwright install chromium webkit`).
+
+The tests run against the live https://sbmadhav.com/design-system/ by default. Set `BASE_URL` to test another host, such as a local server.
 
 ## Style rules
 
