@@ -6,7 +6,7 @@
 <title>Page title · Madhav</title>
 <meta name="description" content="One sentence about this page.">
 <!-- Apply the saved color scheme before paint so there is no flash -->
-<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;if(localStorage.getItem('motion')==='paused')document.documentElement.classList.add('motion-paused');}catch(e){}</script>
 <meta name="theme-color" content="#F6F7F9">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%234FB3A6'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23EE7A63'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
@@ -23,6 +23,8 @@
   .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
   .home svg { width: 32px; height: 32px; flex: none; }
   @media (max-width: 480px) { .home { font-size: 0; gap: 0; } }
+  /* Narrow phones (320px): the controls wrap to a second row instead of running off the screen */
+  @media (max-width: 400px) { .top .md-wrap { flex-wrap: wrap; justify-content: flex-end; height: auto; min-height: 66px; padding-block: var(--space-2); row-gap: var(--space-2); } }
 </style>
 </head>
 <body class="md-page md-root">
@@ -34,7 +36,7 @@
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
     </div>
-    <button class="md-switch" id="kidBtn" role="switch" aria-checked="false"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button>
+    <button class="md-switch" id="kidBtn" role="switch" aria-checked="false" aria-label="Kid mode"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button>
   </div>
 </header>
 

@@ -48,8 +48,8 @@
 .md-bubble::after { content: ""; position: absolute; left: 28px; top: -11px; width: 18px; height: 18px; background: inherit; border-left: 2px solid var(--edge); border-top: 2px solid var(--edge); transform: rotate(45deg); }
 
 /* Color mode picker: System (default) / Daybreak / Deep Space */
-.md-modes { display: inline-flex; border: 2px solid var(--edge); border-radius: var(--radius-pill); overflow: hidden; background: var(--card); backdrop-filter: var(--glass); flex: none; }
-.md-modes button { border: 0; background: none; color: var(--ink); font: 700 13.5px/1 var(--font-sans); padding: 8px 12px; cursor: pointer; }
+.md-modes { display: inline-flex; flex-wrap: wrap; max-width: 100%; border: 2px solid var(--edge); border-radius: var(--radius-pill); overflow: hidden; background: var(--card); backdrop-filter: var(--glass); flex: 0 1 auto; }
+.md-modes button { flex: 1 1 auto; border: 0; background: none; color: var(--ink); font: 700 13.5px/1 var(--font-sans); padding: 8px 12px; cursor: pointer; }
 .md-modes button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 @media (max-width: 480px) { .md-modes button { padding: 8px 7px; font-size: 12px; } }
 
@@ -76,9 +76,16 @@
 @media (max-width: 560px) { .md-grid { grid-template-columns: 1fr; } }
 .md-mono { font-family: var(--font-mono); font-size: .82em; }
 
+/* Skip link: the first thing in <body> on pages with repeated navigation; shows on keyboard focus */
+.md-skip { position: absolute; left: var(--space-3); top: -80px; z-index: 400; padding: 10px 16px; border-radius: var(--radius-pill); background: var(--ink); color: var(--bg); font: 700 15px/1.2 var(--font-sans); text-decoration: none; }
+.md-skip:focus { top: var(--space-3); }
+main[tabindex="-1"]:focus { outline: none; }
+
 /* Kid mode: write both versions, body.kidmode swaps them */
 .kid { display: none; }
 body.kidmode .kid { display: revert; }
 body.kidmode .pro { display: none; }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+/* Pause motion in the Explore menu (/assets/explore.js) sets html.motion-paused: the same rules as reduced motion */
+html.motion-paused *, html.motion-paused *::before, html.motion-paused *::after { animation: none !important; transition: none !important; }

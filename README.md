@@ -163,6 +163,7 @@ To add a weight, put the WOFF2 file in `/assets/fonts/` (in the sbmadhav.github.
 - Springy UI: toggles and level nodes use `cubic-bezier(.5,1.6,.5,1)`.
 - Sections fade up 18px on first scroll into view.
 - `prefers-reduced-motion: reduce` turns all of it off. Nothing essential may depend on motion.
+- **Pause motion** in the Explore menu does the same on every page (WCAG 2.2.2). It sets `class="motion-paused"` on `<html>` and remembers it; `components.css` stops CSS animation under it. Give every page-level reduced-motion rule an `html.motion-paused` twin, and have scripts that animate decoration check `window.siteMotion.paused()` and listen for the `sitemotion` event on `document`.
 
 ## Interaction patterns
 
@@ -185,6 +186,9 @@ To add a weight, put the WOFF2 file in `/assets/fonts/` (in the sbmadhav.github.
 - Focus: `outline: 3px solid var(--focus); outline-offset: 3px`.
 - Toggles use `role="switch"` and `aria-checked`; chips and toggle buttons use `aria-pressed`; live results use `aria-live="polite"`.
 - Every game and animation has a still, keyboard-usable path.
+- Pages with repeated navigation start with `<a class="md-skip" href="#main">Skip to content</a>` and a `<main id="main" tabindex="-1">`.
+- Anything that scrolls sideways (code samples, wide tables) is focusable and named: `tabindex="0" role="region" aria-label="…"`.
+- At 320px wide nothing scrolls sideways: header controls wrap to a second row, and a control whose label is hidden on phones keeps an `aria-label`.
 
 ## Components
 

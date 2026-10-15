@@ -69,6 +69,21 @@ test.describe('accessibility', () => {
     await expect(pres.first()).toBeFocused();
   });
 
+  test('guide tables that scroll sideways can be reached and named from the keyboard', async ({ page }) => {
+    await page.goto('/design-system/');
+    const tables = page.locator('.guide table');
+    expect(await tables.count()).toBeGreaterThan(0);
+    for (const t of await tables.all()) {
+      const box = t.locator('xpath=..');
+      await expect(box).toHaveAttribute('tabindex', '0');
+      await expect(box).toHaveAttribute('role', 'region');
+      await expect(box).toHaveAttribute('aria-label', /^Table: \S/);
+    }
+    const first = page.getByRole('region', { name: /^Table: / }).first();
+    await first.focus();
+    await expect(first).toBeFocused();
+  });
+
   // Known live violations: each is a fixme naming the rule and element. Remove the entry from KNOWN
   // and this fixme once fixed; the test then runs and guards it.
   for (const k of KNOWN) {
