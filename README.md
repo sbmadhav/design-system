@@ -287,7 +287,7 @@ Accessibility fixes, bug fixes and clearer guidelines are welcome. See [CONTRIBU
 
 ### License
 
-The code and guidelines in this repo are released under the [MIT License](LICENSE). The fonts it declares are self-hosted by sbmadhav.github.io and keep their own license, the SIL Open Font License 1.1.
+The code in this repo is released under the [MIT License](LICENSE), and the written guidelines under CC BY 4.0 (see [LICENSE-CONTENT.md](LICENSE-CONTENT.md)). The fonts it declares are self-hosted by sbmadhav.github.io and keep their own license, the SIL Open Font License 1.1.
 
 ### Thank you, Claude
 

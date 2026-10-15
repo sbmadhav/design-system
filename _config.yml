@@ -7,4 +7,5 @@ exclude:
   - CONTRIBUTING.md
   - SECURITY.md
   - LICENSE
+  - LICENSE-CONTENT.md
   - build.py
