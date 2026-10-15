@@ -162,8 +162,12 @@ radius_rows = "".join(
 icons = sorted(p.name for p in (HERE / "icons").glob("*.svg") if p.name != "bolt.svg")
 icon_rows = "".join(f'<figure><img src="icons/{n}" alt="" width="40" height="40"><figcaption>{n[:-4]}</figcaption></figure>' for n in icons)
 
+# Everything in README.md after this marker is about the repo, not the design system,
+# so the reference page leaves it out.
+REPO_ONLY = "<!-- repo-only -->"
 readme = (HERE / "README.md").read_text()
 readme = re.sub(r"\A# .*\n", "", readme)  # the page has its own title
+readme = readme.split(REPO_ONLY)[0]  # repo docs (contributing, license, thanks) stay off the page
 guide_html = markdown.markdown(readme, extensions=["tables", "fenced_code"])
 
 

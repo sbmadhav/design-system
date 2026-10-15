@@ -14,6 +14,7 @@ Tokens, components, a page template and the reference page for sbmadhav.com. Git
 
 - `tokens.json` and `README.md` are the sources. `tokens.css` and `index.html` are generated: never edit them by hand. After changing a source, run `python3 build.py` (needs `pip install markdown`) and commit the generated files with it.
 - `components.css` and `template.html` are hand-written. Keep them on tokens only.
+- `README.md` becomes the reference page, except the repo docs after the `<!-- repo-only -->` marker (about the repo, contributing, license, thanks), which `build.py` leaves out. Keep design guidance above the marker.
 - Paths are absolute and must not change: pages across sbmadhav.com (and other repos served under it) link `/design-system/tokens.css` and `/design-system/components.css`.
 - Fonts, the Explore menu (`/assets/explore.js`), analytics and the profile photo come from the sbmadhav.github.io repo. To add a font weight, add the file there and the face to `FONT_FACES` in `build.py` here.
 - When a color changes, the home page of sbmadhav.github.io has inline copies of the colors: update `index.html` there and refresh its pinned tokens with `python3 scripts/check-tokens.py --refresh`.
@@ -22,7 +23,7 @@ Tokens, components, a page template and the reference page for sbmadhav.com. Git
 
 - Pre-commit hook in `.githooks/pre-commit`; enable it with `git config core.hooksPath .githooks`. It runs `build.py` and fails if that changed a file (stage the regenerated files and commit again).
 - `.github/workflows/build.yml` runs the same check on pushes and pull requests to `main`.
-- `_config.yml` keeps `README.md`, `CLAUDE.md`, `build.py` and `e2e/` out of the published site.
+- `_config.yml` keeps `README.md`, `CLAUDE.md`, `build.py`, `e2e/`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` and `LICENSE-CONTENT.md` out of the published site.
 
 ## End-to-end tests
 
