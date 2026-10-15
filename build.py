@@ -192,6 +192,29 @@ def focusable_code(src):
 
 guide_html = focusable_code(guide_html)
 
+
+def focusable_tables(src):
+    """Wide tables scroll sideways on phones, so each sits in a focusable, labelled region named after
+    the heading above it (markdown tables have no caption), for example "Table: Color"."""
+    out, heading, seen = [], "", {}
+    for part in re.split(r"(<h[1-6][^>]*>.*?</h[1-6]>|<table>|</table>)", src, flags=re.S):
+        m = re.match(r"<h[1-6][^>]*>(.*?)</h[1-6]>", part, re.S)
+        if m:
+            heading = html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip()
+        elif part == "<table>":
+            name = f"Table: {heading}" if heading else "Table"
+            seen[name] = seen.get(name, 0) + 1
+            if seen[name] > 1:
+                name += f" ({seen[name]})"
+            part = f'<div class="tbl" tabindex="0" role="region" aria-label="{e(name)}"><table>'
+        elif part == "</table>":
+            part = "</table></div>"
+        out.append(part)
+    return "".join(out)
+
+
+guide_html = focusable_tables(guide_html)
+
 page = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -199,7 +222,7 @@ page = f"""<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Madhav design system</title>
 <meta name="description" content="Color modes, type, spacing, components and guidelines for sbmadhav.com.">
-<script>try{{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}}catch(e){{}}</script>
+<script>try{{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;if(localStorage.getItem('motion')==='paused')document.documentElement.classList.add('motion-paused');}}catch(e){{}}</script>
 <meta name="theme-color" content="#F6F7F9">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%234FB3A6'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23EE7A63'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
@@ -209,7 +232,7 @@ page = f"""<!doctype html>
 <link rel="stylesheet" href="components.css">
 <style>
   .top {{ position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }}
-  .top .md-wrap {{ display: flex; align-items: center; gap: 12px; height: 62px; }}
+  .top .md-wrap {{ display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 62px; padding-block: var(--space-2); }}
   .home {{ display: inline-flex; align-items: center; gap: 10px; font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }}
   .home svg {{ width: 30px; height: 30px; flex: none; }}
   .top nav a {{ color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }}
@@ -273,12 +296,14 @@ page = f"""<!doctype html>
   .icons figcaption {{ font-size: 12px; color: #525C6E; margin-top: 4px; }}
 
   /* Guidelines (rendered README) */
-  .guide {{ max-width: 820px; }}
+  .guide {{ max-width: 820px; overflow-wrap: break-word; }}
   .guide h2 {{ font-size: 1.7rem; margin: 40px 0 10px !important; }}
   .guide h3 {{ font-size: 1.2rem; margin: 26px 0 6px !important; }}
-  .guide table {{ border-collapse: collapse; width: 100%; font-size: 15px; margin: 10px 0; display: block; overflow-x: auto; }}
+  .guide .tbl {{ overflow-x: auto; margin: 10px 0; border-radius: 8px; }}
+  .guide table {{ border-collapse: collapse; width: 100%; font-size: 15px; }}
   .guide th, .guide td {{ text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }}
-  .guide code {{ font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px 6px; border-radius: 6px; }}
+  .guide code {{ font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }}
+  .guide td code {{ overflow-wrap: normal; }}
   .guide pre {{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; overflow-x: auto; }}
   .guide pre code {{ background: none; padding: 0; }}
   .guide blockquote {{ margin: 14px 0; padding: 10px 16px; border-radius: 14px; background: color-mix(in srgb, var(--coral) 12%, transparent); }}
@@ -287,11 +312,12 @@ page = f"""<!doctype html>
 </style>
 </head>
 <body class="md-page md-root">
+<a class="md-skip" href="#main">Skip to content</a>
 
 <header class="top">
   <div class="md-wrap">
     <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#4FB3A6" stroke="#151B2B" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#151B2B"/><circle cx="41" cy="35" r="3" fill="#151B2B"/><path d="M32 14V9" stroke="#151B2B" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#EE7A63" stroke="#151B2B" stroke-width="3"/></svg>Madhav</a>
-    <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
+    <nav aria-label="Sections"><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
     <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
     <div class="md-modes" role="group" aria-label="Color mode">
       <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
@@ -299,6 +325,7 @@ page = f"""<!doctype html>
   </div>
 </header>
 
+<main id="main" tabindex="-1">
 <section class="hero">
   <div class="md-wrap">
     <div>
@@ -314,7 +341,6 @@ page = f"""<!doctype html>
   </div>
 </section>
 
-<main>
 <section class="md-section" id="modes">
   <div class="md-wrap">
     <span class="md-tag md-tag--plum">Color modes</span>
