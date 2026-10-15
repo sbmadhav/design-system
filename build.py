@@ -21,12 +21,12 @@ THEME_EXTRA = {
     "daybreak": {
         "display": "var(--font-display)", "primary-bg": "var(--coral)", "primary-border": "var(--edge)",
         "glass": "none", "fo": ".32",
-        "page": "radial-gradient(900px 500px at 90% -5%, rgba(255,197,61,.28), transparent 60%), radial-gradient(800px 600px at -10% 60%, rgba(91,141,239,.10), transparent 60%), linear-gradient(180deg, #FFF8EE, #FFF3E2)",
+        "page": "radial-gradient(900px 500px at 90% -5%, rgba(242,181,68,.16), transparent 60%), radial-gradient(800px 600px at -10% 60%, rgba(79,179,166,.10), transparent 60%), linear-gradient(180deg, #F6F7F9, #EEF1F5)",
     },
     "deep-space": {
         "display": "var(--font-display-space)", "primary-bg": "var(--coral)", "primary-border": "transparent",
         "glass": "blur(8px)", "fo": ".45",
-        "page": "radial-gradient(1200px 700px at 85% -10%, rgba(182,164,247,.12), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(69,217,195,.07), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(255,143,135,.06), transparent 60%), #0A0B18",
+        "page": "radial-gradient(1200px 700px at 85% -10%, rgba(240,140,119,.08), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(92,199,184,.07), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(242,192,98,.05), transparent 60%), #0F1218",
     },
 }
 
@@ -127,7 +127,7 @@ def swatches(theme):
 
 def mode_panel(theme):
     label = THEMES[theme]
-    sub = "Light. Warm paper, sunny accents, Fredoka headings." if theme == "daybreak" else "Dark. Calm night sky, soft accents, Space Grotesk headings."
+    sub = "Light. Cool slate-white ground, coral and teal accents, Fredoka headings." if theme == "daybreak" else "Dark. Calm slate night, soft coral and teal accents, Space Grotesk headings."
     return f"""<div class="mode mode-{theme}">
   <div class="mode-head"><div><span class="md-tag">{label}</span><h3>{label}</h3><p>{sub}</p></div>
   <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
@@ -200,8 +200,8 @@ page = f"""<!doctype html>
 <title>Madhav design system</title>
 <meta name="description" content="Color modes, type, spacing, components and guidelines for sbmadhav.com.">
 <script>try{{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}}catch(e){{}}</script>
-<meta name="theme-color" content="#FFF8EE">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%231FA39A'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23FF6B5B'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F6F7F9">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%234FB3A6'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23EE7A63'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/fredoka-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/nunito-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -227,7 +227,7 @@ page = f"""<!doctype html>
   :root[data-theme="dark"] .portrait .blob {{ background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }}
   @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) .portrait .blob {{ background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }} }}
   .portrait img:not(.bolt) {{ position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: 50%; border: 5px solid var(--card); box-shadow: var(--shadow-card); }}
-  .portrait .bolt {{ position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(28,37,65,.25)); }}
+  .portrait .bolt {{ position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(21,27,43,.25)); }}
   @keyframes morph {{ 50% {{ border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; }} }}
   @keyframes bob {{ 50% {{ transform: translateY(-10px) rotate(-3deg); }} }}
   @media (max-width: 760px) {{ .hero .md-wrap {{ grid-template-columns: 1fr; }} .portrait {{ order: -1; margin: 24px 0 0; width: min(260px, 66vw); }} .hero h1 {{ padding-top: 16px; }} }}
@@ -269,8 +269,8 @@ page = f"""<!doctype html>
   .comp-grid .md-card {{ padding: 20px; }}
   .comp-grid h3 {{ margin-bottom: 12px; }}
   .icons {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }}
-  .icons figure {{ margin: 0; background: #FFF8EE; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }}
-  .icons figcaption {{ font-size: 12px; color: #5B6479; margin-top: 4px; }}
+  .icons figure {{ margin: 0; background: #F6F7F9; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }}
+  .icons figcaption {{ font-size: 12px; color: #525C6E; margin-top: 4px; }}
 
   /* Guidelines (rendered README) */
   .guide {{ max-width: 820px; }}
@@ -290,7 +290,7 @@ page = f"""<!doctype html>
 
 <header class="top">
   <div class="md-wrap">
-    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
+    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#4FB3A6" stroke="#151B2B" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#151B2B"/><circle cx="41" cy="35" r="3" fill="#151B2B"/><path d="M32 14V9" stroke="#151B2B" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#EE7A63" stroke="#151B2B" stroke-width="3"/></svg>Madhav</a>
     <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
     <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
     <div class="md-modes" role="group" aria-label="Color mode">
@@ -394,7 +394,7 @@ page = f"""<!doctype html>
     store.set('theme', mode === 'system' ? '' : mode);
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
     const dark = mode === 'dark' || (mode === 'system' && mq.matches);
-    meta.setAttribute('content', dark ? '#0A0B18' : '#FFF8EE');
+    meta.setAttribute('content', dark ? '#0F1218' : '#F6F7F9');
   }}
   btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
   mq.addEventListener('change', () => {{ if (!root.dataset.theme) apply('system'); }});

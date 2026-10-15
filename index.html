@@ -6,8 +6,8 @@
 <title>Madhav design system</title>
 <meta name="description" content="Color modes, type, spacing, components and guidelines for sbmadhav.com.">
 <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
-<meta name="theme-color" content="#FFF8EE">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%231FA39A'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%231C2541'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23FF6B5B'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F6F7F9">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%234FB3A6'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23EE7A63'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="preload" href="/assets/fonts/fredoka-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/nunito-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -33,7 +33,7 @@
   :root[data-theme="dark"] .portrait .blob { background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .portrait .blob { background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); } }
   .portrait img:not(.bolt) { position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: 50%; border: 5px solid var(--card); box-shadow: var(--shadow-card); }
-  .portrait .bolt { position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(28,37,65,.25)); }
+  .portrait .bolt { position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(21,27,43,.25)); }
   @keyframes morph { 50% { border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; } }
   @keyframes bob { 50% { transform: translateY(-10px) rotate(-3deg); } }
   @media (max-width: 760px) { .hero .md-wrap { grid-template-columns: 1fr; } .portrait { order: -1; margin: 24px 0 0; width: min(260px, 66vw); } .hero h1 { padding-top: 16px; } }
@@ -75,8 +75,8 @@
   .comp-grid .md-card { padding: 20px; }
   .comp-grid h3 { margin-bottom: 12px; }
   .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
-  .icons figure { margin: 0; background: #FFF8EE; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }
-  .icons figcaption { font-size: 12px; color: #5B6479; margin-top: 4px; }
+  .icons figure { margin: 0; background: #F6F7F9; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }
+  .icons figcaption { font-size: 12px; color: #525C6E; margin-top: 4px; }
 
   /* Guidelines (rendered README) */
   .guide { max-width: 820px; }
@@ -96,7 +96,7 @@
 
 <header class="top">
   <div class="md-wrap">
-    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#1FA39A" stroke="#1C2541" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#1C2541"/><circle cx="41" cy="35" r="3" fill="#1C2541"/><path d="M32 14V9" stroke="#1C2541" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#FF6B5B" stroke="#1C2541" stroke-width="3"/></svg>Madhav</a>
+    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#4FB3A6" stroke="#151B2B" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#151B2B"/><circle cx="41" cy="35" r="3" fill="#151B2B"/><path d="M32 14V9" stroke="#151B2B" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#EE7A63" stroke="#151B2B" stroke-width="3"/></svg>Madhav</a>
     <nav><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
     <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
     <div class="md-modes" role="group" aria-label="Color mode">
@@ -128,51 +128,51 @@
     <p class="md-lede">Pages follow the visitor's system setting by default. The mode switch overrides it and remembers the choice; picking System again goes back to following the device. Both modes are shown here side by side, whatever this page is set to.</p>
     <div class="modes">
 <div class="mode mode-daybreak">
-  <div class="mode-head"><div><span class="md-tag">Daybreak</span><h3>Daybreak</h3><p>Light. Warm paper, sunny accents, Fredoka headings.</p></div>
+  <div class="mode-head"><div><span class="md-tag">Daybreak</span><h3>Daybreak</h3><p>Light. Cool slate-white ground, coral and teal accents, Fredoka headings.</p></div>
   <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
-  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#FFF8EE</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#FDF0DC</span></span></div>
+  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#F6F7F9</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#ECEFF3</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">#FFFFFF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#1C2541</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#5B6479</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#EADFCC</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#1C2541</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#1C2541</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#FF6B5B</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#1FA39A</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#FFC53D</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#5B8DEF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#A88EEA</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--coral-strong)"></span><span class="sw-t"><b>coral-strong</b><span class="md-mono">#B83A2B</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--teal-strong)"></span><span class="sw-t"><b>teal-strong</b><span class="md-mono">#0F6E68</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sun-strong)"></span><span class="sw-t"><b>sun-strong</b><span class="md-mono">#7A5600</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#2F5BBE</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#6646B8</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#1C2541</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#151B2B</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#525C6E</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#DCE1E8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#151B2B</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#151B2B</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#EE7A63</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#4FB3A6</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#F2B544</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#4FB3A6</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#EE7A63</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral-strong)"></span><span class="sw-t"><b>coral-strong</b><span class="md-mono">#B1432C</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal-strong)"></span><span class="sw-t"><b>teal-strong</b><span class="md-mono">#0E6B63</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun-strong)"></span><span class="sw-t"><b>sun-strong</b><span class="md-mono">#7C5300</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#0E6B63</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#B1432C</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#151B2B</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div></div>
 </div>
 <div class="mode mode-deep-space">
-  <div class="mode-head"><div><span class="md-tag">Deep Space</span><h3>Deep Space</h3><p>Dark. Calm night sky, soft accents, Space Grotesk headings.</p></div>
+  <div class="mode-head"><div><span class="md-tag">Deep Space</span><h3>Deep Space</h3><p>Dark. Calm slate night, soft coral and teal accents, Space Grotesk headings.</p></div>
   <div class="mode-demo"><button class="md-btn md-btn--primary">Primary</button><button class="md-btn">Secondary</button><span class="md-tag md-tag--plum">Tag</span></div></div>
-  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#0A0B18</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#11132A</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">rgba(23,26,49,.88)</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#EDEEFA</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#A9AECB</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#2A2E4A</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#7C86C4</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#4D4F8C</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#FF8F87</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#45D9C3</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#D6F075</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#73BCFF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#B6A4F7</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--coral-strong)"></span><span class="sw-t"><b>coral-strong</b><span class="md-mono">#FF8F87</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--teal-strong)"></span><span class="sw-t"><b>teal-strong</b><span class="md-mono">#45D9C3</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sun-strong)"></span><span class="sw-t"><b>sun-strong</b><span class="md-mono">#D6F075</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#73BCFF</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#B6A4F7</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#0A0B18</span></span></div>
+  <div class="sw-grid"><div class="sw"><span class="chip-c" style="background:var(--bg)"></span><span class="sw-t"><b>bg</b><span class="md-mono">#0F1218</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bg-alt)"></span><span class="sw-t"><b>bg-alt</b><span class="md-mono">#151A22</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--card)"></span><span class="sw-t"><b>card</b><span class="md-mono">rgba(27,33,43,.88)</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink)"></span><span class="sw-t"><b>ink</b><span class="md-mono">#E9EDF3</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ink-muted)"></span><span class="sw-t"><b>ink-muted</b><span class="md-mono">#A2ACBC</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--line)"></span><span class="sw-t"><b>line</b><span class="md-mono">#2A313D</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--edge)"></span><span class="sw-t"><b>edge</b><span class="md-mono">#7D889B</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--ledge)"></span><span class="sw-t"><b>ledge</b><span class="md-mono">#3A4252</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral)"></span><span class="sw-t"><b>coral</b><span class="md-mono">#F08C77</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal)"></span><span class="sw-t"><b>teal</b><span class="md-mono">#5CC7B8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun)"></span><span class="sw-t"><b>sun</b><span class="md-mono">#F2C062</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky)"></span><span class="sw-t"><b>sky</b><span class="md-mono">#5CC7B8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum)"></span><span class="sw-t"><b>plum</b><span class="md-mono">#F08C77</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--coral-strong)"></span><span class="sw-t"><b>coral-strong</b><span class="md-mono">#F59A86</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--teal-strong)"></span><span class="sw-t"><b>teal-strong</b><span class="md-mono">#6ED3C4</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sun-strong)"></span><span class="sw-t"><b>sun-strong</b><span class="md-mono">#F2C062</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#6ED3C4</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#F59A86</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#0F1218</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div></div>
 </div>
     </div>
@@ -288,7 +288,7 @@
 <h2>Principles</h2>
 <ul>
 <li><strong>Two audiences, one page.</strong> Every piece of copy has a grown-up version and a kid version. The layout never changes between them; only the words do.</li>
-<li><strong>Two schemes, two personalities.</strong> Daybreak (light) is a warm, sunny paper notebook. Deep Space (dark) is a neon night sky. They should surprise people with how different they feel, while every component stays in the same place.</li>
+<li><strong>Two schemes, two personalities.</strong> Daybreak (light) is a clean, cool slate-white page. Deep Space (dark) is a calm slate night sky. They should surprise people with how different they feel, while every component stays in the same place.</li>
 <li><strong>Friendly, never childish.</strong> Rounded shapes, chunky borders and a solid "ledge" under controls make things feel touchable. Restraint in copy and layout keeps it professional.</li>
 <li><strong>Play is opt-in.</strong> Music, motion and games never start on their own. Everything respects reduced-motion settings.</li>
 <li><strong>Show, then tell.</strong> Prefer an interactive demo (Brain Lab, Design Lab) over a paragraph that explains an idea.</li>
@@ -317,14 +317,14 @@
 <tr>
 <td>Page ground</td>
 <td><code>bg</code></td>
-<td>warm cream</td>
-<td>near-black ink blue</td>
+<td>cool slate-white</td>
+<td>near-black slate</td>
 </tr>
 <tr>
 <td>Section bands</td>
 <td><code>bg-alt</code></td>
-<td>peach</td>
-<td>deep ink blue</td>
+<td>pale slate</td>
+<td>deep slate</td>
 </tr>
 <tr>
 <td>Cards</td>
@@ -341,25 +341,25 @@
 <tr>
 <td>Hairlines (decorative)</td>
 <td><code>line</code></td>
-<td>sand</td>
+<td>light gray</td>
 <td>slate</td>
 </tr>
 <tr>
 <td>Control border</td>
 <td><code>edge</code></td>
 <td>navy</td>
-<td>periwinkle</td>
+<td>slate gray</td>
 </tr>
 <tr>
 <td>Control ledge</td>
 <td><code>ledge</code> (in <code>shadow-ledge</code>)</td>
 <td>navy</td>
-<td>muted indigo</td>
+<td>dark slate</td>
 </tr>
 <tr>
 <td>Signature fill</td>
 <td><code>coral</code></td>
-<td>coral</td>
+<td>toned coral</td>
 <td>soft coral</td>
 </tr>
 <tr>
@@ -371,26 +371,26 @@
 <tr>
 <td>Highlight fill</td>
 <td><code>sun</code></td>
-<td>gold</td>
-<td>soft lime</td>
+<td>amber</td>
+<td>soft amber</td>
 </tr>
 <tr>
 <td>Info fill</td>
 <td><code>sky</code></td>
-<td>blue</td>
-<td>light blue</td>
+<td>same as <code>teal</code></td>
+<td>same as <code>teal</code></td>
 </tr>
 <tr>
 <td>Play fill</td>
 <td><code>plum</code></td>
-<td>lavender</td>
-<td>soft lavender</td>
+<td>same as <code>coral</code></td>
+<td>same as <code>coral</code></td>
 </tr>
 <tr>
 <td>Text, icons, marks</td>
 <td><code>coral-strong</code>, <code>teal-strong</code>, <code>sun-strong</code>, <code>sky-strong</code>, <code>plum-strong</code></td>
 <td>deep shades</td>
-<td>same as the fill</td>
+<td>lighter shades of the fill</td>
 </tr>
 <tr>
 <td>Text on accent fills</td>
@@ -398,15 +398,11 @@
 <td>navy</td>
 <td>near-black</td>
 </tr>
-<tr>
-<td>Focus ring</td>
-<td><code>focus</code></td>
-<td>alias of <code>sky-strong</code></td>
-<td>alias of <code>sky-strong</code></td>
-</tr>
 </tbody>
 </table>
-<p><strong>Page background</strong> is a gradient, not a flat fill: a soft sun glow top right and a faint sky glow left in Daybreak; faint lavender, aqua and coral haze in Deep Space. It ships as <code>--page</code> in <code>tokens.css</code>; use <code>background: var(--page); background-attachment: fixed;</code> on <code>body</code>.</p>
+<p>The palette is called Harbor: three hues. Coral leads, deep teal supports, and amber (<code>sun</code>) is only for highlights. <code>sky</code> shares teal's values and <code>plum</code> shares coral's; they keep their own names so a page can still say what a color means (thinking, play) and the five tag and fill classes keep working.
+| Focus ring | <code>focus</code> | alias of <code>sky-strong</code> | alias of <code>sky-strong</code> |</p>
+<p><strong>Page background</strong> is a gradient, not a flat fill: a faint amber glow top right and a faint teal glow left in Daybreak; faint coral, aqua and amber haze in Deep Space. It ships as <code>--page</code> in <code>tokens.css</code>; use <code>background: var(--page); background-attachment: fixed;</code> on <code>body</code>.</p>
 <h3>How the colors stay accessible</h3>
 <p>The system follows the approach Stripe describes in <a href="https://stripe.com/blog/accessible-color-systems">Designing accessible color systems</a>: every hue gets the same few lightness levels, so any color at a given level has the same contrast as every other hue at that level. Pick a level by job, not by hue, and contrast takes care of itself.</p>
 <table>
@@ -423,7 +419,7 @@
 <td>Fill</td>
 <td><code>coral</code>, <code>teal</code>, <code>sun</code>, <code>sky</code>, <code>plum</code></td>
 <td>Buttons, tags, chips, highlights, tile backgrounds</td>
-<td>Always carries <code>on-accent</code> text (at least 4.6:1). Never text on <code>bg</code>.</td>
+<td>Always carries <code>on-accent</code> text (at least 6.2:1). Never text on <code>bg</code>.</td>
 </tr>
 <tr>
 <td>Strong</td>
@@ -451,65 +447,66 @@
 <tbody>
 <tr>
 <td><code>ink</code></td>
-<td>14.3</td>
-<td>17.0</td>
+<td>16.0</td>
+<td>16.0</td>
 </tr>
 <tr>
 <td><code>ink-muted</code></td>
-<td>5.6</td>
-<td>8.9</td>
+<td>6.3</td>
+<td>8.2</td>
 </tr>
 <tr>
 <td><code>coral-strong</code></td>
-<td>5.4</td>
-<td>8.9</td>
+<td>5.3</td>
+<td>8.8</td>
 </tr>
 <tr>
 <td><code>teal-strong</code></td>
-<td>5.8</td>
-<td>11.1</td>
+<td>5.9</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td><code>sun-strong</code></td>
 <td>6.3</td>
-<td>15.4</td>
+<td>11.2</td>
 </tr>
 <tr>
 <td><code>sky-strong</code></td>
 <td>5.9</td>
-<td>9.7</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td><code>plum-strong</code></td>
-<td>6.4</td>
-<td>9.0</td>
+<td>5.3</td>
+<td>8.8</td>
 </tr>
 <tr>
 <td><code>edge</code> (controls)</td>
-<td>14.3</td>
-<td>5.6</td>
+<td>16.0</td>
+<td>5.2</td>
 </tr>
 <tr>
 <td><code>focus</code></td>
 <td>5.9</td>
-<td>9.7</td>
+<td>10.5</td>
 </tr>
 <tr>
 <td><code>on-accent</code> on the lightest fill / darkest fill</td>
-<td>9.6 / 4.7</td>
-<td>15.4 / 8.9</td>
+<td>9.4 / 6.2</td>
+<td>11.2 / 7.8</td>
 </tr>
 </tbody>
 </table>
+<p>The tightest pairs are on <code>bg-alt</code>: <code>coral-strong</code> 4.9 in Daybreak and <code>edge</code> 4.6 on <code>card</code> in Deep Space.</p>
 <p><strong>State rules</strong>
 - <strong>Hover:</strong> buttons lift (transform and a deeper ledge); colors stay the same. Chips fill with <code>sun</code> and switch text to <code>on-accent</code>. Links keep their color and gain an underline.
-- <strong>Pressed or selected:</strong> fill with <code>ink</code>, text flips to <code>bg</code> (14.3:1 / 17.0:1).
+- <strong>Pressed or selected:</strong> fill with <code>ink</code>, text flips to <code>bg</code> (16.0:1 / 16.0:1).
 - <strong>Focus:</strong> 3px <code>focus</code> outline with a 3px offset, on every interactive element.
 - <strong>Disabled:</strong> 45% opacity. Disabled controls are exempt from contrast rules, but never rely on disabled styling alone to explain why something is unavailable.</p>
 <p><strong>Accent rules</strong>
 - Fills carry <code>on-accent</code> text; text, icons and chart marks use <code>*-strong</code>. White text on any fill fails and is not allowed.
-- Deep Space is calm by default: purple and pink appear as soft lavender (<code>plum</code>) and soft coral (<code>coral</code>) accents, not as neon glows or gradients. Use <code>plum</code> sparingly, never as the lead accent.
-- No more than five colors in one composition. One accent leads; others support.
+- Deep Space is calm by default: accents are soft coral and aqua, not neon glows or gradients.
+- Three hues in one composition. Coral leads, teal supports, amber only highlights.
 - Section tags take one accent each: <code>sun</code> for About, <code>sky</code> for Brain Lab, <code>coral</code> for Bug Hunt, <code>plum</code> for games, <code>teal</code> for Journey.
 - <code>line</code> is decorative. A control's boundary must come from <code>edge</code> (or a fill with at least 3:1 against its ground).</p>
 <h2>Typography</h2>
@@ -596,7 +593,7 @@
 <h2>Accessibility</h2>
 <ul>
 <li>Text meets 4.5:1 in both schemes: <code>ink</code> and <code>ink-muted</code> on <code>bg</code>, <code>bg-alt</code> and <code>card</code>.</li>
-<li>Focus: <code>outline: 3px solid var(--sky); outline-offset: 3px</code>.</li>
+<li>Focus: <code>outline: 3px solid var(--focus); outline-offset: 3px</code>.</li>
 <li>Toggles use <code>role="switch"</code> and <code>aria-checked</code>; chips and toggle buttons use <code>aria-pressed</code>; live results use <code>aria-live="polite"</code>.</li>
 <li>Every game and animation has a still, keyboard-usable path.</li>
 </ul>
@@ -605,7 +602,7 @@
 <p>Classes: <code>md-btn</code>, <code>md-btn--primary</code>, <code>md-btn--sm</code>.</p>
 <p>A pill with a 2px edge and a solid ledge underneath that lifts on hover and presses down on click.</p>
 <ul>
-<li><strong>Primary</strong> (<code>md-btn md-btn--primary</code>): one per view, the main call to action. Coral in Daybreak; a coral-to-plum gradient in Deep Space. Label in <code>on-accent</code>.</li>
+<li><strong>Primary</strong> (<code>md-btn md-btn--primary</code>): one per view, the main call to action. Coral in both modes. Label in <code>on-accent</code>.</li>
 <li><strong>Secondary</strong> (<code>md-btn</code>): card background. Use for every other action.</li>
 <li><strong>Small</strong> (<code>md-btn--sm</code>): inside tools and games (Undo, Clear, Reset).</li>
 <li>Labels are verbs in sentence case and can have kid and grown-up versions ("See how my agents think" / "Peek inside a robot brain").</li>
@@ -661,16 +658,16 @@
 <li>Announce it with <code>role="status"</code> and <code>aria-live="polite"</code>.</li>
 </ul>
 <h2>Icons</h2>
-<p>The line icons from sbmadhav.com, exported from its inline SVG sprite. 32×32 grid, 2.4px round-capped strokes, drawn here in <code>ink</code> navy (#1C2541).</p>
+<p>The line icons from sbmadhav.com, exported from its inline SVG sprite. 32×32 grid, 2.4px round-capped strokes, drawn here in <code>ink</code> navy (#151B2B).</p>
 <ul>
 <li>On the site they live in a <code>&lt;svg&gt;&lt;defs&gt;&lt;symbol&gt;</code> sprite and use <code>currentColor</code>, so they take the accent color of their tile or text. Copy the paths into a sprite rather than loading the files in <code>icons/</code> with <code>&lt;img&gt;</code> when the color must change.</li>
 <li>Pair each with a meaning, not a decoration: agent (agentic AI), voice, interface, shield (responsible AI), briefcase (consulting), hardware, sneaker, health, bank, mystery (what's next), bug, star (goal or current level).</li>
 </ul>
 <h2>Mascot</h2>
-<p>Bolt, the site's original robot mascot: teal body, cream face, coral antenna and cheeks, gold chest, navy outlines.</p>
+<p>Bolt, the site's original robot mascot: teal body and arms, pale mint face, coral antenna and cheeks, amber chest, navy outlines.</p>
 <ul>
 <li>Bolt speaks through the Bubble component and reacts to what people do (switching schemes, playing music, winning games).</li>
-<li>Keep Bolt's colors fixed in both schemes; in Deep Space add a faint glow (<code>drop-shadow(0 0 10px rgba(182,164,247,.22))</code>).</li>
+<li>Keep Bolt's colors fixed in both schemes; in Deep Space add a faint glow (<code>drop-shadow(0 0 10px rgba(240,140,119,.22))</code>).</li>
 <li>Never put words on Bolt or change his shape; poses come from small transforms (bob, tilt, eyes following the pointer).</li>
 </ul>
     </div>
@@ -692,7 +689,7 @@
     store.set('theme', mode === 'system' ? '' : mode);
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
     const dark = mode === 'dark' || (mode === 'system' && mq.matches);
-    meta.setAttribute('content', dark ? '#0A0B18' : '#FFF8EE');
+    meta.setAttribute('content', dark ? '#0F1218' : '#F6F7F9');
   }
   btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
   mq.addEventListener('change', () => { if (!root.dataset.theme) apply('system'); });

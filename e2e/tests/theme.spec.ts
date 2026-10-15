@@ -20,15 +20,15 @@ test('tokens apply and differ between the two schemes (system setting)', async (
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/design-system/');
   const light = await vars(page);
-  expect(light.coral).toBe('#FF6B5B');
-  expect(light.bg).toBe('#FFF8EE');
-  expect(light.meta).toBe('#FFF8EE');
+  expect(light.coral).toBe('#EE7A63');
+  expect(light.bg).toBe('#F6F7F9');
+  expect(light.meta).toBe('#F6F7F9');
   await page.emulateMedia({ colorScheme: 'dark' });
-  await expect.poll(async () => (await vars(page)).coral).toBe('#FF8F87');
+  await expect.poll(async () => (await vars(page)).coral).toBe('#F08C77');
   // theme-color is updated by the page's matchMedia change listener, a moment after the CSS
-  await expect.poll(async () => (await vars(page)).meta).toBe('#0A0B18');
+  await expect.poll(async () => (await vars(page)).meta).toBe('#0F1218');
   const dark = await vars(page);
-  expect(dark.bg).toBe('#0A0B18');
+  expect(dark.bg).toBe('#0F1218');
   expect([dark.body, dark.bodyImage]).not.toEqual([light.body, light.bodyImage]);
   await expect(page.locator('html')).not.toHaveAttribute('data-theme', /.+/);
   await expect(pressed(page)).toHaveAttribute('data-mode', 'system');
@@ -42,27 +42,27 @@ test('mode switch sets data-theme, persists across reload, and System goes back 
   await page.locator('.md-modes button[data-mode="dark"]').click();
   await expect(html).toHaveAttribute('data-theme', 'dark');
   await expect(pressed(page)).toHaveText('Deep Space');
-  expect((await vars(page)).coral).toBe('#FF8F87');
+  expect((await vars(page)).coral).toBe('#F08C77');
   expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('dark');
   await page.reload();
   await expect(html).toHaveAttribute('data-theme', 'dark');
   await expect(pressed(page)).toHaveAttribute('data-mode', 'dark');
-  expect((await vars(page)).coral).toBe('#FF8F87');
+  expect((await vars(page)).coral).toBe('#F08C77');
 
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.locator('.md-modes button[data-mode="light"]').click();
   await expect(html).toHaveAttribute('data-theme', 'light');
-  expect((await vars(page)).coral).toBe('#FF6B5B');
+  expect((await vars(page)).coral).toBe('#EE7A63');
   await page.reload();
   await expect(html).toHaveAttribute('data-theme', 'light');
-  expect((await vars(page)).bg).toBe('#FFF8EE');
+  expect((await vars(page)).bg).toBe('#F6F7F9');
 
   await page.locator('.md-modes button[data-mode="system"]').click();
   await expect(html).not.toHaveAttribute('data-theme', /.+/);
   expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('');
   await page.reload();
   await expect(html).not.toHaveAttribute('data-theme', /.+/);
-  expect((await vars(page)).bg).toBe('#0A0B18'); // device is dark
+  expect((await vars(page)).bg).toBe('#0F1218'); // device is dark
 });
 
 test('the side-by-side previews keep their own scheme whatever the page is set to', async ({ page }) => {
@@ -70,8 +70,8 @@ test('the side-by-side previews keep their own scheme whatever the page is set t
   const chip = (cls: string) => page.locator(`${cls} .sw .chip-c`).first().evaluate(e => getComputedStyle(e).backgroundColor);
   for (const mode of ['light', 'dark']) {
     await page.locator(`.md-modes button[data-mode="${mode}"]`).click();
-    expect(await chip('.mode-daybreak')).toBe('rgb(255, 248, 238)');
-    expect(await chip('.mode-deep-space')).toBe('rgb(10, 11, 24)');
+    expect(await chip('.mode-daybreak')).toBe('rgb(246, 247, 249)');
+    expect(await chip('.mode-deep-space')).toBe('rgb(15, 18, 24)');
   }
 });
 
