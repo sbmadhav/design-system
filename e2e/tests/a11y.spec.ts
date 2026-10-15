@@ -10,13 +10,7 @@ import { test, expect } from './fixtures';
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 type Known = { rule: string; target: string; note: string };
-const KNOWN: Known[] = [
-  {
-    rule: 'scrollable-region-focusable',
-    target: 'pre',
-    note: 'The "Start a new page" code sample (.guide pre, overflow-x: auto) scrolls sideways but cannot be reached with the keyboard. Fix: tabindex="0" on the <pre> (in build.py output) or let it wrap.',
-  },
-];
+const KNOWN: Known[] = [];
 
 const isKnown = (rule: string, target: string) => KNOWN.some(k => k.rule === rule && k.target === target);
 
@@ -60,6 +54,20 @@ test.describe('accessibility', () => {
       expect(found, JSON.stringify(found, null, 2)).toEqual([]);
     });
   }
+
+  test('code samples that scroll sideways can be reached and named from the keyboard', async ({ page }) => {
+    await page.goto('/design-system/');
+    const pres = page.locator('.guide pre');
+    expect(await pres.count()).toBeGreaterThan(0);
+    for (const pre of await pres.all()) {
+      await expect(pre).toHaveAttribute('tabindex', '0');
+      await expect(pre).toHaveAttribute('role', 'region');
+      await expect(pre).toHaveAttribute('aria-label', /^Code sample: \S/);
+    }
+    await expect(page.getByRole('region', { name: 'Code sample: Typography' })).toBeVisible();
+    await pres.first().focus();
+    await expect(pres.first()).toBeFocused();
+  });
 
   // Known live violations: each is a fixme naming the rule and element. Remove the entry from KNOWN
   // and this fixme once fixed; the test then runs and guards it.

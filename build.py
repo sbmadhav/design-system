@@ -166,6 +166,28 @@ readme = (HERE / "README.md").read_text()
 readme = re.sub(r"\A# .*\n", "", readme)  # the page has its own title
 guide_html = markdown.markdown(readme, extensions=["tables", "fenced_code"])
 
+
+def focusable_code(src):
+    """Code samples scroll sideways (.guide pre has overflow-x: auto), so keyboard users must be
+    able to reach them: each <pre> becomes a focusable, labelled region named after the heading
+    above it, for example "Code sample: Start a new page"."""
+    out, heading, seen = [], "", {}
+    for part in re.split(r"(<h[1-6][^>]*>.*?</h[1-6]>|<pre>)", src, flags=re.S):
+        m = re.match(r"<h[1-6][^>]*>(.*?)</h[1-6]>", part, re.S)
+        if m:
+            heading = html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip()
+        elif part == "<pre>":
+            name = f"Code sample: {heading}" if heading else "Code sample"
+            seen[name] = seen.get(name, 0) + 1
+            if seen[name] > 1:
+                name += f" ({seen[name]})"
+            part = f'<pre tabindex="0" role="region" aria-label="{e(name)}">'
+        out.append(part)
+    return "".join(out)
+
+
+guide_html = focusable_code(guide_html)
+
 page = f"""<!doctype html>
 <html lang="en">
 <head>
