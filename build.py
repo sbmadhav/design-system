@@ -7,8 +7,13 @@ Reads  tokens.json, README.md
 Writes tokens.css   (CSS custom properties, Daybreak default, Deep Space for dark)
        index.html   (the design system reference page at /design-system/)
 Requires: pip install markdown
+
+index.html gets a Content-Security-Policy <meta> (and an explicit Referrer-Policy) right after
+<meta charset>, with the sha256 of each inline script computed here, so never edit the hashes by
+hand. GitHub Pages cannot send headers, so the policy has to be a <meta>; it cannot carry
+frame-ancestors, report-uri or sandbox.
 """
-import html, json, pathlib, re
+import base64, hashlib, html, json, pathlib, re, sys
 import markdown
 
 HERE = pathlib.Path(__file__).parent
@@ -434,5 +439,41 @@ page = f"""<!doctype html>
 </body>
 </html>
 """
-(HERE / "index.html").write_text(page)
+# ---------- Content-Security-Policy ----------
+# Everything the page loads is on this origin (this repo, plus /assets/ from sbmadhav.github.io:
+# fonts, icons, the Explore menu, analytics and GoatCounter's count.js). The only third party is
+# GoatCounter's beacon: sendBeacon (connect-src), or an <img> when that fails (img-src). Styles
+# need 'unsafe-inline' for the style="" attributes in the reference page.
+GOATCOUNTER = "https://sbmadhav.goatcounter.com"
+CSP = "; ".join([
+    "default-src 'self'",
+    "script-src 'self' INLINE_SCRIPTS",
+    "style-src 'self' 'unsafe-inline'",
+    f"img-src 'self' data: {GOATCOUNTER}",
+    "font-src 'self'",
+    f"connect-src 'self' {GOATCOUNTER}",
+    "manifest-src 'self'",
+    "frame-src 'none'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+])
+
+
+def add_csp(text):
+    """The CSP and referrer <meta> tags after <meta charset>, allowing each inline script by hash."""
+    if re.search(r"""<[a-z][^>]*\s(on[a-z]+)\s*=""", text, re.I) or re.search(r"""(href|src)\s*=\s*["']?\s*javascript:""", text, re.I):
+        sys.exit("build.py: index.html has an inline event handler or a javascript: URL, which the CSP blocks")
+    hashes = []
+    for attrs, body in re.findall(r"<script(?![^>]*\bsrc=)([^>]*)>(.*?)</script>", text, re.S | re.I):
+        if "type=" in attrs.lower() and not re.search(r"""type=["']?(text/javascript|module)\b""", attrs, re.I):
+            continue  # a data block never runs
+        hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(body.encode()).digest()).decode() + "'")
+    policy = CSP.replace("INLINE_SCRIPTS", " ".join(dict.fromkeys(hashes)))
+    charset = '<meta charset="utf-8">\n'
+    return text.replace(charset, charset + f'<meta http-equiv="Content-Security-Policy" content="{policy}">\n'
+                        '<meta name="referrer" content="strict-origin-when-cross-origin">\n', 1)
+
+
+(HERE / "index.html").write_text(add_csp(page))
 print("wrote tokens.css and index.html")

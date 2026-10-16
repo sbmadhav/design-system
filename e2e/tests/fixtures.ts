@@ -2,10 +2,12 @@ import { test as base, expect, type Page, type BrowserContext } from '@playwrigh
 
 /* Shared fixtures for the sbmadhav.com end-to-end suite.
    - GoatCounter is answered locally (never reaches goatcounter.com) so test runs do not count as visits.
+     Its count.js is served from the main site (/assets/count.js); gc.zgo.at stays in the pattern for a
+     main site that still loads it from there.
    - `issues` collects console errors, page errors and failed or 4xx/5xx requests for a page, so a
      test can assert that a page loaded cleanly. */
 
-export const ANALYTICS = /(^https:\/\/[^/]*goatcounter\.com\/)|(^https:\/\/gc\.zgo\.at\/)/;
+export const ANALYTICS = /(^https:\/\/[^/]*goatcounter\.com\/)|(^https:\/\/gc\.zgo\.at\/)|(^https?:\/\/[^/]+\/assets\/count\.js(\?|$))/;
 
 export async function blockAnalytics(ctx: BrowserContext | Page) {
   await ctx.route(ANALYTICS, route =>
