@@ -20,6 +20,8 @@ before=$(git diff --binary --no-ext-diff | git hash-object --stdin)
 python3 build.py >/dev/null || fail "build.py failed"
 after=$(git diff --binary --no-ext-diff | git hash-object --stdin)
 
+python3 -m unittest discover -s tests >/dev/null 2>&1 || fail "unit tests failed: python3 -m unittest discover -s tests"
+
 if [ "$before" != "$after" ]; then
   git diff --stat >&2
   fail "build.py regenerated files (listed above). Review them, git add them, and commit again."

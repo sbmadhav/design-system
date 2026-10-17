@@ -1,34 +1,37 @@
 #!/usr/bin/env python3
-"""Build the design system's generated files from its sources.
+"""Build the design system's generated files from its sources, then check them.
 
-    python3 build.py
+    python3 build.py                           build and check
+    python3 build.py --check-immutable REF     also fail if a published version under v/ differs from git REF
 
-Reads  tokens.json, README.md
-Writes tokens.css   (CSS custom properties, Daybreak default, Deep Space for dark)
-       index.html   (the design system reference page at /design-system/)
+Reads  tokens.json, README.md, header.html, components.css, music.html, header.js, compose.py
+Writes tokens.css     (CSS custom properties, Daybreak default, Deep Space for dark)
+       index.html     (the design system reference page at /design-system/)
+       template.html  (its header block, re-composed from header.html, and its pinned version)
+       v/<version>/   (an immutable copy of the published files for this version, see docs/adr/0001)
+       versions.json  (every published version and the latest)
+Checks every themed token is emitted in each scheme block, the category colours' contrast and distinctness,
+and that hand-written files use tokens (no raw hex or rgb colours).
 Requires: pip install markdown
 """
-import html, json, pathlib, re
+import html, itertools, json, math, pathlib, re, shutil, subprocess, sys
 import markdown
+
+import compose
 
 HERE = pathlib.Path(__file__).parent
 T = json.loads((HERE / "tokens.json").read_text())
+VERSION = T["version"]
 COLORS = T["color"]["tokens"]
 SHADOWS = T["shadow"]["tokens"]
+THEMED = T["theme"]["tokens"] + T["effect"]["tokens"]
 THEMES = {"daybreak": "Daybreak", "deep-space": "Deep Space"}
-
-THEME_EXTRA = {
-    "daybreak": {
-        "display": "var(--font-display)", "primary-bg": "var(--coral)", "primary-border": "var(--edge)",
-        "glass": "none", "fo": ".32",
-        "page": "radial-gradient(900px 500px at 90% -5%, rgba(242,181,68,.16), transparent 60%), radial-gradient(800px 600px at -10% 60%, rgba(79,179,166,.10), transparent 60%), linear-gradient(180deg, #F6F7F9, #EEF1F5)",
-    },
-    "deep-space": {
-        "display": "var(--font-display-space)", "primary-bg": "var(--coral)", "primary-border": "transparent",
-        "glass": "blur(8px)", "fo": ".45",
-        "page": "radial-gradient(1200px 700px at 85% -10%, rgba(240,140,119,.08), transparent 60%), radial-gradient(900px 600px at -10% 40%, rgba(92,199,184,.07), transparent 60%), radial-gradient(1000px 700px at 70% 110%, rgba(242,192,98,.05), transparent 60%), #0F1218",
-    },
-}
+FAMILY = {"display": "var(--display)", "sans": "var(--font-sans)", "mono": "var(--font-mono)"}
+STYLES = [(g["family"], s) for g in T["type"]["groups"] for s in g["styles"]]
+STYLE_FAMILY = {s["name"]: fam for fam, s in STYLES}
+ALIASES = T["type"]["aliases"]
+# The files other repos load, also published (immutable) at /design-system/v/<version>/
+PUBLISHED = ["tokens.css", "tokens.json", "components.css", "header.html", "music.html", "header.js", "compose.py"]
 
 
 def val(v):
@@ -36,18 +39,61 @@ def val(v):
     return f"var(--{m.group(1)})" if m else v
 
 
+def shorthand(n, fam):
+    return f"var(--text-{n}-weight) var(--text-{n}-size)/var(--text-{n}-leading) {FAMILY[fam]}"
+
+
+def tracking(s, theme):
+    if theme == "deep-space" and s.get("letterSpacingDeepSpace"):
+        return s["letterSpacingDeepSpace"]
+    return s.get("letterSpacing", "0")
+
+
+def type_themed(theme):
+    """Type tokens that depend on the scheme: display styles use --display and tighter Deep Space tracking.
+    They sit in every scheme block (and .mode-*), so a pinned preview block recomputes them."""
+    out = []
+    for fam, s in STYLES:
+        if fam == "display":
+            n = s["name"]
+            out += [f"--text-{n}-tracking: {tracking(s, theme)};", f"--text-{n}: {shorthand(n, fam)};"]
+    for a, n in ALIASES.items():
+        if STYLE_FAMILY[n] == "display":
+            out += [f"--text-{a}: var(--text-{n});", f"--text-{a}-tracking: var(--text-{n}-tracking);"]
+    return out
+
+
+def themed_decls(theme):
+    out = [f"--{c['name']}: {val(c['value'][theme])};" for c in COLORS]
+    out += [f"--{s['name']}: {s['value'][theme]};" for s in SHADOWS + THEMED]
+    out += type_themed(theme)
+    out.append(f"color-scheme: {'dark' if theme == 'deep-space' else 'light'};")
+    return out
+
+
 def theme_vars(theme, indent="  "):
-    out = [f"{indent}--{c['name']}: {val(c['value'][theme])};" for c in COLORS]
-    out += [f"{indent}--{s['name']}: {s['value'][theme]};" for s in SHADOWS]
-    out += [f"{indent}--{k}: {v};" for k, v in THEME_EXTRA[theme].items()]
-    out.append(f"{indent}color-scheme: {'dark' if theme == 'deep-space' else 'light'};")
-    return "\n".join(out)
+    return "\n".join(indent + d for d in themed_decls(theme))
+
+
+def static_decls():
+    out = [f"--font-{k}: {v};" for k, v in T["type"]["families"].items()]
+    for group in ("spacing", "radius", "size", "z", "motion"):
+        out += [f"--{t['name']}: {t['value']};" for t in T[group]["tokens"]]
+    for fam, s in STYLES:
+        n = s["name"]
+        out += [f"--text-{n}-size: {s.get('fluid', s['fontSize'])};", f"--text-{n}-weight: {s['fontWeight']};",
+                f"--text-{n}-leading: {s['lineHeight']};"]
+        if fam != "display":
+            out += [f"--text-{n}-tracking: {tracking(s, 'daybreak')};", f"--text-{n}: {shorthand(n, fam)};"]
+    for a, n in ALIASES.items():
+        out += [f"--text-{a}-size: var(--text-{n}-size);"]
+        if STYLE_FAMILY[n] != "display":
+            out += [f"--text-{a}: var(--text-{n});", f"--text-{a}-tracking: var(--text-{n}-tracking);"]
+    return out
 
 
 def static_vars():
-    out = [f"  --font-{k}: {v};" for k, v in T["type"]["families"].items()]
-    out += [f"  --{t['name']}: {t['value']};" for t in T["spacing"]["tokens"] + T["radius"]["tokens"]]
-    return "\n".join(out)
+    return "\n".join("  " + d for d in static_decls())
 
 
 # Self-hosted faces, shared by every page that links tokens.css. index.html and
@@ -70,14 +116,16 @@ def font_faces():
 
 
 # ---------- tokens.css ----------
-tokens_css = f"""/* Madhav design system tokens. GENERATED by build.py from tokens.json; edit that file, not this one.
+tokens_css = f"""/* Madhav design system tokens, version {VERSION}. GENERATED by build.py from tokens.json; edit that file, not this one.
    Color modes: Daybreak (light) and Deep Space (dark).
    Default: follow the visitor's system setting (prefers-color-scheme).
-   Override: <html data-theme="light"> or <html data-theme="dark">, saved by the page's toggle. */
+   Override: <html data-theme="light"> or <html data-theme="dark">, saved by the theme button (header.js).
+   Pin a version: /design-system/v/{VERSION}/tokens.css never changes; /design-system/tokens.css is the latest. */
 
 /* Self-hosted fonts in /assets/fonts (no third-party requests) */
 {font_faces()}
 
+/* Scheme-independent: fonts, spacing, radius, sizes, z-index, motion and the type scale */
 :root {{
 {static_vars()}
 }}
@@ -111,6 +159,8 @@ tokens_css = f"""/* Madhav design system tokens. GENERATED by build.py from toke
 
 # ---------- index.html ----------
 e = html.escape
+HEADER = (HERE / "header.html").read_text()
+MUSIC = (HERE / "music.html").read_text().strip()
 
 
 def swatches(theme):
@@ -135,21 +185,26 @@ def mode_panel(theme):
 </div>"""
 
 
+CATS = [c["name"][4:] for c in COLORS if re.fullmatch(r"cat-[a-z]+", c["name"])]
+
+
+def cat_panel(theme):
+    fills = "".join(f'<span class="cat-fill" style="background:var(--cat-{n})">{n.capitalize()}</span>' for n in CATS)
+    strong = "".join(f'<span class="cat-strong" style="color:var(--cat-{n}-strong)">{n.capitalize()}</span>' for n in CATS)
+    return f'<div class="mode mode-{theme} cat-panel"><span class="md-tag">{THEMES[theme]}</span><div class="cat-row">{fills}</div><div class="cat-row">{strong}</div></div>'
+
+
 type_rows = []
-for g in T["type"]["groups"]:
-    fam = g["family"]
-    for s in g["styles"]:
-        fam_var = "var(--display)" if fam == "display" else f"var(--font-{fam})"
-        size = s["fontSize"]
-        st = f"font-family:{fam_var};font-size:min({size},9vw);line-height:{s['lineHeight']};font-weight:{s['fontWeight']};"
-        if s.get("letterSpacing"):
-            st += f"letter-spacing:{s['letterSpacing']};"
-        if s["name"] == "kicker":
-            st += "text-transform:uppercase;"
-        type_rows.append(
-            f'<div class="ty"><div class="ty-meta"><b>{e(s["name"])}</b><span class="md-mono">{e(size)} / {s["lineHeight"]} / {s["fontWeight"]}</span><span>{e(s.get("usage",""))}</span></div>'
-            f'<div class="ty-sample" style="{st}">{e(s.get("sample",""))}</div></div>'
-        )
+for fam, s in STYLES:
+    n = s["name"]
+    st = f"font:var(--text-{n});letter-spacing:var(--text-{n}-tracking);"
+    if n == "kicker":
+        st += "text-transform:uppercase;"
+    size = s.get("fluid", s["fontSize"])
+    type_rows.append(
+        f'<div class="ty"><div class="ty-meta"><b>{e(n)}</b><code class="md-mono">--text-{e(n)}</code><span class="md-mono">{e(s["fontSize"])} / {s["lineHeight"]} / {s["fontWeight"]}</span><span>{e(s.get("usage",""))}</span></div>'
+        f'<div class="ty-sample" style="{st}">{e(s.get("sample",""))}</div></div>'
+    )
 
 space_rows = "".join(
     f'<div class="sp"><span class="md-mono">{e(t["name"])}</span><i style="width:{t["value"]}"></i><span class="md-mono">{e(t["value"])}</span></div>'
@@ -159,6 +214,18 @@ radius_rows = "".join(
     f'<div class="rd"><i style="border-radius:var(--{t["name"]})"></i><b>{e(t["name"])}</b><span class="md-mono">{e(t["value"])}</span></div>'
     for t in T["radius"]["tokens"]
 )
+
+
+def token_table(group, caption):
+    rows = "".join(f'<tr><td><code class="md-mono">--{e(t["name"])}</code></td><td><code class="md-mono">{e(t["value"])}</code></td><td>{e(t["usage"])}</td></tr>' for t in T[group]["tokens"])
+    return f'<div class="tok"><h3>{caption}</h3><div class="tbl" tabindex="0" role="region" aria-label="Table: {caption}"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody>{rows}</tbody></table></div></div>'
+
+
+def themed_table(tokens, caption):
+    rows = "".join(f'<tr><td><code class="md-mono">--{e(t["name"])}</code></td><td>{e(t["usage"])}</td></tr>' for t in tokens)
+    return f'<div class="tok"><h3>{caption}</h3><div class="tbl" tabindex="0" role="region" aria-label="Table: {caption}"><table><thead><tr><th>Token</th><th>Use (a value per scheme, see tokens.json)</th></tr></thead><tbody>{rows}</tbody></table></div></div>'
+
+
 icons = sorted(p.name for p in (HERE / "icons").glob("*.svg") if p.name != "bolt.svg")
 icon_rows = "".join(f'<figure><img src="icons/{n}" alt="" width="40" height="40"><figcaption>{n[:-4]}</figcaption></figure>' for n in icons)
 
@@ -215,6 +282,9 @@ def focusable_tables(src):
 
 guide_html = focusable_tables(guide_html)
 
+NAV = '<nav class="md-nav" aria-label="Sections"><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#tokens">Tokens</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>'
+page_header = compose.render(HEADER, {"nav": NAV})
+
 page = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -231,111 +301,106 @@ page = f"""<!doctype html>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="components.css">
 <style>
-  .top {{ position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }}
-  .top .md-wrap {{ display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 62px; padding-block: var(--space-2); }}
-  .home {{ display: inline-flex; align-items: center; gap: 10px; font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }}
-  .home svg {{ width: 30px; height: 30px; flex: none; }}
-  .top nav a {{ color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }}
-  .top nav a:hover {{ color: var(--ink); background: var(--bg-alt); }}
-  @media (max-width: 1000px) {{ .top nav {{ display: none; }} }}
-  @media (max-width: 480px) {{ .home {{ display: none; }} .top .md-wrap {{ justify-content: flex-end; }} }}
-
   /* Header: the cover */
   .hero {{ position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }}
-  .hero .md-wrap {{ display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; min-height: 360px; gap: 24px; }}
-  .hero h1 {{ font-size: clamp(3.4rem, 9vw, 7rem); line-height: .92; letter-spacing: -.02em; padding: 56px 0 8px; }}
-  .hero p {{ color: var(--ink-muted); margin: 6px 0 40px 4px; font-size: 15px; }}
-  .portrait {{ position: relative; justify-self: center; width: min(320px, 70vw); aspect-ratio: 1; margin: 28px 0; }}
+  .hero .md-wrap {{ display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; min-height: 360px; gap: var(--space-6); }}
+  .hero h1 {{ font-size: clamp(3.4rem, 9vw, 7rem); line-height: .92; letter-spacing: -.02em; padding: 56px 0 var(--space-2); }}
+  .hero p {{ color: var(--ink-muted); margin: var(--space-1-5) 0 40px var(--space-1); font-size: var(--text-small-size); }}
+  .hero .ver {{ display: inline-block; margin-left: var(--space-1); }}
+  .portrait {{ position: relative; justify-self: center; width: min(320px, 70vw); aspect-ratio: 1; margin: var(--space-7) 0; }}
   .portrait .blob {{ position: absolute; inset: 4%; border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%; background: var(--sun); animation: morph 12s ease-in-out infinite; }}
   :root[data-theme="dark"] .portrait .blob {{ background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }}
   @media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) .portrait .blob {{ background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }} }}
-  .portrait img:not(.bolt) {{ position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: 50%; border: 5px solid var(--card); box-shadow: var(--shadow-card); }}
-  .portrait .bolt {{ position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(21,27,43,.25)); }}
+  .portrait img:not(.bolt) {{ position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: var(--radius-round); border: 5px solid var(--card); box-shadow: var(--shadow-card); }}
+  .portrait .bolt {{ position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px color-mix(in srgb, var(--bolt-line) 25%, transparent)); }}
   @keyframes morph {{ 50% {{ border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; }} }}
   @keyframes bob {{ 50% {{ transform: translateY(-10px) rotate(-3deg); }} }}
-  @media (max-width: 760px) {{ .hero .md-wrap {{ grid-template-columns: 1fr; }} .portrait {{ order: -1; margin: 24px 0 0; width: min(260px, 66vw); }} .hero h1 {{ padding-top: 16px; }} }}
+  @media (max-width: 760px) {{ .hero .md-wrap {{ grid-template-columns: 1fr; }} .portrait {{ order: -1; margin: var(--space-6) 0 0; width: min(260px, 66vw); }} .hero h1 {{ padding-top: var(--space-4); }} }}
 
   /* Color modes */
-  .modes {{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }}
+  .modes {{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4-5); }}
   @media (max-width: 900px) {{ .modes {{ grid-template-columns: 1fr; }} }}
   .mode {{ background: var(--page); color: var(--ink); border: 2px solid var(--edge); border-radius: var(--radius-xl); padding: 22px; box-shadow: var(--shadow-card); font-family: var(--font-sans); }}
-  .mode h3 {{ font: 600 26px/1.1 var(--display); margin: 10px 0 4px; }}
-  .mode-head {{ display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; }}
-  .mode-head p {{ margin: 0; color: var(--ink-muted); font-size: 15px; }}
-  .mode-demo {{ display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }}
-  .sw-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }}
-  .sw {{ display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px; }}
-  .chip-c {{ flex: none; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); }}
+  .mode h3 {{ font: 600 26px/1.1 var(--display); letter-spacing: var(--tracking-heading); margin: var(--space-2-5) 0 var(--space-1); }}
+  .mode-head {{ display: flex; justify-content: space-between; gap: var(--space-3-5); flex-wrap: wrap; align-items: flex-end; margin-bottom: var(--space-4); }}
+  .mode-head p {{ margin: 0; color: var(--ink-muted); font-size: var(--text-small-size); }}
+  .mode-demo {{ display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }}
+  .sw-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-2); }}
+  .sw {{ display: flex; gap: var(--space-2-5); align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-2); }}
+  .chip-c {{ flex: none; width: 34px; height: 34px; border-radius: var(--radius-xs); border: 1px solid var(--line); }}
   .sw-t {{ display: flex; flex-direction: column; line-height: 1.25; font-size: 13.5px; min-width: 0; }}
   .sw-t .md-mono {{ color: var(--ink-muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
-  .note {{ margin-top: 14px; color: var(--ink-muted); font-size: 15px; }}
+  .note {{ margin-top: var(--space-3-5); color: var(--ink-muted); font-size: var(--text-small-size); }}
+  .cat-panel {{ display: grid; gap: var(--space-3); }}
+  .cat-panel > .md-tag {{ justify-self: start; }}
+  .cat-row {{ display: flex; flex-wrap: wrap; gap: var(--space-2); }}
+  .cat-fill {{ padding: var(--space-1-5) var(--space-3-5); border: 2px solid var(--edge); border-radius: var(--radius-pill); color: var(--on-accent); font: var(--text-label); }}
+  .cat-strong {{ padding: var(--space-1-5) var(--space-2); font: 700 var(--text-body-size)/1.2 var(--font-sans); }}
 
-  /* Type, spacing, radius */
-  .ty {{ display: grid; grid-template-columns: 260px 1fr; gap: 20px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }}
+  /* Type, spacing, radius, more tokens */
+  .ty {{ display: grid; grid-template-columns: 260px 1fr; gap: var(--space-5); align-items: center; padding: var(--space-3-5) 0; border-top: 1px solid var(--line); }}
   .ty-meta {{ display: flex; flex-direction: column; font-size: 13.5px; color: var(--ink-muted); }}
-  .ty-meta b {{ color: var(--ink); font-size: 15px; }}
+  .ty-meta b {{ color: var(--ink); font-size: var(--text-small-size); }}
+  .ty-meta code {{ color: var(--ink); }}
   .ty-sample {{ overflow-wrap: anywhere; }}
-  @media (max-width: 700px) {{ .ty {{ grid-template-columns: 1fr; gap: 6px; }} }}
-  .two {{ display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }}
+  @media (max-width: 700px) {{ .ty {{ grid-template-columns: 1fr; gap: var(--space-1-5); }} }}
+  .two {{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4-5); }}
   @media (max-width: 800px) {{ .two {{ grid-template-columns: 1fr; }} }}
-  .sp {{ display: grid; grid-template-columns: 120px 1fr 56px; gap: 10px; align-items: center; padding: 5px 0; }}
-  .sp i {{ display: block; height: 14px; border-radius: 4px; background: var(--sky); }}
-  .rds {{ display: flex; flex-wrap: wrap; gap: 14px; }}
-  .rd {{ display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; }}
+  .sp {{ display: grid; grid-template-columns: 120px 1fr 56px; gap: var(--space-2-5); align-items: center; padding: 5px 0; }}
+  .sp i {{ display: block; height: 14px; border-radius: var(--radius-2xs); background: var(--sky); }}
+  .rds {{ display: flex; flex-wrap: wrap; gap: var(--space-3-5); }}
+  .rd {{ display: flex; flex-direction: column; align-items: center; gap: var(--space-1); font-size: 13px; }}
   .rd i {{ width: 72px; height: 72px; background: var(--sun); border: 2px solid var(--edge); }}
   .rd .md-mono {{ color: var(--ink-muted); }}
+  .toks {{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4-5); }}
+  @media (max-width: 900px) {{ .toks {{ grid-template-columns: 1fr; }} }}
+  .tok {{ min-width: 0; }}
+  .tok h3 {{ font-size: 1.2rem; margin-bottom: var(--space-2) !important; }}
 
   /* Components and icons */
-  .demo {{ display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }}
-  .comp-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }}
+  .demo {{ display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }}
+  .demo-col {{ display: grid; gap: var(--space-3); }}
+  .comp-grid {{ display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4-5); }}
   @media (max-width: 800px) {{ .comp-grid {{ grid-template-columns: 1fr; }} }}
-  .comp-grid .md-card {{ padding: 20px; }}
-  .comp-grid h3 {{ margin-bottom: 12px; }}
-  .icons {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }}
-  .icons figure {{ margin: 0; background: #F6F7F9; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }}
-  .icons figcaption {{ font-size: 12px; color: #525C6E; margin-top: 4px; }}
+  .comp-grid .md-card {{ padding: var(--space-5); min-width: 0; }}
+  .comp-grid .md-card:hover {{ transform: none; }}
+  .comp-grid h3 {{ margin-bottom: var(--space-3); }}
+  .comp-grid .md-tile {{ min-width: 140px; }}
+  .icons {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--space-2-5); }}
+  .icons figure {{ margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-1-5) var(--space-2); text-align: center; }}
+  .icons figcaption {{ font-size: 12px; color: var(--ink-muted); margin-top: var(--space-1); }}
 
   /* Guidelines (rendered README) */
   .guide {{ max-width: 820px; overflow-wrap: break-word; }}
-  .guide h2 {{ font-size: 1.7rem; margin: 40px 0 10px !important; }}
-  .guide h3 {{ font-size: 1.2rem; margin: 26px 0 6px !important; }}
-  .guide .tbl {{ overflow-x: auto; margin: 10px 0; border-radius: 8px; }}
-  .guide table {{ border-collapse: collapse; width: 100%; font-size: 15px; }}
-  .guide th, .guide td {{ text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }}
-  .guide code {{ font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }}
+  .guide h2 {{ font-size: 1.7rem; margin: 40px 0 var(--space-2-5) !important; }}
+  .guide h3 {{ font-size: 1.2rem; margin: 26px 0 var(--space-1-5) !important; }}
+  .tbl {{ overflow-x: auto; margin: var(--space-2-5) 0; border-radius: var(--radius-xs); }}
+  .tbl table {{ border-collapse: collapse; width: 100%; font-size: var(--text-small-size); }}
+  .tbl th, .tbl td {{ text-align: left; padding: var(--space-2) var(--space-2-5); border-bottom: 1px solid var(--line); vertical-align: top; }}
+  .guide code {{ font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px var(--space-1-5); border-radius: var(--radius-xs); overflow-wrap: anywhere; }}
   .guide td code {{ overflow-wrap: normal; }}
-  .guide pre {{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; overflow-x: auto; }}
+  .guide pre {{ background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3-5); overflow-x: auto; }}
   .guide pre code {{ background: none; padding: 0; }}
-  .guide blockquote {{ margin: 14px 0; padding: 10px 16px; border-radius: 14px; background: color-mix(in srgb, var(--coral) 12%, transparent); }}
+  .guide blockquote {{ margin: var(--space-3-5) 0; padding: var(--space-2-5) var(--space-4); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--coral) 12%, transparent); }}
   .guide a {{ color: var(--ink); }}
-  footer {{ padding: 28px 0 40px; color: var(--ink-muted); font-size: 14px; }}
+  footer {{ padding: var(--space-7) 0 40px; color: var(--ink-muted); font-size: var(--text-label-size); }}
 </style>
 </head>
 <body class="md-page md-root">
 <a class="md-skip" href="#main">Skip to content</a>
 
-<header class="top">
-  <div class="md-wrap">
-    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#4FB3A6" stroke="#151B2B" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#151B2B"/><circle cx="41" cy="35" r="3" fill="#151B2B"/><path d="M32 14V9" stroke="#151B2B" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#EE7A63" stroke="#151B2B" stroke-width="3"/></svg>Madhav</a>
-    <nav aria-label="Sections"><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
-    <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
-    <div class="md-modes" role="group" aria-label="Color mode">
-      <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
-    </div>
-  </div>
-</header>
-
+{page_header}
 <main id="main" tabindex="-1">
 <section class="hero">
   <div class="md-wrap">
     <div>
       <h1>Madhav</h1>
-      <p>Design system. Professional enough for recruiters, fun enough for kids.</p>
+      <p>Design system <span class="md-mono ver">v{VERSION}</span>. Professional enough for recruiters, fun enough for kids.</p>
     </div>
     <div class="portrait" aria-hidden="true">
       <div class="blob"></div>
       <img src="/assets/profile.jpg" alt="" width="400" height="400">
-      <img class="bolt" src="icons/bolt.svg" alt="" width="160" height="170">
+      <img class="bolt md-bolt" src="icons/bolt.svg" alt="" width="160" height="170">
     </div>
     </div>
   </div>
@@ -345,7 +410,7 @@ page = f"""<!doctype html>
   <div class="md-wrap">
     <span class="md-tag md-tag--plum">Color modes</span>
     <h2 class="md-heading">Two modes, one system</h2>
-    <p class="md-lede">Pages follow the visitor's system setting by default. The mode switch overrides it and remembers the choice; picking System again goes back to following the device. Both modes are shown here side by side, whatever this page is set to.</p>
+    <p class="md-lede">Pages follow the visitor's system setting by default. The round sun or moon button in the header switches scheme and remembers the choice; switching back to match the device clears it, so the page follows the device again. Both modes are shown here side by side, whatever this page is set to.</p>
     <div class="modes">
 {mode_panel('daybreak')}
 {mode_panel('deep-space')}
@@ -354,19 +419,45 @@ page = f"""<!doctype html>
   </div>
 </section>
 
-<section class="md-section md-band" id="type">
+<section class="md-section md-band" id="categories">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--sky">Categories</span>
+    <h2 class="md-heading">Category colours</h2>
+    <p class="md-lede">Six distinct hues for things that need telling apart: belts, categories, legend keys. Fills carry <code class="md-mono">on-accent</code> text; the <code class="md-mono">-strong</code> shades are for text and marks. Every pairing meets AA in both schemes.</p>
+    <div class="modes">
+{cat_panel('daybreak')}
+{cat_panel('deep-space')}
+    </div>
+  </div>
+</section>
+
+<section class="md-section" id="type">
   <div class="md-wrap">
     <span class="md-tag md-tag--sky">Typography</span>
     <h2 class="md-heading">Type scale</h2>
-    <p class="md-lede">Headings use Fredoka in Daybreak and Space Grotesk in Deep Space through <code class="md-mono">var(--display)</code>. Body is Nunito Sans; code is JetBrains Mono.</p>
+    <p class="md-lede">Each style is a token: <code class="md-mono">font: var(--text-title)</code> plus <code class="md-mono">letter-spacing: var(--text-title-tracking)</code>, or the class <code class="md-mono">md-text-title</code>. Headings use Fredoka in Daybreak and Space Grotesk in Deep Space through <code class="md-mono">var(--display)</code>. Body is Nunito Sans; code is JetBrains Mono.</p>
     {''.join(type_rows)}
   </div>
 </section>
 
-<section class="md-section">
+<section class="md-section md-band">
   <div class="md-wrap two">
     <div><span class="md-tag md-tag--teal">Spacing</span><h2 class="md-heading" style="font-size:1.8rem">Spacing</h2><div style="margin-top:18px">{space_rows}</div></div>
     <div><span class="md-tag">Shape</span><h2 class="md-heading" style="font-size:1.8rem">Corners</h2><div class="rds" style="margin-top:18px">{radius_rows}</div></div>
+  </div>
+</section>
+
+<section class="md-section" id="tokens">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--coral">Tokens</span>
+    <h2 class="md-heading">Depth, layers and motion</h2>
+    <p class="md-lede">Shadows and effects have a value per scheme; sizes, layers and motion are the same in both.</p>
+    <div class="toks">
+{themed_table(SHADOWS + T['effect']['tokens'], 'Shadows and effects')}
+{token_table('size', 'Sizes')}
+{token_table('z', 'Layers (z-index)')}
+{token_table('motion', 'Motion')}
+    </div>
   </div>
 </section>
 
@@ -374,7 +465,7 @@ page = f"""<!doctype html>
   <div class="md-wrap">
     <span class="md-tag md-tag--coral">Components</span>
     <h2 class="md-heading">Components</h2>
-    <p class="md-lede">Live, from <code class="md-mono">components.css</code>. Switch modes at the top to see each one change.</p>
+    <p class="md-lede">Live, from <code class="md-mono">components.css</code>. The header at the top of this page is the shared site header. Switch scheme with the sun or moon to see each one change.</p>
     <div class="comp-grid">
       <div class="md-card"><h3>Button</h3><div class="demo"><button class="md-btn md-btn--primary">See how my agents think</button><button class="md-btn">Squash some bugs</button><button class="md-btn md-btn--sm">Undo</button></div></div>
       <div class="md-card"><h3>Chip</h3><div class="demo"><button class="md-chip" aria-pressed="true">The Ticket Drop</button><button class="md-chip" aria-pressed="false">The App Went Viral</button></div></div>
@@ -382,6 +473,14 @@ page = f"""<!doctype html>
       <div class="md-card"><h3>Switch</h3><div class="demo"><button class="md-switch" role="switch" aria-checked="false" id="demoSwitch"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button></div></div>
       <div class="md-card"><h3>Stat</h3><div class="demo"><div class="md-stat"><div class="md-kicker">Years building</div><div class="md-value">17</div><p>Since 2009</p></div><div class="md-stat"><div class="md-kicker">AI squad</div><div class="md-value">2 → 25</div><p>Engineers, QA, design</p></div></div></div>
       <div class="md-card"><h3>Bubble</h3><div class="demo" style="padding-top:12px"><div class="md-bubble">Hi, I'm Bolt. I route requests so the big model does not have to.</div></div></div>
+      <div class="md-card"><h3>Raised tile</h3><div class="demo" id="demoTiles" role="group" aria-label="Tiles"><button class="md-tile" aria-pressed="true"><span class="md-tile-t">Grade 3</span><span class="md-tile-s">Times tables</span></button><button class="md-tile" aria-pressed="false"><span class="md-tile-t">Grade 4</span><span class="md-tile-s">Long division</span></button><button class="md-tile md-tile--fill" aria-pressed="false" style="--tile-fill:var(--cat-blue)"><span class="md-tile-t">Blue belt</span><span class="md-tile-s">Three tricks</span></button><button class="md-tile md-tile--fill" id="demoFillPressed" aria-pressed="true" style="--tile-fill:var(--cat-purple)"><span class="md-tile-t">Purple belt</span><span class="md-tile-s">Selected</span></button></div></div>
+      <div class="md-card"><h3>Text input</h3><div class="demo-col"><div><label class="md-label" for="demoName">Nickname</label><input class="md-input" id="demoName" placeholder="Swift Otter" aria-describedby="demoNameHint"><span class="md-hint" id="demoNameHint">Leaderboards only see this name.</span></div><div><label class="md-label" for="demoGrade">Grade</label><select class="md-input" id="demoGrade"><option>Grade 3</option><option>Grade 4</option></select></div></div></div>
+      <div class="md-card"><h3>Music pill</h3><div class="demo" id="demoMusic">{MUSIC.replace('id="musicBtn"', 'id="demoMusicBtn"').replace('id="nextTrack"', 'id="demoNext"')}<span class="md-music is-on" role="group" aria-label="Music (panel style)"><button type="button" class="md-music-btn" aria-expanded="false" aria-label="Calm music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/></svg><span class="md-music-lbl">Music</span><span class="md-eq" aria-hidden="true"><i></i><i></i><i></i></span></button></span></div></div>
+      <div class="md-card"><h3>Round icon button and link button</h3><div class="demo"><button type="button" class="md-icon-btn" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><button type="button" class="md-icon-btn md-icon-btn--sm" aria-label="Flip back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p style="margin:0">Progress stays here. <button type="button" class="md-link">Reset play mode</button></p></div></div>
+      <div class="md-card"><h3>Progress bar</h3><div class="demo-col"><div class="md-progress" role="progressbar" aria-label="Quest progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"><span style="--value:60%"></span></div><div class="md-progress md-progress--sm" role="progressbar" aria-label="Time left" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35" style="--bar:var(--sun-strong)"><span style="--value:35%"></span></div><progress class="md-progress md-progress--lg" value="80" max="100" aria-label="Lesson progress">80%</progress></div></div>
+      <div class="md-card"><h3>Dialog and toast</h3><div class="demo"><button type="button" class="md-btn" id="demoDialogBtn">Open a dialog</button><button type="button" class="md-btn" id="demoToastBtn">Show a toast</button></div>
+        <dialog class="md-dialog" id="demoDialog" aria-labelledby="demoDialogT"><div class="md-dialog-head"><h2 id="demoDialogT">Sutra of the day</h2><button type="button" class="md-icon-btn md-icon-btn--sm" id="demoDialogX" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p style="margin:0">By one more than the one before. A dialog has a scrim behind it, a modal shadow and a close button.</p><div class="md-dialog-foot"><button type="button" class="md-btn md-btn--primary" id="demoDialogOk">Got it</button></div></dialog></div>
+      <div class="md-card"><h3>Segmented control and kicker</h3><div class="demo-col"><div class="md-seg" role="group" aria-label="Leaderboard" id="demoSeg"><button aria-pressed="true">Today</button><button aria-pressed="false">This week</button><button aria-pressed="false">All time</button></div><span class="md-kicker">Kicker on its own</span><p class="md-sr-only">Screen-reader-only text sits here: read aloud, never shown.</p></div></div>
     </div>
   </div>
 </section>
@@ -390,8 +489,8 @@ page = f"""<!doctype html>
   <div class="md-wrap">
     <span class="md-tag md-tag--teal">Icons</span>
     <h2 class="md-heading">Icons and mascot</h2>
-    <p class="md-lede">32 by 32 line icons with 2.4px round strokes. Files live in <code class="md-mono">icons/</code>.</p>
-    <div class="icons">{icon_rows}<figure><img src="icons/bolt.svg" alt="Bolt the robot" width="40" height="42"><figcaption>bolt</figcaption></figure></div>
+    <p class="md-lede">32 by 32 line icons with 2.4px round strokes. Files live in <code class="md-mono">icons/</code>. Shown on a Daybreak ground in both schemes, since they are drawn in navy.</p>
+    <div class="icons mode-daybreak">{icon_rows}<figure><img src="icons/bolt.svg" alt="Bolt the robot" width="40" height="42"><figcaption>bolt</figcaption></figure></div>
   </div>
 </section>
 
@@ -406,33 +505,200 @@ page = f"""<!doctype html>
 </section>
 </main>
 
-<footer><div class="md-wrap">Generated by <code class="md-mono">build.py</code> from <code class="md-mono">tokens.json</code> and <code class="md-mono">README.md</code>. <a href="/" style="color:var(--ink);font-weight:700">Back to sbmadhav.com</a></div></footer>
+<div class="md-toasts" id="demoToasts" role="status" aria-live="polite"></div>
+
+<footer><div class="md-wrap">Version {VERSION}. Generated by <code class="md-mono">build.py</code> from <code class="md-mono">tokens.json</code> and <code class="md-mono">README.md</code>. <a href="/" style="color:var(--ink);font-weight:700">Back to sbmadhav.com</a></div></footer>
 
 <script>
 (() => {{
-  const root = document.documentElement, meta = document.querySelector('meta[name="theme-color"]');
-  const mq = matchMedia('(prefers-color-scheme: dark)');
-  const store = {{ get: k => {{ try {{ return localStorage.getItem(k); }} catch (e) {{ return null; }} }},
-                  set: (k, v) => {{ try {{ localStorage.setItem(k, v); }} catch (e) {{}} }} }};
-  const btns = document.querySelectorAll('.md-modes button');
-  function apply(mode) {{
-    if (mode === 'system') delete root.dataset.theme; else root.dataset.theme = mode;
-    store.set('theme', mode === 'system' ? '' : mode);
-    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-    const dark = mode === 'dark' || (mode === 'system' && mq.matches);
-    meta.setAttribute('content', dark ? '#0F1218' : '#F6F7F9');
-  }}
-  btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
-  mq.addEventListener('change', () => {{ if (!root.dataset.theme) apply('system'); }});
-  apply(root.dataset.theme || 'system');
-  const sw = document.getElementById('demoSwitch');
+  const $ = s => document.getElementById(s);
+  const sw = $('demoSwitch');
   sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true')));
+  const music = $('demoMusicBtn');
+  music.addEventListener('click', () => {{
+    const on = music.getAttribute('aria-pressed') !== 'true';
+    music.setAttribute('aria-pressed', String(on));
+    music.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+  }});
+  const press = group => group.addEventListener('click', ev => {{
+    const b = ev.target.closest('button[aria-pressed]');
+    if (!b) return;
+    group.querySelectorAll('button[aria-pressed]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  }});
+  press($('demoSeg')); press($('demoTiles'));
+  const dlg = $('demoDialog');
+  $('demoDialogBtn').addEventListener('click', () => dlg.showModal());
+  $('demoDialogX').addEventListener('click', () => dlg.close());
+  $('demoDialogOk').addEventListener('click', () => dlg.close());
+  const toasts = $('demoToasts');
+  $('demoToastBtn').addEventListener('click', () => {{
+    const t = document.createElement('div');
+    t.className = 'md-toast';
+    t.textContent = 'Saved. Nice streak!';
+    toasts.append(t);
+    setTimeout(() => {{ t.classList.add('is-leaving'); setTimeout(() => t.remove(), 300); }}, 2600);
+  }});
 }})();
 </script>
+<script src="header.js" defer></script>
 <script src="/assets/explore.js" defer></script>
 <script src="/assets/analytics.js" defer></script>
 </body>
 </html>
 """
 (HERE / "index.html").write_text(page)
-print("wrote tokens.css and index.html")
+
+# ---------- template.html: the header block and the pinned version ----------
+template_path = HERE / "template.html"
+template = compose.compose(template_path.read_text(), HEADER)
+template = re.sub(r"/design-system/v/\d+\.\d+\.\d+/", f"/design-system/v/{VERSION}/", template)
+template_path.write_text(template)
+
+# ---------- versioned copy: v/<version>/ and versions.json ----------
+vdir = HERE / "v" / VERSION
+vdir.mkdir(parents=True, exist_ok=True)
+for f in PUBLISHED:
+    shutil.copyfile(HERE / f, vdir / f)
+# Pages publishes every file, so a version folder holds exactly PUBLISHED: anything else would ship at a pinned URL
+extra = sorted(p.relative_to(vdir).as_posix() for p in vdir.rglob("*") if p.is_file() and p.relative_to(vdir).as_posix() not in PUBLISHED)
+if extra:
+    sys.exit(f"build.py: v/{VERSION}/ holds files outside PUBLISHED: {', '.join(extra)}. Remove them (or add them to PUBLISHED).")
+versions = sorted((p.name for p in (HERE / "v").iterdir() if re.fullmatch(r"\d+\.\d+\.\d+", p.name)),
+                  key=lambda v: tuple(map(int, v.split("."))))
+(HERE / "versions.json").write_text(json.dumps({"latest": VERSION, "versions": versions, "files": PUBLISHED}, indent=2) + "\n")
+
+
+# ---------- checks ----------
+problems = []
+
+
+def rgb(hexv):
+    h = hexv.lstrip("#")
+    return [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+
+
+def lin(c):
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
+def color(name, theme, over=None):
+    """A color token as sRGB 0..1, rgba composited over `over` (a hex), {aliases} resolved."""
+    v = next(c for c in COLORS if c["name"] == name)["value"][theme]
+    m = re.fullmatch(r"\{(.+)\}", v)
+    if m:
+        return color(m.group(1), theme, over)
+    m = re.fullmatch(r"rgba\(([^)]+)\)", v)
+    if m:
+        r, g, b, a = [float(x) for x in m.group(1).split(",")]
+        base = rgb(over or "#000000")
+        return [a * x / 255 + (1 - a) * y for x, y in zip((r, g, b), base)]
+    return rgb(v)
+
+
+def lum(c):
+    r, g, b = [lin(x) for x in c]
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast(a, b):
+    la, lb = sorted([lum(a), lum(b)], reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def lab(c):
+    r, g, b = [lin(x) for x in c]
+    x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047
+    y = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883
+    f = lambda t: t ** (1 / 3) if t > 0.008856 else 7.787 * t + 16 / 116
+    return (116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z)))
+
+
+# 1. Category colours: on-accent text on each fill, each -strong shade on every ground, all six distinct
+MIN_DE = 20  # CIE76 distance between any two category colours in the same scheme
+for theme in THEMES:
+    bg = next(c for c in COLORS if c["name"] == "bg")["value"][theme]
+    grounds = {g: color(g, theme, bg) for g in ("bg", "bg-alt", "card")}
+    for n in CATS:
+        r = contrast(color("on-accent", theme), color(f"cat-{n}", theme))
+        if r < 4.5:
+            problems.append(f"{theme}: on-accent on cat-{n} is {r:.2f}:1 (needs 4.5)")
+        for g, gc in grounds.items():
+            r = contrast(color(f"cat-{n}-strong", theme), gc)
+            if r < 4.5:
+                problems.append(f"{theme}: cat-{n}-strong on {g} is {r:.2f}:1 (needs 4.5)")
+    for kind in ("", "-strong"):
+        for a, b in itertools.combinations(CATS, 2):
+            d = math.dist(lab(color(f"cat-{a}{kind}", theme)), lab(color(f"cat-{b}{kind}", theme)))
+            if d < MIN_DE:
+                problems.append(f"{theme}: cat-{a}{kind} and cat-{b}{kind} are too alike (distance {d:.1f}, needs {MIN_DE})")
+    r = contrast(color("media-ink", theme), color("media-black", theme))
+    if r < 4.5:
+        problems.append(f"{theme}: media-ink on media-black is {r:.2f}:1")
+    if len(CATS) != 6:
+        problems.append(f"expected 6 category colours, found {len(CATS)}")
+
+# 2. Every themed token is declared in each of the five scheme blocks of tokens.css, and every static one once
+css = tokens_css
+blocks = {
+    "Daybreak :root": re.findall(r"^:root \{\n(.*?)^\}", css, re.S | re.M)[1],
+    "Deep Space (system)": re.search(r':root:not\(\[data-theme="light"\]\) \{\n(.*?)^  \}', css, re.S | re.M).group(1),
+    'Deep Space (data-theme="dark")': re.search(r'^:root\[data-theme="dark"\] \{\n(.*?)^\}', css, re.S | re.M).group(1),
+    ".mode-daybreak": re.search(r"^\.mode-daybreak \{\n(.*?)^\}", css, re.S | re.M).group(1),
+    ".mode-deep-space": re.search(r"^\.mode-deep-space \{\n(.*?)^\}", css, re.S | re.M).group(1),
+}
+static_block = re.findall(r"^:root \{\n(.*?)^\}", css, re.S | re.M)[0]
+names = lambda decls: [d.split(":")[0] for d in decls]
+for label, block in blocks.items():
+    declared = set(re.findall(r"^\s*(--[\w-]+):", block, re.M))
+    missing = [n for n in names(themed_decls("daybreak")) if n.startswith("--") and n not in declared]
+    if missing:
+        problems.append(f"tokens.css {label} is missing {', '.join(missing)}")
+declared = set(re.findall(r"^\s*(--[\w-]+):", static_block, re.M))
+missing = [n for n in names(static_decls()) if n not in declared]
+if missing:
+    problems.append(f"tokens.css static :root is missing {', '.join(missing)}")
+
+# 3. Hand-written files use tokens: no raw hex or rgb() colours. HTML attributes that cannot read CSS
+#    (the favicon data URI and <meta name="theme-color">, which header.js keeps on --bg) are exempt.
+RAW = re.compile(r"#[0-9A-Fa-f]{3,8}\b|\brgba?\(|\bhsla?\(")
+for f in ["components.css", "header.html", "music.html", "header.js", "template.html"]:
+    for i, line in enumerate((HERE / f).read_text().splitlines(), 1):
+        if 'rel="icon"' in line or 'name="theme-color"' in line:
+            continue
+        if f == "header.js" and line.lstrip().startswith(("/*", "*", "//")):
+            continue
+        if RAW.search(line):
+            problems.append(f"{f}:{i}: raw colour, use a token: {line.strip()[:100]}")
+
+# 4. Published versions never change: every v/<version>/ that exists in git REF must hold exactly the same
+#    files with the same bytes here. Added, changed and deleted files all fail (Pages publishes every file).
+def immutable_problems(ref):
+    out = []
+    listed = subprocess.run(["git", "ls-tree", "-r", "--name-only", ref, "v/"], cwd=HERE, capture_output=True, text=True)
+    if listed.returncode:
+        return [f"--check-immutable: cannot list v/ at {ref}: {listed.stderr.strip()}"]
+    published = {}
+    for path in filter(None, listed.stdout.splitlines()):
+        published.setdefault(path.split("/")[1], set()).add(path)
+    for ver, old_paths in sorted(published.items()):
+        vroot = HERE / "v" / ver
+        now = {p.relative_to(HERE).as_posix() for p in vroot.rglob("*") if p.is_file()} if vroot.is_dir() else set()
+        for path in sorted(now - old_paths):
+            out.append(f"{path} was added to published version {ver}: published versions are immutable. Bump \"version\" in tokens.json instead.")
+        for path in sorted(old_paths - now):
+            out.append(f"{path} was deleted from published version {ver}: published versions are immutable.")
+        for path in sorted(old_paths & now):
+            old = subprocess.run(["git", "show", f"{ref}:{path}"], cwd=HERE, capture_output=True).stdout
+            if (HERE / path).read_bytes() != old:
+                out.append(f"{path} differs from {ref}: published versions are immutable. Bump \"version\" in tokens.json instead.")
+    return out
+
+
+if "--check-immutable" in sys.argv:
+    problems += immutable_problems(sys.argv[sys.argv.index("--check-immutable") + 1])
+
+if problems:
+    print("build.py: checks failed:\n  " + "\n  ".join(problems), file=sys.stderr)
+    sys.exit(1)
+print(f"wrote tokens.css, index.html, template.html, v/{VERSION}/ and versions.json; checks passed")

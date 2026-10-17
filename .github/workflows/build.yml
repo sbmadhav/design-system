@@ -26,9 +26,32 @@ jobs:
       - name: Build
         run: python3 build.py
 
+      - name: Unit tests (compose.py, the immutable-version check)
+        run: python3 -m unittest discover -s tests -v
+
       - name: Generated files are committed
         run: |
           git diff --exit-code || {
             echo "::error::build.py changed the files above. Run python3 build.py, then commit the results."
             exit 1
           }
+
+      # A version published under v/ never changes (docs/adr/0001). Compare with the base branch on pull
+      # requests and with the previous commit on pushes; a change to a published file needs a new version.
+      - name: Published versions are unchanged
+        if: github.event_name != 'workflow_dispatch'
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            git fetch --no-tags --depth=1 origin "$BASE_REF"
+            base=FETCH_HEAD
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            git fetch --no-tags --depth=1 origin "$BEFORE"
+            base=FETCH_HEAD
+          else
+            echo "No base commit to compare with"; exit 0
+          fi
+          python3 build.py --check-immutable "$base"

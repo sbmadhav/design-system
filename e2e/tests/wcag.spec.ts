@@ -47,9 +47,16 @@ for (const path of ['/design-system/', '/design-system/template.html']) {
     expect(await sideways(page)).toBe(0);
     await page.addStyleTag({ content: SPACING });
     expect(await sideways(page)).toBe(0);
-    const box = await page.locator('.md-modes').boundingBox();
-    expect(box!.x).toBeGreaterThanOrEqual(0);
-    expect(box!.x + box!.width).toBeLessThanOrEqual(320);
+    // Every header control stays on screen (the end controls wrap to a second row instead)
+    const boxes = await page.locator('.md-header :is(a, button)').evaluateAll(els => els
+      .filter(e => (e as HTMLElement).offsetParent !== null)
+      .map(e => { const r = e.getBoundingClientRect(); return { id: e.id || e.className, left: r.left, right: r.right }; }));
+    expect(boxes.length).toBeGreaterThanOrEqual(3);
+    for (const b of boxes) {
+      expect(b.left, `${b.id} left`).toBeGreaterThanOrEqual(0);
+      expect(b.right, `${b.id} right`).toBeLessThanOrEqual(320);
+    }
+    await expect(page.locator('#themeBtn')).toBeInViewport();
   });
 }
 

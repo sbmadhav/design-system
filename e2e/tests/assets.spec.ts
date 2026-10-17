@@ -76,8 +76,42 @@ test.describe('published files', () => {
     }
   });
 
+  test('versions.json lists the current version, and each pinned file matches the latest and this checkout', async ({ request }) => {
+    const local = JSON.parse(readFileSync(path.join(REPO, 'versions.json'), 'utf8'));
+    const version = JSON.parse(readFileSync(path.join(REPO, 'tokens.json'), 'utf8')).version;
+    const r = await request.get('/design-system/versions.json');
+    expect(r.status()).toBe(200);
+    const live = await r.json();
+    expect(live).toEqual(local);
+    expect(live.latest).toBe(version);
+    expect(live.versions).toContain(version);
+    for (const f of live.files as string[]) {
+      const pinned = await request.get(`/design-system/v/${version}/${f}`);
+      expect(pinned.status(), f).toBe(200);
+      const body = await pinned.text();
+      expect(body, `v/${version}/${f} equals the latest /design-system/${f}`).toBe(await (await request.get(`/design-system/${f}`)).text());
+      expect(body, `v/${version}/${f} equals this checkout`).toBe(readFileSync(path.join(REPO, 'v', version, f), 'utf8'));
+    }
+    expect((await request.get(`/design-system/v/${version}/tokens.css`)).headers()['content-type']).toMatch(/^text\/css/);
+    expect((await request.get(`/design-system/v/${version}/header.js`)).headers()['content-type']).toMatch(/javascript/);
+  });
+
+  test('every published version is still served, unchanged', async ({ request }) => {
+    const { versions, files } = JSON.parse(readFileSync(path.join(REPO, 'versions.json'), 'utf8'));
+    for (const v of versions as string[]) {
+      for (const f of files as string[]) {
+        const local = path.join(REPO, 'v', v, f);
+        let want: string;
+        try { want = readFileSync(local, 'utf8'); } catch { continue; } // a file added in a later version
+        const r = await request.get(`/design-system/v/${v}/${f}`);
+        expect(r.status(), `v/${v}/${f}`).toBe(200);
+        expect(await r.text(), `v/${v}/${f}`).toBe(want);
+      }
+    }
+  });
+
   test('repo-only files are not published (_config.yml exclude)', async ({ request }) => {
-    for (const f of ['README.md', 'CLAUDE.md', 'build.py', 'e2e/package.json', 'e2e/playwright.config.ts']) {
+    for (const f of ['README.md', 'CLAUDE.md', 'build.py', 'e2e/package.json', 'e2e/playwright.config.ts', 'docs/adr/0001-versioned-releases-and-shared-header.md']) {
       expect((await request.get(`/design-system/${f}`)).status(), f).toBe(404);
     }
   });

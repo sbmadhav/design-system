@@ -1,0 +1,249 @@
+/* Madhav design system components. Load after tokens.css. Classes are prefixed md-.
+   Theme differences come from tokens (--display, --primary-bg, --glass, --tracking-heading, the --text-* type styles),
+   so almost nothing here needs a theme selector: the sun/moon swap of the theme button is the one exception. */
+.md-root { font-family: var(--font-sans); color: var(--ink); font-size: var(--text-body-size); line-height: var(--text-body-leading); -webkit-font-smoothing: antialiased; }
+.md-root :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: var(--radius-xs); }
+.md-card, .md-btn, .md-chip, .md-switch, .md-stat, .md-bubble, .md-tile, .md-input { backdrop-filter: var(--glass); }
+
+/* Type styles as classes: font plus tracking from the --text-* tokens. Kicker also uppercases. */
+.md-text-display-xl { font: var(--text-display-xl); letter-spacing: var(--text-display-xl-tracking); }
+.md-text-display-l { font: var(--text-display-l); letter-spacing: var(--text-display-l-tracking); }
+.md-text-heading { font: var(--text-heading); letter-spacing: var(--text-heading-tracking); }
+.md-text-stat { font: var(--text-stat); letter-spacing: var(--text-stat-tracking); }
+.md-text-title { font: var(--text-title); letter-spacing: var(--text-title-tracking); }
+.md-text-card-title { font: var(--text-card-title); letter-spacing: var(--text-card-title-tracking); }
+.md-text-lede { font: var(--text-lede); letter-spacing: var(--text-lede-tracking); }
+.md-text-body { font: var(--text-body); letter-spacing: var(--text-body-tracking); }
+.md-text-small { font: var(--text-small); letter-spacing: var(--text-small-tracking); }
+.md-text-nav { font: var(--text-nav); letter-spacing: var(--text-nav-tracking); }
+.md-text-label { font: var(--text-label); letter-spacing: var(--text-label-tracking); }
+.md-text-label-sm { font: var(--text-label-sm); letter-spacing: var(--text-label-sm-tracking); }
+.md-text-kicker, .md-kicker { font: var(--text-kicker); letter-spacing: var(--text-kicker-tracking); text-transform: uppercase; }
+.md-text-code { font: var(--text-code); letter-spacing: var(--text-code-tracking); }
+
+/* Kicker: the uppercase label above stats, lists and panels. Works anywhere, not only in .md-stat. */
+.md-kicker { display: block; color: var(--ink-muted); }
+
+/* Button */
+.md-btn { display: inline-flex; align-items: center; gap: var(--space-2); font: 700 15px/1.2 var(--font-sans); color: var(--ink); text-decoration: none; background: var(--card); border: 2px solid var(--edge); border-radius: var(--radius-pill); padding: 9px var(--space-4-5); box-shadow: var(--shadow-ledge); cursor: pointer; transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
+.md-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-ledge-hover); }
+.md-btn:active { transform: translateY(2px); box-shadow: var(--shadow-ledge-press); }
+.md-btn--primary { background: var(--primary-bg); border-color: var(--primary-border); color: var(--on-accent); }
+.md-btn--sm { padding: 5px var(--space-3); font-size: var(--text-label-sm-size); }
+.md-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.md-btn svg { width: 18px; height: 18px; }
+
+/* Link button: a <button> that reads as a link (inline actions such as "Reset play mode") */
+.md-link { display: inline; padding: 0; margin: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--coral); cursor: pointer; }
+.md-link:hover { text-decoration-color: currentColor; }
+
+/* Round icon button: one icon, no label (close, play, flip back). Always give it an aria-label. */
+.md-icon-btn { display: inline-grid; place-items: center; flex: none; width: var(--control-height); height: var(--control-height); padding: 0; border: 2px solid var(--edge); border-radius: var(--radius-round); background: var(--card); color: var(--ink); cursor: pointer; transition: transform var(--duration-fast), background-color var(--duration-fast); }
+.md-icon-btn:hover { background: color-mix(in srgb, var(--sun) 35%, var(--card)); }
+.md-icon-btn:active { transform: scale(.94); }
+.md-icon-btn svg { width: 20px; height: 20px; }
+.md-icon-btn--sm { width: 32px; height: 32px; }
+.md-icon-btn--sm svg { width: 16px; height: 16px; }
+.md-icon-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+/* Chip (toggleable option) */
+.md-chip { border: 2px solid var(--edge); background: var(--card); color: var(--ink); border-radius: var(--radius-pill); padding: var(--space-2) var(--space-3-5); font: 700 14.5px/1.2 var(--font-sans); cursor: pointer; transition: var(--duration-fast); }
+.md-chip:hover { background: var(--sun); color: var(--on-accent); }
+.md-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* Tag (section label) */
+.md-tag { display: inline-block; font: 600 var(--text-label-size)/1.3 var(--display); padding: 3px var(--space-3); border-radius: var(--radius-pill); color: var(--on-accent); background: var(--sun); }
+.md-tag--sky { background: var(--sky); } .md-tag--coral { background: var(--coral); } .md-tag--plum { background: var(--plum); } .md-tag--teal { background: var(--teal); }
+
+/* Card */
+.md-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--space-5); box-shadow: var(--shadow-card); transition: transform var(--duration-medium); }
+.md-card:hover { transform: translateY(-4px) rotate(-.4deg); }
+.md-card h3 { font: var(--text-card-title); letter-spacing: var(--text-card-title-tracking); margin: 0 0 var(--space-1-5); }
+.md-card p { margin: 0; color: var(--ink-muted); font-size: var(--text-small-size); line-height: var(--text-small-leading); }
+.md-icon-tile { width: 54px; height: 54px; border-radius: var(--radius-md); display: grid; place-items: center; margin-bottom: var(--space-3-5); }
+.md-icon-tile img { width: 30px; height: 30px; }
+
+/* Raised tile: a card-sized control (a grade, a game, a mode, a key) with the edge, ledge, lift and press of a button */
+.md-tile { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); text-align: left; padding: var(--space-3-5) var(--space-4); border: 2px solid var(--edge); border-radius: var(--radius-md); background: var(--card); color: var(--ink); font: inherit; text-decoration: none; cursor: pointer; box-shadow: var(--shadow-ledge); transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
+.md-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-ledge-hover); }
+.md-tile:active { transform: translateY(2px); box-shadow: var(--shadow-ledge-press); }
+.md-tile[aria-pressed="true"], .md-tile[aria-current="true"], .md-tile[aria-current="page"] { background: color-mix(in srgb, var(--sun) 24%, var(--card)); }
+.md-tile:disabled, .md-tile[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: var(--shadow-ledge); }
+.md-tile-t { font: var(--text-card-title); letter-spacing: var(--text-card-title-tracking); }
+.md-tile-s { color: var(--ink-muted); font-size: var(--text-small-size); line-height: var(--text-small-leading); }
+.md-tile--fill { background: var(--tile-fill, var(--sun)); color: var(--on-accent); }
+.md-tile--fill .md-tile-s { color: inherit; }
+/* A selected fill tile keeps its fill (the category colour is its meaning, and on-accent text needs it for contrast);
+   selection shows as a ring in ink, outside a gap in the page ground, at least 3:1 in both schemes */
+.md-tile--fill:is([aria-pressed="true"], [aria-current="true"], [aria-current="page"]) { background: var(--tile-fill, var(--sun)); box-shadow: var(--shadow-ledge), 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
+.md-tile--fill:is([aria-pressed="true"], [aria-current="true"], [aria-current="page"]):hover { box-shadow: var(--shadow-ledge-hover), 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
+.md-tile--fill:is([aria-pressed="true"], [aria-current="true"], [aria-current="page"]):active { box-shadow: var(--shadow-ledge-press), 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
+.md-tile--center { align-items: center; justify-content: center; text-align: center; }
+
+/* Stat */
+.md-stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md); padding: var(--space-3-5) var(--space-4-5); box-shadow: var(--shadow-card); }
+.md-stat .md-value { font: var(--text-stat); letter-spacing: var(--text-stat-tracking); }
+.md-stat p { margin: 2px 0 0; font-size: var(--text-label-size); color: var(--ink-muted); }
+
+/* Text input: <input>, <select> and <textarea> */
+.md-label { display: block; font: var(--text-label); margin-bottom: var(--space-1-5); color: var(--ink); }
+.md-hint { display: block; margin-top: var(--space-1); font-size: var(--text-small-size); color: var(--ink-muted); }
+.md-input { display: block; box-sizing: border-box; width: 100%; max-width: 100%; min-height: var(--control-height); padding: var(--space-2) var(--space-3-5); border: 2px solid var(--edge); border-radius: var(--radius-sm); background: var(--card); color: var(--ink); font: 600 var(--text-body-size)/1.3 var(--font-sans); }
+.md-input::placeholder { color: var(--ink-muted); opacity: 1; }
+.md-input[aria-invalid="true"] { border-color: var(--coral-strong); }
+.md-input:disabled { opacity: .45; cursor: not-allowed; }
+textarea.md-input { min-height: 96px; resize: vertical; line-height: var(--text-body-leading); }
+
+/* Switch (kid mode) */
+.md-switch { display: inline-flex; align-items: center; gap: var(--space-2-5); border: 2px solid var(--edge); border-radius: var(--radius-pill); padding: var(--space-1) var(--space-1-5) var(--space-1) var(--space-3); background: var(--card); color: var(--ink); font: var(--text-label-sm); cursor: pointer; }
+.md-switch .md-track { width: 44px; height: 24px; border-radius: var(--radius-pill); background: var(--line); position: relative; transition: background var(--duration-medium); }
+.md-switch .md-knob { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: var(--radius-round); background: var(--ink); transition: transform var(--duration-medium) var(--ease-spring); }
+.md-switch[aria-checked="true"] .md-track { background: var(--sun); }
+.md-switch[aria-checked="true"] .md-knob { transform: translateX(20px); }
+
+/* Speech bubble (Bolt) */
+.md-bubble { position: relative; display: inline-block; max-width: 270px; background: var(--card); border: 2px solid var(--edge); border-radius: var(--radius-bubble); padding: var(--space-2-5) var(--space-3-5); font: 700 14.5px/1.4 var(--font-sans); color: var(--ink); box-shadow: var(--shadow-ledge); }
+.md-bubble::after { content: ""; position: absolute; left: 28px; top: -11px; width: 18px; height: 18px; background: inherit; border-left: 2px solid var(--edge); border-top: 2px solid var(--edge); transform: rotate(45deg); }
+
+/* Bolt and space illustrations: a faint glow in Deep Space, none in Daybreak */
+.md-bolt { filter: var(--bolt-glow); }
+
+/* Progress bar: <div class="md-progress" role="progressbar" ...><span style="--value:40%"></span></div>, or <progress class="md-progress"> */
+.md-progress { display: block; width: 100%; height: 10px; overflow: hidden; border: 0; border-radius: var(--radius-pill); background: var(--line); appearance: none; -webkit-appearance: none; }
+.md-progress > span { display: block; height: 100%; width: var(--value, 0%); border-radius: inherit; background: var(--bar, var(--teal-strong)); transition: width var(--duration-medium) var(--ease-out); }
+progress.md-progress { color: var(--bar, var(--teal-strong)); }
+progress.md-progress::-webkit-progress-bar { background: var(--line); border-radius: var(--radius-pill); }
+progress.md-progress::-webkit-progress-value { background: var(--bar, var(--teal-strong)); border-radius: var(--radius-pill); }
+progress.md-progress::-moz-progress-bar { background: var(--bar, var(--teal-strong)); border-radius: var(--radius-pill); }
+.md-progress--sm { height: 6px; }
+.md-progress--lg { height: 16px; }
+
+/* Dialog: <dialog class="md-dialog">, opened with showModal() */
+.md-dialog { box-sizing: border-box; width: min(560px, calc(100vw - 2 * var(--space-4))); max-height: calc(100dvh - 2 * var(--space-6)); padding: var(--space-6); overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(var(--card), var(--card)), var(--bg); color: var(--ink); box-shadow: var(--shadow-modal); }
+.md-dialog::backdrop { background: var(--scrim); }
+.md-dialog[open] { animation: md-pop var(--duration-slow) var(--ease-out); }
+.md-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.md-dialog-head h2 { font: var(--text-title); letter-spacing: var(--text-title-tracking); margin: 0; }
+.md-dialog-foot { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-5); }
+@media (max-width: 600px) { .md-dialog { padding: var(--space-5); border-radius: var(--radius-lg); } }
+@keyframes md-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
+
+/* Toast: short messages in a stack that never blocks taps on the page underneath */
+.md-toasts { position: fixed; left: 50%; bottom: var(--space-6); z-index: var(--z-toast); display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: max-content; max-width: calc(100vw - 2 * var(--space-4)); transform: translateX(-50%); pointer-events: none; }
+.md-toast { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2-5) var(--space-4-5); border-radius: var(--radius-pill); background: var(--ink); color: var(--bg); font: var(--text-label); box-shadow: var(--shadow-modal); pointer-events: none; animation: md-toast-in var(--duration-slow) var(--ease-spring); }
+.md-toast a, .md-toast button { pointer-events: auto; color: inherit; }
+.md-toast.is-leaving { opacity: 0; transform: translateY(8px); transition: opacity var(--duration-medium), transform var(--duration-medium); }
+@media (max-width: 600px) { .md-toasts { bottom: var(--space-4); } }
+@keyframes md-toast-in { from { opacity: 0; transform: translateY(16px) scale(.96); } }
+
+/* Segmented control: one choice from two to four (leaderboard tabs, units). Not for the color scheme:
+   that is the theme button in the header. .md-modes is the original name and keeps working. */
+.md-modes, .md-seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; border: 2px solid var(--edge); border-radius: var(--radius-pill); overflow: hidden; background: var(--card); backdrop-filter: var(--glass); flex: 0 1 auto; }
+.md-modes button, .md-seg button { flex: 1 1 auto; border: 0; background: none; color: var(--ink); font: 700 var(--text-label-sm-size)/1 var(--font-sans); padding: var(--space-2) var(--space-3); cursor: pointer; }
+.md-modes button[aria-pressed="true"], .md-seg button[aria-pressed="true"], .md-seg button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+@media (max-width: 480px) { .md-modes button, .md-seg button { padding: var(--space-2) 7px; font-size: 12px; } }
+
+/* Explore menu button (the menu itself comes from /assets/explore.js) */
+.xp-btn { display: inline-flex; align-items: center; gap: var(--space-2); flex: none; height: var(--control-height); padding: 0 var(--space-3-5) 0 var(--space-2-5); border: 2px solid var(--edge); border-radius: var(--radius-pill); background: var(--card); color: var(--ink); font: 700 var(--text-label-size)/1 var(--font-sans); cursor: pointer; box-shadow: var(--shadow-ledge); transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
+.xp-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-ledge-hover); }
+.xp-btn:active { transform: translateY(2px); box-shadow: var(--shadow-ledge-press); }
+.xp-btn svg { width: 20px; height: 20px; }
+.xp-btn .xp-dots i { transition: transform .3s var(--ease-spring); }
+.xp-btn:hover .xp-dots i:nth-child(2) { transform: translate(1px, -1px); }
+@media (max-width: 600px) { .xp-btn { padding: 0; width: var(--control-height); justify-content: center; } .xp-btn .xp-lbl { display: none; } }
+
+/* ---------- Shared site header (header.html): brand, nav slot, Explore, theme button, music and end slots ---------- */
+.md-header { position: sticky; top: 0; z-index: var(--z-header); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.md-header-in { display: flex; align-items: center; gap: var(--space-2-5); height: var(--header-height); }
+.md-brand { display: flex; align-items: center; gap: var(--space-2-5); flex: none; margin-right: auto; padding: 0; border: 0; background: none; color: var(--ink); font: var(--text-card-title); line-height: 1; text-decoration: none; cursor: pointer; }
+.md-brand svg { width: 34px; height: 34px; flex: none; transition: transform .3s; }
+.md-brand:hover svg { transform: rotate(-12deg) scale(1.08); }
+.md-header-end { display: flex; align-items: center; gap: var(--space-2-5); flex: none; }
+.md-header-end:empty { display: none; }
+
+/* Nav: the page's section links or app tabs. The current one is filled (aria-current="page" or "true"). */
+.md-nav { display: flex; gap: var(--space-1); min-width: 0; }
+.md-nav a { white-space: nowrap; text-decoration: none; padding: var(--space-1-5) var(--space-3); border-radius: var(--radius-pill); font: var(--text-nav); color: var(--ink-muted); }
+.md-nav a:hover { background: var(--bg-alt); color: var(--ink); }
+.md-nav a[aria-current="page"], .md-nav a[aria-current="true"] { background: var(--ink); color: var(--bg); }
+
+/* Theme button: the round sun (Daybreak) or moon (Deep Space); header.js switches it */
+.md-theme { transition: transform var(--duration-slow) var(--ease-spring); }
+.md-theme:hover { transform: rotate(-20deg) scale(1.06); background: var(--card); }
+.md-theme .md-theme-moon { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .md-theme .md-theme-sun { display: none; } :root:not([data-theme="light"]) .md-theme .md-theme-moon { display: block; } }
+:root[data-theme="dark"] .md-theme .md-theme-sun { display: none; }
+:root[data-theme="dark"] .md-theme .md-theme-moon { display: block; }
+html.md-theme-anim body, html.md-theme-anim body * { transition: background-color .5s, color .5s, border-color .5s, box-shadow .5s !important; }
+
+/* Music pill (music.html): note, "Music", equalizer, and an optional next-track button. Each site brings its own music.
+   Playing: aria-pressed="true" on .md-music-btn, or the class is-on on .md-music (for a button that opens a panel). */
+.md-music { display: inline-flex; align-items: stretch; flex: none; min-height: var(--control-height); box-sizing: border-box; overflow: hidden; border: 2px solid var(--edge); border-radius: var(--radius-pill); background: var(--card); color: var(--ink); font: var(--text-label-sm); white-space: nowrap; }
+.md-music button { display: inline-flex; align-items: center; gap: var(--space-2); border: 0; background: none; color: inherit; font: inherit; padding: var(--space-1-5) var(--space-3) var(--space-1-5) var(--space-2-5); cursor: pointer; }
+.md-music .md-music-next { padding: var(--space-1-5) var(--space-2-5) var(--space-1-5) var(--space-2); border-left: 2px solid var(--line); }
+.md-music button:hover { background: color-mix(in srgb, var(--sun) 35%, transparent); }
+.md-music svg { width: 18px; height: 18px; flex: none; }
+.md-eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+.md-eq i { display: block; width: 3px; height: 4px; border-radius: 2px; background: var(--plum); }
+.md-music.is-on, .md-music:has(.md-music-btn[aria-pressed="true"]) { background: var(--ink); color: var(--bg); }
+.md-music.is-on .md-music-next, .md-music:has(.md-music-btn[aria-pressed="true"]) .md-music-next { border-left-color: color-mix(in srgb, var(--bg) 30%, transparent); }
+.md-music.is-on .md-eq i, .md-music-btn[aria-pressed="true"] .md-eq i { background: var(--sun); animation: md-eq .9s ease-in-out infinite alternate; }
+.md-music.is-on .md-eq i:nth-child(2), .md-music-btn[aria-pressed="true"] .md-eq i:nth-child(2) { animation-delay: -.3s; }
+.md-music.is-on .md-eq i:nth-child(3), .md-music-btn[aria-pressed="true"] .md-eq i:nth-child(3) { animation-delay: -.6s; }
+@keyframes md-eq { from { height: 3px; } to { height: 14px; } }
+
+/* Below 1180px the section links hide (the Explore menu lists them). App tabs (.md-header--tabs) instead move to
+   their own rows and wrap, so every tab stays on screen. */
+@media (max-width: 1180px) {
+  .md-header:not(.md-header--tabs) .md-nav { display: none; }
+  .md-header--tabs .md-header-in { flex-wrap: wrap; height: auto; min-height: var(--header-height); padding-top: var(--space-3); padding-bottom: var(--space-2); row-gap: var(--space-2-5); }
+  .md-header--tabs .md-nav { order: 9; flex: 1 0 100%; flex-wrap: wrap; row-gap: var(--space-1); }
+}
+@media (max-width: 600px) {
+  .md-header-in, .md-header-end { gap: var(--space-2); }
+  .md-brand { font-size: 1.1rem; }
+  .md-header .md-icon-btn { width: var(--control-height-sm); height: var(--control-height-sm); }
+  .md-music { min-height: var(--control-height-sm); }
+  .md-music .md-music-lbl, .md-music .md-eq { display: none; }
+  .md-music button { padding: var(--space-1-5) var(--space-2); }
+  .md-music .md-music-next { padding: var(--space-1-5) 7px; }
+  .md-header--tabs .md-nav a { padding: var(--space-1-5) 9px; }
+}
+/* Narrow phones (320px): the end controls wrap to a second row instead of running off the screen */
+@media (max-width: 420px) {
+  .md-header:not(.md-header--tabs) .md-header-in { flex-wrap: wrap; height: auto; min-height: var(--header-height); padding-block: var(--space-2-5); row-gap: var(--space-2); }
+  .md-header-end { margin-left: auto; }
+}
+@media (max-width: 360px) { .md-brand-t { display: none; } }
+
+/* Page basics */
+.md-page { margin: 0; background: var(--page); background-attachment: fixed; color: var(--ink); font-family: var(--font-sans); font-size: var(--text-body-size); line-height: var(--text-body-leading); -webkit-font-smoothing: antialiased; }
+.md-page h1, .md-page h2, .md-page h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; letter-spacing: var(--tracking-heading); margin: 0; }
+.md-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6); }
+@media (max-width: 600px) { .md-wrap { padding: 0 var(--space-4); } }
+.md-section { padding: var(--space-section) 0; }
+.md-band { background: color-mix(in srgb, var(--bg-alt) 72%, transparent); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.md-heading { font-size: var(--text-heading-size); margin-top: var(--space-2-5) !important; }
+.md-lede { color: var(--ink-muted); max-width: 40em; margin: var(--space-2) 0 var(--space-7); }
+.md-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4-5); }
+@media (max-width: 980px) { .md-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .md-grid { grid-template-columns: 1fr; } }
+.md-mono { font-family: var(--font-mono); font-size: .82em; }
+
+/* Screen-reader-only text: read aloud, never shown */
+.md-sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* Skip link: the first thing in <body> on pages with repeated navigation; shows on keyboard focus */
+.md-skip { position: absolute; left: var(--space-3); top: -80px; z-index: var(--z-skip); padding: var(--space-2-5) var(--space-4); border-radius: var(--radius-pill); background: var(--ink); color: var(--bg); font: 700 15px/1.2 var(--font-sans); text-decoration: none; }
+.md-skip:focus { top: var(--space-3); }
+main[tabindex="-1"]:focus { outline: none; }
+
+/* Kid mode: write both versions, body.kidmode swaps them */
+.kid { display: none; }
+body.kidmode .kid { display: revert; }
+body.kidmode .pro { display: none; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .md-brand:hover svg, .md-theme:hover { transform: none; } }
+/* Pause motion in the Explore menu (/assets/explore.js) sets html.motion-paused: the same rules as reduced motion */
+html.motion-paused *, html.motion-paused *::before, html.motion-paused *::after { animation: none !important; transition: none !important; }
+html.motion-paused .md-brand:hover svg, html.motion-paused .md-theme:hover { transform: none; }
