@@ -73,6 +73,11 @@
 .md-tile-s { color: var(--ink-muted); font-size: var(--text-small-size); line-height: var(--text-small-leading); }
 .md-tile--fill { background: var(--tile-fill, var(--sun)); color: var(--on-accent); }
 .md-tile--fill .md-tile-s { color: inherit; }
+/* A selected fill tile keeps its fill (the category colour is its meaning, and on-accent text needs it for contrast);
+   selection shows as a ring in ink, outside a gap in the page ground, at least 3:1 in both schemes */
+.md-tile--fill:is([aria-pressed="true"], [aria-current="true"], [aria-current="page"]) { background: var(--tile-fill, var(--sun)); box-shadow: var(--shadow-ledge), 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
+.md-tile--fill:is([aria-pressed="true"], [aria-current="true"], [aria-current="page"]):hover { box-shadow: var(--shadow-ledge-hover), 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
+.md-tile--fill:is([aria-pressed="true"], [aria-current="true"], [aria-current="page"]):active { box-shadow: var(--shadow-ledge-press), 0 0 0 3px var(--bg), 0 0 0 6px var(--ink); }
 .md-tile--center { align-items: center; justify-content: center; text-align: center; }
 
 /* Stat */

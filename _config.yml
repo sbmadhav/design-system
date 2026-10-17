@@ -11,4 +11,5 @@ exclude:
   - build.py
   - e2e/
   - docs/
+  - tests/
   - .gitignore

@@ -41,7 +41,7 @@ git config core.hooksPath .githooks   # turn on the pre-commit hook
 python3 build.py
 ```
 
-To preview with fonts and the site chrome, run `node e2e/local-server.mjs` and open http://localhost:8123/design-system/. It serves this checkout and takes everything else (fonts, the Explore menu) from the live site.
+To preview with fonts and the site chrome, run `node e2e/local-server.mjs` and open http://127.0.0.1:8123/design-system/. It serves this checkout and takes everything else (fonts, the Explore menu) from the live site.
 
 ## Checks
 
@@ -49,6 +49,7 @@ To preview with fonts and the site chrome, run `node e2e/local-server.mjs` and o
 |---|---|
 | Generated files are current, contrast, token coverage, no raw colours | `python3 build.py && git diff --exit-code` |
 | Published versions are unchanged | `python3 build.py --check-immutable origin/main` |
+| Unit tests (compose.py, the immutable-version check) | `python3 -m unittest discover -s tests` |
 | End-to-end tests | `cd e2e && npm ci && npx playwright test` |
 
 `tokens.json` and `README.md` are the sources; `tokens.css`, `index.html`, the header block in `template.html`, `v/<version>/` and `versions.json` are generated. Never edit the generated files by hand. Run `python3 build.py` and commit what it changes with your change. The pre-commit hook and CI both run this check.
@@ -61,7 +62,7 @@ If you change a color, say so in the pull request: the home page in sbmadhav.git
 
 Every change that affects behavior updates or adds the matching Playwright test in `e2e/` in the same commit. Run `cd e2e && npx playwright test` before pushing (first time: `npm ci && npx playwright install chromium webkit`).
 
-The tests run against the live https://sbmadhav.com/design-system/ by default. Set `BASE_URL` to test another host, such as the local server: `node e2e/local-server.mjs &` then `BASE_URL=http://localhost:8123 npx playwright test`.
+The tests run against the live https://sbmadhav.com/design-system/ by default. Set `BASE_URL` to test another host, such as the local server: `node e2e/local-server.mjs &` then `BASE_URL=http://127.0.0.1:8123 npx playwright test`.
 
 ## Style rules
 

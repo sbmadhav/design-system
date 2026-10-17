@@ -473,7 +473,7 @@ page = f"""<!doctype html>
       <div class="md-card"><h3>Switch</h3><div class="demo"><button class="md-switch" role="switch" aria-checked="false" id="demoSwitch"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button></div></div>
       <div class="md-card"><h3>Stat</h3><div class="demo"><div class="md-stat"><div class="md-kicker">Years building</div><div class="md-value">17</div><p>Since 2009</p></div><div class="md-stat"><div class="md-kicker">AI squad</div><div class="md-value">2 → 25</div><p>Engineers, QA, design</p></div></div></div>
       <div class="md-card"><h3>Bubble</h3><div class="demo" style="padding-top:12px"><div class="md-bubble">Hi, I'm Bolt. I route requests so the big model does not have to.</div></div></div>
-      <div class="md-card"><h3>Raised tile</h3><div class="demo" id="demoTiles"><button class="md-tile" aria-pressed="true"><span class="md-tile-t">Grade 3</span><span class="md-tile-s">Times tables</span></button><button class="md-tile" aria-pressed="false"><span class="md-tile-t">Grade 4</span><span class="md-tile-s">Long division</span></button><button class="md-tile md-tile--fill" style="--tile-fill:var(--cat-blue)"><span class="md-tile-t">Blue belt</span><span class="md-tile-s">Three tricks</span></button></div></div>
+      <div class="md-card"><h3>Raised tile</h3><div class="demo" id="demoTiles" role="group" aria-label="Tiles"><button class="md-tile" aria-pressed="true"><span class="md-tile-t">Grade 3</span><span class="md-tile-s">Times tables</span></button><button class="md-tile" aria-pressed="false"><span class="md-tile-t">Grade 4</span><span class="md-tile-s">Long division</span></button><button class="md-tile md-tile--fill" aria-pressed="false" style="--tile-fill:var(--cat-blue)"><span class="md-tile-t">Blue belt</span><span class="md-tile-s">Three tricks</span></button><button class="md-tile md-tile--fill" id="demoFillPressed" aria-pressed="true" style="--tile-fill:var(--cat-purple)"><span class="md-tile-t">Purple belt</span><span class="md-tile-s">Selected</span></button></div></div>
       <div class="md-card"><h3>Text input</h3><div class="demo-col"><div><label class="md-label" for="demoName">Nickname</label><input class="md-input" id="demoName" placeholder="Swift Otter" aria-describedby="demoNameHint"><span class="md-hint" id="demoNameHint">Leaderboards only see this name.</span></div><div><label class="md-label" for="demoGrade">Grade</label><select class="md-input" id="demoGrade"><option>Grade 3</option><option>Grade 4</option></select></div></div></div>
       <div class="md-card"><h3>Music pill</h3><div class="demo" id="demoMusic">{MUSIC.replace('id="musicBtn"', 'id="demoMusicBtn"').replace('id="nextTrack"', 'id="demoNext"')}<span class="md-music is-on" role="group" aria-label="Music (panel style)"><button type="button" class="md-music-btn" aria-expanded="false" aria-label="Calm music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/></svg><span class="md-music-lbl">Music</span><span class="md-eq" aria-hidden="true"><i></i><i></i><i></i></span></button></span></div></div>
       <div class="md-card"><h3>Round icon button and link button</h3><div class="demo"><button type="button" class="md-icon-btn" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><button type="button" class="md-icon-btn md-icon-btn--sm" aria-label="Flip back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p style="margin:0">Progress stays here. <button type="button" class="md-link">Reset play mode</button></p></div></div>
@@ -667,17 +667,32 @@ for f in ["components.css", "header.html", "music.html", "header.js", "template.
         if RAW.search(line):
             problems.append(f"{f}:{i}: raw colour, use a token: {line.strip()[:100]}")
 
-# 4. Published versions never change: compare every file under v/ in git REF with this checkout
-if "--check-immutable" in sys.argv:
-    ref = sys.argv[sys.argv.index("--check-immutable") + 1]
+# 4. Published versions never change: every v/<version>/ that exists in git REF must hold exactly the same
+#    files with the same bytes here. Added, changed and deleted files all fail (Pages publishes every file).
+def immutable_problems(ref):
+    out = []
     listed = subprocess.run(["git", "ls-tree", "-r", "--name-only", ref, "v/"], cwd=HERE, capture_output=True, text=True)
     if listed.returncode:
-        problems.append(f"--check-immutable: cannot list v/ at {ref}: {listed.stderr.strip()}")
+        return [f"--check-immutable: cannot list v/ at {ref}: {listed.stderr.strip()}"]
+    published = {}
     for path in filter(None, listed.stdout.splitlines()):
-        old = subprocess.run(["git", "show", f"{ref}:{path}"], cwd=HERE, capture_output=True).stdout
-        new = (HERE / path).read_bytes() if (HERE / path).exists() else None
-        if new != old:
-            problems.append(f"{path} differs from {ref}: published versions are immutable. Bump \"version\" in tokens.json instead.")
+        published.setdefault(path.split("/")[1], set()).add(path)
+    for ver, old_paths in sorted(published.items()):
+        vroot = HERE / "v" / ver
+        now = {p.relative_to(HERE).as_posix() for p in vroot.rglob("*") if p.is_file()} if vroot.is_dir() else set()
+        for path in sorted(now - old_paths):
+            out.append(f"{path} was added to published version {ver}: published versions are immutable. Bump \"version\" in tokens.json instead.")
+        for path in sorted(old_paths - now):
+            out.append(f"{path} was deleted from published version {ver}: published versions are immutable.")
+        for path in sorted(old_paths & now):
+            old = subprocess.run(["git", "show", f"{ref}:{path}"], cwd=HERE, capture_output=True).stdout
+            if (HERE / path).read_bytes() != old:
+                out.append(f"{path} differs from {ref}: published versions are immutable. Bump \"version\" in tokens.json instead.")
+    return out
+
+
+if "--check-immutable" in sys.argv:
+    problems += immutable_problems(sys.argv[sys.argv.index("--check-immutable") + 1])
 
 if problems:
     print("build.py: checks failed:\n  " + "\n  ".join(problems), file=sys.stderr)

@@ -25,11 +25,11 @@ Tokens, components, the shared site header, a page template and the reference pa
 
 - `build.py` itself fails if a category colour misses AA (or two get too alike) in either scheme, if a token is missing from a scheme block of `tokens.css`, or if a hand-written file has a raw colour.
 - Pre-commit hook in `.githooks/pre-commit`; enable it with `git config core.hooksPath .githooks`. It runs `build.py` and fails if that changed a file (stage the regenerated files and commit again).
-- `.github/workflows/build.yml` runs the same check on pushes and pull requests to `main`, plus `build.py --check-immutable <base>` so a published version cannot change.
-- `_config.yml` keeps `README.md`, `CLAUDE.md`, `build.py`, `e2e/`, `docs/`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` and `LICENSE-CONTENT.md` out of the published site.
+- `.github/workflows/build.yml` runs the same check on pushes and pull requests to `main`, plus `build.py --check-immutable <base>` so a published version cannot gain, lose or change a file, and the unit tests in `tests/` (`python3 -m unittest discover -s tests`, also in the pre-commit hook).
+- `_config.yml` keeps `README.md`, `CLAUDE.md`, `build.py`, `e2e/`, `docs/`, `tests/`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` and `LICENSE-CONTENT.md` out of the published site.
 
 ## End-to-end tests
 
 - Every change that affects behavior updates or adds the matching Playwright test in `e2e/` in the same commit; run `cd e2e && npx playwright test` before pushing.
-- Run them with `cd e2e && npm ci && npx playwright test` (first time: `npx playwright install chromium webkit`). They test the live site, https://sbmadhav.com/design-system/, by default; set `BASE_URL` to test another host. `node e2e/local-server.mjs` serves this checkout at http://localhost:8123/design-system/ (the rest from the live site) for `BASE_URL=http://localhost:8123`. A push to `main` lands before Pages deploys, so the workflow `.github/workflows/e2e.yml` waits for the deploy, then runs them; it also runs daily.
+- Run them with `cd e2e && npm ci && npx playwright test` (first time: `npx playwright install chromium webkit`). They test the live site, https://sbmadhav.com/design-system/, by default; set `BASE_URL` to test another host. `node e2e/local-server.mjs` serves this checkout at http://127.0.0.1:8123/design-system/ (the rest from the live site) for `BASE_URL=http://127.0.0.1:8123`. A push to `main` lands before Pages deploys, so the workflow `.github/workflows/e2e.yml` waits for the deploy, then runs them; it also runs daily.
 - Known live accessibility issues are `test.fixme` entries in `e2e/tests/a11y.spec.ts` (`KNOWN`); remove the entry when fixing one.

@@ -64,3 +64,33 @@ test('inputs are labelled, progress bars show their value, the kicker and sr-onl
   expect(await sr.evaluate(e => [e.getBoundingClientRect().width, e.getBoundingClientRect().height])).toEqual([1, 1]);
   await expect(page.getByText('Screen-reader-only text sits here', { exact: false })).toHaveCount(1);
 });
+
+for (const scheme of ['light', 'dark'] as const) {
+  test(`a selected fill tile keeps its category fill, AA text and a visible ring (${scheme})`, async ({ page }) => {
+    await page.emulateMedia({ colorScheme: scheme });
+    await page.goto('/design-system/');
+    const tile = page.locator('#demoFillPressed');
+    await expect(tile).toHaveAttribute('aria-pressed', 'true');
+    const got = await tile.evaluate(e => {
+      const probe = document.createElement('i');
+      probe.style.color = 'var(--cat-purple)';
+      document.body.append(probe);
+      const fill = getComputedStyle(probe).color;
+      probe.remove();
+      const cs = getComputedStyle(e), sub = getComputedStyle(e.querySelector('.md-tile-s')!);
+      return { bg: cs.backgroundColor, fill, text: cs.color, sub: sub.color, shadow: cs.boxShadow };
+    });
+    expect(got.bg).toBe(got.fill); // the selected state does not replace the category colour
+    const rgb = (s: string) => s.match(/[\d.]+/g)!.slice(0, 3).map(Number);
+    const lin = (c: number) => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+    const lum = (c: number[]) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2]);
+    const contrast = (a: string, b: string) => { const [x, y] = [lum(rgb(a)), lum(rgb(b))].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+    expect(contrast(got.text, got.bg)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(got.sub, got.bg)).toBeGreaterThanOrEqual(4.5);
+    // Selection shows as a ring (three shadows: ledge, gap, ring) and not only through colour
+    expect(got.shadow.split(/,(?![^(]*\))/).length).toBe(3);
+    // The plain fill tile next to it has no ring
+    const plain = await page.locator('#demoTiles .md-tile--fill[aria-pressed="false"]').evaluate(e => getComputedStyle(e).boxShadow);
+    expect(plain.split(/,(?![^(]*\))/).length).toBe(1);
+  });
+}

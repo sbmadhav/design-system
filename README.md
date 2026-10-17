@@ -45,10 +45,10 @@ The decision and its alternatives are in `docs/adr/0001-versioned-releases-and-s
 The design system lives in its own repo, [sbmadhav/design-system](https://github.com/sbmadhav/design-system), and GitHub Pages publishes it as a project site. Under the user site's custom domain that is **sbmadhav.com/design-system/**, the same URLs every page already links. `_config.yml` keeps `README.md`, `CLAUDE.md` and `build.py` out of the published site; `tokens.json` is published so other repos can read it.
 
 - **Build.** `pip install markdown`, then `python3 build.py`. Commit the generated files (`tokens.css`, `index.html`, `template.html`, `v/<version>/`, `versions.json`) with the change that produced them.
-- **Release.** Any change to a published file needs a new `version` in `tokens.json` (semver, see Versions). `build.py` writes `v/<version>/`; CI fails if a version already on `main` would change (`python3 build.py --check-immutable origin/main`).
+- **Release.** Any change to a published file needs a new `version` in `tokens.json` (semver, see Versions). `build.py` writes `v/<version>/`; CI fails if a version already on `main` would gain, lose or change a file (`python3 build.py --check-immutable origin/main`). Unit tests for that check and for `compose.py` live in `tests/`: `python3 -m unittest discover -s tests`.
 - **Checks.** `build.py` fails if a category colour misses AA in either scheme, if a token is missing from a scheme block of `tokens.css`, or if a hand-written file uses a raw colour. A pre-commit hook in `.githooks/` and the workflow in `.github/workflows/build.yml` both run it and fail if it changed a file. Enable the hook once per clone: `git config core.hooksPath .githooks`.
 - **Shared files from the site.** Fonts (`/assets/fonts/`), the profile photo, the app icon, the Explore menu (`/assets/explore.js`) and analytics (`/assets/analytics.js`) are served by the sbmadhav.github.io repo. Keep those paths there.
-- **Preview locally.** Absolute `/assets/` and `/design-system/` paths need the whole site. Run `node e2e/local-server.mjs` and open http://localhost:8123/design-system/: it serves this checkout and takes everything else from the live site. The end-to-end tests run against it with `BASE_URL=http://localhost:8123`.
+- **Preview locally.** Absolute `/assets/` and `/design-system/` paths need the whole site. Run `node e2e/local-server.mjs` and open http://127.0.0.1:8123/design-system/: it serves this checkout and takes everything else from the live site. The end-to-end tests run against it with `BASE_URL=http://127.0.0.1:8123`.
 - **The site's color check.** The home page inlines its colors for a fast first paint. sbmadhav.github.io keeps a pinned copy of `tokens.json` and compares against it; after changing a color here, refresh that copy there with `python3 scripts/check-tokens.py --refresh`.
 
 The interactive version of this system, with live previews of every component, is kept privately in Claude.
@@ -355,7 +355,7 @@ The sticky bar at the top of every page on sbmadhav.com, the same everywhere: Bo
 <!-- /md-header -->
 ```
 
-- **Compose it at build time**, never by hand: `python3 compose.py header.html page.html` (with the pinned `header.html`) fills the block from the partial and keeps the page's slots. Run it again after moving to a new version; `--check` fails when a page's header differs from the partial, for CI.
+- **Compose it at build time**, never by hand (a malformed, duplicated or unclosed slot marker is an error, so page content is never dropped): `python3 compose.py header.html page.html` (with the pinned `header.html`) fills the block from the partial and keeps the page's slots. Run it again after moving to a new version; `--check` fails when a page's header differs from the partial, for CI.
 - **Slots:** `brand` (the name next to the logo, default "Madhav"), `nav`, `music` (the Music pill) and `end` (a kid mode switch, a Player chip). Everything outside the slots is fixed.
 - **Nav:** `<nav class="md-nav">` with plain links; mark the current one `aria-current="page"` (or `"true"` for app routes) and it fills with `ink`. Section links hide under 1180px (the Explore menu lists them). For **app tabs** that must always show, add `md-header--tabs` to `<header>`: under 1180px the tabs move to their own rows and wrap.
 - **Phones:** under 600px the controls shrink to 36px and Explore and Music show their icon only; under 420px the end controls wrap to a second row; under 360px the name hides and the logo keeps the link's name.
@@ -385,7 +385,7 @@ A card-sized control with a button's edge, ledge, lift and press: grade and game
 
 - A `<button>` or `<a>`. Title in `md-tile-t` (`card-title`), an optional line in `md-tile-s`.
 - Selected: `aria-pressed="true"` (or `aria-current`) tints it with `sun`.
-- `md-tile--fill` fills it with `--tile-fill` (default `sun`) and switches text to `on-accent`: `style="--tile-fill: var(--cat-blue)"`.
+- `md-tile--fill` fills it with `--tile-fill` (default `sun`) and switches text to `on-accent`: `style="--tile-fill: var(--cat-blue)"`. A selected fill tile keeps its fill and shows an `ink` ring instead.
 
 ### Text input
 

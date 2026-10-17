@@ -26,6 +26,9 @@ jobs:
       - name: Build
         run: python3 build.py
 
+      - name: Unit tests (compose.py, the immutable-version check)
+        run: python3 -m unittest discover -s tests -v
+
       - name: Generated files are committed
         run: |
           git diff --exit-code || {
