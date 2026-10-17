@@ -10,3 +10,5 @@ exclude:
   - LICENSE-CONTENT.md
   - build.py
   - e2e/
+  - docs/
+  - .gitignore

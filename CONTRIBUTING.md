@@ -41,16 +41,19 @@ git config core.hooksPath .githooks   # turn on the pre-commit hook
 python3 build.py
 ```
 
-To preview with fonts and the site chrome, put this repo next to a [sbmadhav.github.io](https://github.com/sbmadhav/sbmadhav.github.io) checkout, run `ln -s ../design-system sbmadhav.github.io/design-system`, then `python3 -m http.server 8000` inside sbmadhav.github.io and open http://localhost:8000/design-system/.
+To preview with fonts and the site chrome, run `node e2e/local-server.mjs` and open http://localhost:8123/design-system/. It serves this checkout and takes everything else (fonts, the Explore menu) from the live site.
 
 ## Checks
 
 | Check | Command |
 |---|---|
-| Generated files are current | `python3 build.py && git diff --exit-code` |
+| Generated files are current, contrast, token coverage, no raw colours | `python3 build.py && git diff --exit-code` |
+| Published versions are unchanged | `python3 build.py --check-immutable origin/main` |
 | End-to-end tests | `cd e2e && npm ci && npx playwright test` |
 
-`tokens.json` and `README.md` are the sources; `tokens.css` and `index.html` are generated. Never edit the generated files by hand. Run `python3 build.py` and commit what it changes with your change. The pre-commit hook and CI both run this check.
+`tokens.json` and `README.md` are the sources; `tokens.css`, `index.html`, the header block in `template.html`, `v/<version>/` and `versions.json` are generated. Never edit the generated files by hand. Run `python3 build.py` and commit what it changes with your change. The pre-commit hook and CI both run this check.
+
+Every release is also published at `/design-system/v/<version>/`, and a published version never changes. If your change touches a published file (`tokens.css`, `tokens.json`, `components.css`, `header.html`, `music.html`, `header.js`, `compose.py`), bump `version` in `tokens.json`: a patch for a fix, a minor version for anything new, a major version for a rename or removal. See `docs/adr/0001-versioned-releases-and-shared-header.md`.
 
 If you change a color, say so in the pull request: the home page in sbmadhav.github.io keeps inline copies of the colors, and the owner updates them there.
 
@@ -58,11 +61,11 @@ If you change a color, say so in the pull request: the home page in sbmadhav.git
 
 Every change that affects behavior updates or adds the matching Playwright test in `e2e/` in the same commit. Run `cd e2e && npx playwright test` before pushing (first time: `npm ci && npx playwright install chromium webkit`).
 
-The tests run against the live https://sbmadhav.com/design-system/ by default. Set `BASE_URL` to test another host, such as a local server.
+The tests run against the live https://sbmadhav.com/design-system/ by default. Set `BASE_URL` to test another host, such as the local server: `node e2e/local-server.mjs &` then `BASE_URL=http://localhost:8123 npx playwright test`.
 
 ## Style rules
 
-- Use tokens, never raw hex, in `components.css` and `template.html`: `var(--coral)`, `var(--space-6)`, `var(--radius-lg)`. Text on accent fills uses `var(--on-accent)`.
+- Use tokens, never raw hex, in `components.css`, `template.html`, `header.html` and `header.js`: `var(--coral)`, `var(--space-6)`, `var(--radius-lg)`, `font: var(--text-label)`. Text on accent fills uses `var(--on-accent)`. `build.py` fails on raw colours there.
 - Support both color schemes: Daybreak (light) and Deep Space (dark).
 - Support kid mode: copy is written twice, `<span class="pro">` and `<span class="kid">`, and the layout never changes between them.
 - Every color pairing meets WCAG 2.1 AA in both schemes.
