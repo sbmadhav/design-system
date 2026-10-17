@@ -4,11 +4,11 @@
 //   node e2e/local-server.mjs [port]          (default 8123)
 //   BASE_URL=http://127.0.0.1:8123 npx playwright test
 import http from 'node:http';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, realpath, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = await realpath(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'));
 const port = +(process.argv[2] || process.env.PORT || 8123);
 const LIVE = 'https://sbmadhav.com';
 const PREFIX = '/design-system/';
@@ -31,14 +31,18 @@ http.createServer(async (req, res) => {
     const pathname = decodeURIComponent(url.pathname);
     if (pathname === '/design-system') { res.writeHead(301, { location: PREFIX + url.search }); return res.end(); }
     if (!pathname.startsWith(PREFIX)) return await proxy(req, res);
-    const rel = '/' + pathname.slice(PREFIX.length);
-    if (BLOCKED.test(rel)) { res.writeHead(404); return res.end('Not found'); }
-    // Resolve, then require the result to be the checkout or inside it (root + separator), so "..",
-    // encoded slashes and sibling folders that share a name prefix (design-system-old) are all refused
-    let p = path.resolve(root, '.' + rel);
-    if (p !== root && !p.startsWith(root + path.sep)) { res.writeHead(403); return res.end(); }
+    // Resolve dot segments and encoded separators, follow symlinks (realpath), and only then check that the
+    // file is inside the checkout (root + separator) and not repo-only, so nothing can hide behind "..", "%2F"
+    // or a link that points elsewhere.
+    const inside = q => q === root || q.startsWith(root + path.sep);
+    let p = path.resolve(root, '.' + '/' + pathname.slice(PREFIX.length));
+    if (!inside(p)) { res.writeHead(403); return res.end(); }
     const s = await stat(p).catch(() => null);
     if (s && s.isDirectory()) p = path.join(p, 'index.html');
+    p = await realpath(p).catch(() => null);
+    if (!p) { res.writeHead(404); return res.end('Not found'); }
+    if (!inside(p)) { res.writeHead(403); return res.end(); }
+    if (BLOCKED.test('/' + path.relative(root, p).split(path.sep).join('/'))) { res.writeHead(404); return res.end('Not found'); }
     const body = await readFile(p).catch(() => null);
     if (!body) { res.writeHead(404); return res.end('Not found'); }
     res.writeHead(200, { 'content-type': TYPES[path.extname(p)] || 'application/octet-stream', 'cache-control': 'no-cache' });

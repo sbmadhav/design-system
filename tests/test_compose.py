@@ -53,6 +53,8 @@ class BadPages(unittest.TestCase):
     def test_malformed_marker(self):
         self.bad(f"<!--slot:nav-->{NAV}<!-- /slot:nav -->", "malformed slot marker")
         self.bad(f"<!-- slot: nav -->{NAV}<!-- /slot:nav -->", "malformed slot marker")
+        self.bad(f"<!-- slot_nav -->{NAV}<!-- /slot_nav -->", "malformed slot marker")
+        self.bad(f"<!-- SLOT:nav -->{NAV}<!-- /SLOT:nav -->", "malformed slot marker")
 
     def test_unknown_slot(self):
         self.bad("<!-- slot:footer -->x<!-- /slot:footer -->", "unknown header slot")
@@ -61,6 +63,7 @@ class BadPages(unittest.TestCase):
         self.bad(None, "found markers none", whole="<body></body>")
         self.bad(None, "expected one", whole=page("") + page(""))
         self.bad(None, "expected one", whole="<!-- md-header -->\n<header></header>")
+        self.bad(None, "expected one", whole="<!-- md_header -->\n<header></header>\n<!-- /md_header -->")
 
     def test_cli_exits_with_the_error_and_leaves_the_file_alone(self):
         import subprocess, tempfile

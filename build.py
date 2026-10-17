@@ -559,6 +559,10 @@ vdir = HERE / "v" / VERSION
 vdir.mkdir(parents=True, exist_ok=True)
 for f in PUBLISHED:
     shutil.copyfile(HERE / f, vdir / f)
+# Pages publishes every file, so a version folder holds exactly PUBLISHED: anything else would ship at a pinned URL
+extra = sorted(p.relative_to(vdir).as_posix() for p in vdir.rglob("*") if p.is_file() and p.relative_to(vdir).as_posix() not in PUBLISHED)
+if extra:
+    sys.exit(f"build.py: v/{VERSION}/ holds files outside PUBLISHED: {', '.join(extra)}. Remove them (or add them to PUBLISHED).")
 versions = sorted((p.name for p in (HERE / "v").iterdir() if re.fullmatch(r"\d+\.\d+\.\d+", p.name)),
                   key=lambda v: tuple(map(int, v.split("."))))
 (HERE / "versions.json").write_text(json.dumps({"latest": VERSION, "versions": versions, "files": PUBLISHED}, indent=2) + "\n")

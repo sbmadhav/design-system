@@ -41,13 +41,21 @@ class Immutable(unittest.TestCase):
     def test_unchanged_passes(self):
         self.assertEqual(self.check().returncode, 0)
 
-    def test_added_file_fails(self):
+    def test_added_file_in_the_current_version_fails(self):
+        (self.vdir / "extra.js").write_text("alert(1)")
+        r = self.check()
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("outside PUBLISHED: extra.js", r.stderr)
+
+    def test_added_file_in_an_older_version_fails(self):
+        self.bump()  # the published version is now an older one, so only --check-immutable guards it
         (self.vdir / "extra.js").write_text("alert(1)")
         r = self.check()
         self.assertNotEqual(r.returncode, 0)
         self.assertIn(f"v/{self.version}/extra.js was added", r.stderr)
 
-    def test_added_file_in_a_subfolder_fails(self):
+    def test_added_file_in_a_subfolder_of_an_older_version_fails(self):
+        self.bump()
         (self.vdir / "sub").mkdir()
         (self.vdir / "sub" / "x.css").write_text("a{}")
         self.assertIn(f"v/{self.version}/sub/x.css was added", self.check().stderr)
@@ -78,6 +86,16 @@ class Immutable(unittest.TestCase):
         r = self.check()
         self.assertNotEqual(r.returncode, 0)
         self.assertIn(f"v/{self.version}/components.css differs", r.stderr)
+
+    def test_extra_file_in_a_new_version_fails(self):
+        self.bump()
+        t = json.loads((self.d / "tokens.json").read_text())
+        new = self.d / "v" / t["version"]
+        new.mkdir(parents=True)
+        (new / "notes.md").write_text("internal")
+        r = self.check()
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("outside PUBLISHED: notes.md", r.stderr)
 
     def test_a_new_version_may_be_added(self):
         self.bump()

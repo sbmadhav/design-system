@@ -27,8 +27,8 @@ SLOT = re.compile(r"<!-- slot:([\w-]+) -->(.*?)<!-- /slot:\1 -->", re.S)
 
 
 # Anything that looks like a marker, well formed or not, so a typo cannot slip past the strict pattern
-ANY_SLOT = re.compile(r"<!--\s*/?\s*slot\b.*?-->", re.S)
-ANY_BLOCK = re.compile(r"<!--\s*/?\s*md-header\b.*?-->", re.S)
+ANY_SLOT = re.compile(r"<!--\s*/?\s*slot.*?-->", re.S | re.I)
+ANY_BLOCK = re.compile(r"<!--\s*/?\s*md[-_]?header.*?-->", re.S | re.I)
 MARKER = re.compile(r"<!-- (/?)slot:([\w-]+) -->")
 
 
