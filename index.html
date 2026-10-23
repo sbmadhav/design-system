@@ -882,7 +882,7 @@
 <h2>Accessibility</h2>
 <ul>
 <li>Text meets 4.5:1 in both schemes: <code>ink</code> and <code>ink-muted</code> on <code>bg</code>, <code>bg-alt</code> and <code>card</code>.</li>
-<li>Focus: <code>outline: 3px solid var(--focus); outline-offset: 3px</code>, following the element's own shape: a pill's ring is a pill, a card's ring keeps its corners. A target scripts move focus to with <code>tabindex="-1"</code> (main after the skip link, a heading after a view swap) shows no ring, since Tab never reaches it; a page that wants one adds its own rule.</li>
+<li>Focus: <code>outline: 3px solid var(--focus); outline-offset: 3px</code>, following the element's own shape: a pill's ring is a pill, a card's ring keeps its corners. A target scripts move focus to with <code>tabindex="-1"</code> (main after the skip link, a section or a heading after a view swap) shows no ring, since Tab never reaches it; a page that wants one adds its own rule. Only those landmarks and headings lose the ring: an interactive element with <code>tabindex="-1"</code> (a roving-tabindex tab, tile or key reached with the arrow keys) keeps it.</li>
 <li>Toggles use <code>role="switch"</code> and <code>aria-checked</code>; chips and toggle buttons use <code>aria-pressed</code>; live results use <code>aria-live="polite"</code>.</li>
 <li>Every game and animation has a still, keyboard-usable path.</li>
 <li>Pages with repeated navigation start with <code>&lt;a class="md-skip" href="#main"&gt;Skip to content&lt;/a&gt;</code> and a <code>&lt;main id="main" tabindex="-1"&gt;</code>.</li>

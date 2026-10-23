@@ -259,7 +259,7 @@ Use the z-index tokens, never a number: `z-base` (1, content above the space bac
 ## Accessibility
 
 - Text meets 4.5:1 in both schemes: `ink` and `ink-muted` on `bg`, `bg-alt` and `card`.
-- Focus: `outline: 3px solid var(--focus); outline-offset: 3px`, following the element's own shape: a pill's ring is a pill, a card's ring keeps its corners. A target scripts move focus to with `tabindex="-1"` (main after the skip link, a heading after a view swap) shows no ring, since Tab never reaches it; a page that wants one adds its own rule.
+- Focus: `outline: 3px solid var(--focus); outline-offset: 3px`, following the element's own shape: a pill's ring is a pill, a card's ring keeps its corners. A target scripts move focus to with `tabindex="-1"` (main after the skip link, a section or a heading after a view swap) shows no ring, since Tab never reaches it; a page that wants one adds its own rule. Only those landmarks and headings lose the ring: an interactive element with `tabindex="-1"` (a roving-tabindex tab, tile or key reached with the arrow keys) keeps it.
 - Toggles use `role="switch"` and `aria-checked`; chips and toggle buttons use `aria-pressed`; live results use `aria-live="polite"`.
 - Every game and animation has a still, keyboard-usable path.
 - Pages with repeated navigation start with `<a class="md-skip" href="#main">Skip to content</a>` and a `<main id="main" tabindex="-1">`.

@@ -30,9 +30,11 @@ class FocusRing(unittest.TestCase):
         rounded = [s for s, b in RULES if "border-radius: var(--radius-xs)" in b and ":focus-visible" in s]
         self.assertEqual(rounded, [".md-root :is(a:not([class]), .md-link):focus-visible"])
 
-    def test_script_focus_targets_show_no_ring(self):
-        self.assertIn('.md-root [tabindex="-1"]:focus { outline: none; }', CSS)
+    def test_script_focus_targets_show_no_ring_but_roving_tabindex_widgets_keep_it(self):
+        self.assertIn('.md-root :is(main, section, article, h1, h2, h3, h4, h5, h6)[tabindex="-1"]:focus { outline: none; }', CSS)
         self.assertNotIn('main[tabindex="-1"]:focus', CSS)
+        # Never a bare [tabindex="-1"]: a button, tab or tile focused with the arrow keys must keep its ring (WCAG 2.4.7)
+        self.assertFalse(re.search(r'\.md-root \[tabindex="-1"\]', CSS))
 
 
 class Header(unittest.TestCase):

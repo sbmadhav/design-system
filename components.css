@@ -307,9 +307,10 @@ html.md-theme-anim body, html.md-theme-anim body * { transition: background-colo
 /* Skip link: the first thing in <body> on pages with repeated navigation; shows on keyboard focus */
 .md-skip { position: absolute; left: var(--space-3); top: -80px; z-index: var(--z-skip); padding: var(--space-2-5) var(--space-4); border-radius: var(--radius-pill); background: var(--ink); color: var(--bg); font: 700 15px/1.2 var(--font-sans); text-decoration: none; }
 .md-skip:focus { top: var(--space-3); }
-/* A target scripts move focus to (main after the skip link, a heading after a view swap) is never Tab-reachable, so
-   it shows no ring. A page that wants one adds its own rule. */
-.md-root [tabindex="-1"]:focus { outline: none; }
+/* A target scripts move focus to (main after the skip link, a section or a heading after a view swap) is never
+   Tab-reachable, so it shows no ring; a page that wants one adds its own rule. Only those landmarks and headings:
+   an interactive element with tabindex="-1" (a roving-tabindex tab, tile or key reached with the arrow keys) keeps its ring. */
+.md-root :is(main, section, article, h1, h2, h3, h4, h5, h6)[tabindex="-1"]:focus { outline: none; }
 
 /* Kid mode: write both versions, body.kidmode swaps them */
 .kid { display: none; }
