@@ -23,7 +23,7 @@ Tokens, components, the shared site header, a page template and the reference pa
 
 ## Checks
 
-- `build.py` itself fails if a category colour misses AA (or two get too alike) in either scheme, if a token is missing from a scheme block of `tokens.css`, or if a hand-written file has a raw colour.
+- `build.py` itself fails if an accent fill or `-strong` shade misses its contrast floor, if a category colour misses AA (or two get too alike) in either scheme, if a token is missing from a scheme block of `tokens.css`, or if a hand-written file has a raw colour. `tests/test_components.py` holds the rules `components.css` must keep (the focus ring's shape, tokens for every padding and control height, the classes each release adds).
 - Pre-commit hook in `.githooks/pre-commit`; enable it with `git config core.hooksPath .githooks`. It runs `build.py` and fails if that changed a file (stage the regenerated files and commit again).
 - `.github/workflows/build.yml` runs the same check on pushes and pull requests to `main`, plus `build.py --check-immutable <base>` so a published version cannot gain, lose or change a file, and the unit tests in `tests/` (`python3 -m unittest discover -s tests`, also in the pre-commit hook).
 - `_config.yml` keeps `README.md`, `CLAUDE.md`, `build.py`, `e2e/`, `docs/`, `tests/`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` and `LICENSE-CONTENT.md` out of the published site.
