@@ -44,8 +44,16 @@ test('the reference page carries the policy and runs with no violations', async 
   await expect(page.locator('dialog.xpm')).toBeVisible();
   await page.keyboard.press('Escape');
 
-  // GoatCounter as the shared analytics.js uses it (analytics is off on localhost): the main site's count.js,
-  // then one request of each kind its beacon uses. The fixtures answer them locally, so nothing is counted.
+  // GoatCounter as the shared analytics.js uses it (analytics is off on localhost): the main site's real count.js
+  // (this test lets it through the fixtures' stub, which other tests keep), then one request of each kind its
+  // beacon uses. The beacons are answered here, so nothing is counted, and must reach the network: a request
+  // the policy blocked would never get this far.
+  const beacons: string[] = [];
+  await page.route(/\/assets\/count\.js(\?|$)/, route => route.continue());
+  await page.route(/^https:\/\/sbmadhav\.goatcounter\.com\//, route => {
+    beacons.push(new URL(route.request().url()).searchParams.get('e2e') || '');
+    return route.fulfill({ status: 204 });
+  });
   await page.evaluate(() => new Promise<void>((resolve, reject) => {
     const s = document.createElement('script');
     s.src = '/assets/count.js';
@@ -53,11 +61,12 @@ test('the reference page carries the policy and runs with no violations', async 
     s.onerror = () => reject(new Error('count.js did not load'));
     document.head.appendChild(s);
   }));
+  expect(await page.evaluate(() => typeof (window as any).goatcounter?.count), 'the real count.js ran').toBe('function');
   await page.evaluate(() => {
     navigator.sendBeacon('https://sbmadhav.goatcounter.com/count?e2e=csp');
     new Image().src = 'https://sbmadhav.goatcounter.com/count?e2e=csp-img';
   });
-  await page.waitForTimeout(2000);
+  await expect.poll(() => [...beacons].sort()).toEqual(expect.arrayContaining(['csp', 'csp-img']));
   expect(await v.list(), 'securitypolicyviolation events').toEqual([]);
   expect(v.console, 'CSP console messages').toEqual([]);
 });
