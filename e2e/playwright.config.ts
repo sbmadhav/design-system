@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 // End-to-end tests for the design system at sbmadhav.com/design-system/. They run against the LIVE
 // site and its real dependencies (fonts and the Explore menu come from the sbmadhav.github.io repo)
 // by default. Point them elsewhere with BASE_URL, for example a staging host that serves the same paths:
-//   BASE_URL=http://localhost:8123 npx playwright test
+//   BASE_URL=http://127.0.0.1:8123 npx playwright test
 export const BASE_URL = (process.env.BASE_URL || 'https://sbmadhav.com').replace(/\/$/, '');
 
 export default defineConfig({

@@ -4,7 +4,8 @@
 
 ## Checklist
 
-- [ ] Ran `python3 build.py` and committed `tokens.css` and `index.html`
+- [ ] Ran `python3 build.py` and committed what it generated (`tokens.css`, `index.html`, `template.html`, `v/<version>/`, `versions.json`)
+- [ ] Changed a published file? Bumped `version` in `tokens.json` (published versions under `v/` never change)
 - [ ] Behavior changes update or add the matching Playwright test in `e2e/`, and `npx playwright test` passes
 - [ ] Tokens only, no raw hex
 - [ ] Tested in Daybreak (light) and Deep Space (dark), kid mode, and at 390px wide

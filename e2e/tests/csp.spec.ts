@@ -29,8 +29,14 @@ test('the reference page carries the policy and runs with no violations', async 
   expect(csp.split(';').find(d => d.trim().startsWith('script-src'))).not.toContain("'unsafe-inline'");
   await expect(page.locator('meta[name="referrer"]')).toHaveAttribute('content', 'strict-origin-when-cross-origin');
 
-  // Both inline scripts ran: the mode buttons and the demo switch work
-  await page.locator('.md-modes [data-mode="dark"]').first().click();
+  // header.js (same origin) ran: the scheme button switches to the other scheme
+  const before = await page.evaluate(() => (window as any).siteTheme.get());
+  await page.locator('#themeBtn').click();
+  await expect.poll(() => page.evaluate(() => (window as any).siteTheme.get())).not.toBe(before);
+
+  // Both inline scripts ran: the pre-paint snippet applies a saved scheme, and the demo switch works
+  await page.evaluate(() => localStorage.setItem('theme', 'dark'));
+  await page.reload({ waitUntil: 'load' });
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.locator('#demoSwitch').click();
   await expect(page.locator('#demoSwitch')).toHaveAttribute('aria-checked', 'true');

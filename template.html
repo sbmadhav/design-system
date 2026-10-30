@@ -5,42 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Page title · Madhav</title>
 <meta name="description" content="One sentence about this page.">
-<!-- Apply the saved color scheme before paint so there is no flash -->
+<!-- Apply the saved color scheme (and Pause motion) before paint so there is no flash -->
 <script>try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;if(localStorage.getItem('motion')==='paused')document.documentElement.classList.add('motion-paused');}catch(e){}</script>
+<!-- header.js keeps theme-color on the current --bg; this is only the first-paint value -->
 <meta name="theme-color" content="#F6F7F9">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='14' width='48' height='40' rx='14' fill='%234FB3A6'/%3E%3Ccircle cx='24' cy='34' r='7' fill='white'/%3E%3Ccircle cx='40' cy='34' r='7' fill='white'/%3E%3Ccircle cx='25' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='41' cy='35' r='3' fill='%23151B2B'/%3E%3Ccircle cx='32' cy='7' r='5' fill='%23EE7A63'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <!-- Fonts are self-hosted; tokens.css declares the faces. Preload the two that render first. -->
 <link rel="preload" href="/assets/fonts/fredoka-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/nunito-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/design-system/tokens.css">
-<link rel="stylesheet" href="/design-system/components.css">
+<!-- A pinned design-system version: these files never change. Move to a newer version on purpose, in its own change. -->
+<link rel="stylesheet" href="/design-system/v/2.2.0/tokens.css">
+<link rel="stylesheet" href="/design-system/v/2.2.0/components.css">
 <style>
   /* Page-specific styles go here. Use tokens, never raw hex. */
-  @media (max-width: 480px) { .top .md-switch > span:first-child { display: none; } .top .md-switch { padding-left: 6px; } .top .md-wrap { gap: 6px; } }
-  .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
-  .top .md-wrap { display: flex; align-items: center; gap: 10px; height: 66px; }
-  .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.25rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
-  .home svg { width: 32px; height: 32px; flex: none; }
-  @media (max-width: 480px) { .home { font-size: 0; gap: 0; } }
-  /* Narrow phones (320px): the controls wrap to a second row instead of running off the screen */
-  @media (max-width: 400px) { .top .md-wrap { flex-wrap: wrap; justify-content: flex-end; height: auto; min-height: 66px; padding-block: var(--space-2); row-gap: var(--space-2); } }
 </style>
 </head>
 <body class="md-page md-root">
+<a class="md-skip" href="#main">Skip to content</a>
 
-<header class="top">
-  <div class="md-wrap">
-    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#4FB3A6" stroke="#151B2B" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#151B2B"/><circle cx="41" cy="35" r="3" fill="#151B2B"/><path d="M32 14V9" stroke="#151B2B" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#EE7A63" stroke="#151B2B" stroke-width="3"/></svg>Madhav</a>
-    <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
-    <div class="md-modes" role="group" aria-label="Color mode">
-      <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
-    </div>
-    <button class="md-switch" id="kidBtn" role="switch" aria-checked="false" aria-label="Kid mode"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button>
+<!-- The shared site header, composed from header.html at build time (python3 compose.py header.html this-page.html).
+     Edit only what is inside the slot markers: brand, nav, music and end. -->
+<!-- md-header -->
+<header class="md-header">
+  <div class="md-wrap md-header-in">
+    <a class="md-brand" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="var(--bolt-body)" stroke="var(--bolt-line)" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="var(--bolt-eye)"/><circle cx="40" cy="34" r="7" fill="var(--bolt-eye)"/><circle cx="25" cy="35" r="3" fill="var(--bolt-line)"/><circle cx="41" cy="35" r="3" fill="var(--bolt-line)"/><path d="M32 14V9" stroke="var(--bolt-line)" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="var(--bolt-accent)" stroke="var(--bolt-line)" stroke-width="3"/></svg><span class="md-brand-t"><!-- slot:brand -->Madhav<!-- /slot:brand --></span></a>
+    <!-- slot:nav --><!-- /slot:nav -->
+    <button type="button" class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
+    <button type="button" class="md-icon-btn md-theme" id="themeBtn" aria-label="Switch color scheme" title="Switch color scheme"><svg class="md-theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="var(--sun)" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg class="md-theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="var(--plum)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="17" cy="5" r="1.2" fill="currentColor"/><circle cx="20.5" cy="9" r=".9" fill="currentColor"/></svg></button>
+    <div class="md-header-end"><!-- slot:music --><!-- /slot:music --><!-- slot:end --><button class="md-switch" id="kidBtn" role="switch" aria-checked="false" aria-label="Kid mode"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button><!-- /slot:end --></div>
   </div>
 </header>
+<!-- /md-header -->
 
-<main>
+<main id="main" tabindex="-1">
   <section class="md-section">
     <div class="md-wrap">
       <span class="md-tag md-tag--plum"><span class="pro">New page</span><span class="kid">Something new</span></span>
@@ -60,23 +58,14 @@
 (() => {
   const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
                   set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
-  // Color mode: follow the system by default; Daybreak or Deep Space overrides and is remembered
-  const root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
-  const modeBtns = document.querySelectorAll('.md-modes button');
-  const applyMode = mode => {
-    if (mode === 'system') delete root.dataset.theme; else root.dataset.theme = mode;
-    store.set('theme', mode === 'system' ? '' : mode);
-    modeBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-  };
-  modeBtns.forEach(b => b.addEventListener('click', () => applyMode(b.dataset.mode)));
-  applyMode(root.dataset.theme || 'system');
-  // Kid mode: shared with the home page through the same storage key
+  // Kid mode: shared with the home page through the same storage key. The color scheme is header.js.
   const kidBtn = document.getElementById('kidBtn');
   const setKid = on => { document.body.classList.toggle('kidmode', on); kidBtn.setAttribute('aria-checked', String(on)); store.set('kidmode', on ? '1' : '0'); };
   kidBtn.addEventListener('click', () => setKid(!document.body.classList.contains('kidmode')));
   setKid(new URLSearchParams(location.search).has('kid') || store.get('kidmode') === '1');
 })();
 </script>
+<script src="/design-system/v/2.2.0/header.js" defer></script>
 <script src="/assets/explore.js" defer></script>
 <script src="/assets/analytics.js" defer></script>
 </body>

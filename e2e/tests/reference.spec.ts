@@ -13,7 +13,7 @@ test('reference page renders cleanly: headings, swatches and components', async 
   await page.goto('/design-system/');
   await expect(page).toHaveTitle(/design system/i);
   await expect(page.locator('h1')).toHaveText('Madhav');
-  for (const h of ['Two modes, one system', 'Type scale', 'Components', 'Icons and mascot', 'How to use it']) {
+  for (const h of ['Two modes, one system', 'Category colours', 'Type scale', 'Depth, layers and motion', 'Components', 'Icons and mascot', 'How to use it']) {
     await expect(page.getByRole('heading', { level: 2, name: h }).first()).toBeVisible();
   }
   // One swatch per color token in each scheme
@@ -21,7 +21,7 @@ test('reference page renders cleanly: headings, swatches and components', async 
   await expect(page.locator('.mode-deep-space .sw')).toHaveCount(COLORS.length);
   // Component demos
   await expect(page.locator('#components .md-btn--primary').first()).toBeVisible();
-  for (const sel of ['.md-chip', '.md-tag', '.md-switch', '.md-stat', '.md-card']) {
+  for (const sel of ['.md-chip', '.md-tag', '.md-switch', '.md-stat', '.md-card', '.md-tile', '.md-input', '.md-music', '.md-icon-btn', '.md-link', '.md-progress', '.md-dialog', '.md-seg', '.md-kicker', '.md-sr-only', '.md-toasts']) {
     await expect(page.locator(sel).first()).toBeAttached();
   }
   await expect(page.locator('#components .md-btn').first()).toBeVisible();
@@ -72,7 +72,7 @@ test('in-page navigation anchors have targets', async ({ page }) => {
     if (h === '#') continue;
     await expect(page.locator(h), `target for ${h}`).toHaveCount(1);
   }
-  // The header nav collapses below 1000px wide; use it where it is shown
+  // The header nav hides below 1180px wide (the Explore menu lists the sections); use it where it is shown
   const navLink = page.locator('header nav a[href="#components"]');
   if (await navLink.isVisible()) await navLink.click();
   else await page.goto('/design-system/#components');

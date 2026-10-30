@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DtaLlZXOm9syLQvk7Pek1nLAmGVNIqvuEGeJtJN+EJk=' 'sha256-oz8Vg8RQYMwr0oRU2UG2o7Ae6oZV+M2K/NeHHE4npb4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://sbmadhav.goatcounter.com; font-src 'self'; connect-src 'self' https://sbmadhav.goatcounter.com; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DtaLlZXOm9syLQvk7Pek1nLAmGVNIqvuEGeJtJN+EJk=' 'sha256-lH2Qz2TsovIG2WMXku2jzoGAi9Im27O8ZwcmjDdK2a0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://sbmadhav.goatcounter.com; font-src 'self'; connect-src 'self' https://sbmadhav.goatcounter.com; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Madhav design system</title>
@@ -16,97 +16,104 @@
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="components.css">
 <style>
-  .top { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 88%, transparent); border-bottom: 1px solid var(--line); }
-  .top .md-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; min-height: 62px; padding-block: var(--space-2); }
-  .home { display: inline-flex; align-items: center; gap: 10px; font: 600 1.15rem/1 var(--display); text-decoration: none; color: var(--ink); margin-right: auto; }
-  .home svg { width: 30px; height: 30px; flex: none; }
-  .top nav a { color: var(--ink-muted); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: 999px; }
-  .top nav a:hover { color: var(--ink); background: var(--bg-alt); }
-  @media (max-width: 1000px) { .top nav { display: none; } }
-  @media (max-width: 480px) { .home { display: none; } .top .md-wrap { justify-content: flex-end; } }
-
   /* Header: the cover */
   .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
-  .hero .md-wrap { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; min-height: 360px; gap: 24px; }
-  .hero h1 { font-size: clamp(3.4rem, 9vw, 7rem); line-height: .92; letter-spacing: -.02em; padding: 56px 0 8px; }
-  .hero p { color: var(--ink-muted); margin: 6px 0 40px 4px; font-size: 15px; }
-  .portrait { position: relative; justify-self: center; width: min(320px, 70vw); aspect-ratio: 1; margin: 28px 0; }
+  .hero .md-wrap { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; min-height: 360px; gap: var(--space-6); }
+  .hero h1 { font-size: clamp(3.4rem, 9vw, 7rem); line-height: .92; letter-spacing: -.02em; padding: 56px 0 var(--space-2); }
+  .hero p { color: var(--ink-muted); margin: var(--space-1-5) 0 40px var(--space-1); font-size: var(--text-small-size); }
+  .hero .ver { display: inline-block; margin-left: var(--space-1); }
+  .portrait { position: relative; justify-self: center; width: min(320px, 70vw); aspect-ratio: 1; margin: var(--space-7) 0; }
   .portrait .blob { position: absolute; inset: 4%; border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%; background: var(--sun); animation: morph 12s ease-in-out infinite; }
   :root[data-theme="dark"] .portrait .blob { background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .portrait .blob { background: conic-gradient(var(--coral), var(--plum), var(--teal), var(--sun), var(--coral)); } }
-  .portrait img:not(.bolt) { position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: 50%; border: 5px solid var(--card); box-shadow: var(--shadow-card); }
-  .portrait .bolt { position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px rgba(21,27,43,.25)); }
+  .portrait img:not(.bolt) { position: absolute; inset: 9%; width: 82%; height: 82%; object-fit: cover; object-position: 50% 35%; border-radius: var(--radius-round); border: 5px solid var(--card); box-shadow: var(--shadow-card); }
+  .portrait .bolt { position: absolute; right: -8%; bottom: -4%; width: 42%; height: auto; animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 10px 14px color-mix(in srgb, var(--bolt-line) 25%, transparent)); }
   @keyframes morph { 50% { border-radius: 56% 44% 42% 58% / 44% 58% 42% 56%; } }
   @keyframes bob { 50% { transform: translateY(-10px) rotate(-3deg); } }
-  @media (max-width: 760px) { .hero .md-wrap { grid-template-columns: 1fr; } .portrait { order: -1; margin: 24px 0 0; width: min(260px, 66vw); } .hero h1 { padding-top: 16px; } }
+  @media (max-width: 760px) { .hero .md-wrap { grid-template-columns: 1fr; } .portrait { order: -1; margin: var(--space-6) 0 0; width: min(260px, 66vw); } .hero h1 { padding-top: var(--space-4); } }
 
   /* Color modes */
-  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4-5); }
   @media (max-width: 900px) { .modes { grid-template-columns: 1fr; } }
   .mode { background: var(--page); color: var(--ink); border: 2px solid var(--edge); border-radius: var(--radius-xl); padding: 22px; box-shadow: var(--shadow-card); font-family: var(--font-sans); }
-  .mode h3 { font: 600 26px/1.1 var(--display); margin: 10px 0 4px; }
-  .mode-head { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; }
-  .mode-head p { margin: 0; color: var(--ink-muted); font-size: 15px; }
-  .mode-demo { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .sw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-  .sw { display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px; }
-  .chip-c { flex: none; width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); }
+  .mode h3 { font: 600 26px/1.1 var(--display); letter-spacing: var(--tracking-heading); margin: var(--space-2-5) 0 var(--space-1); }
+  .mode-head { display: flex; justify-content: space-between; gap: var(--space-3-5); flex-wrap: wrap; align-items: flex-end; margin-bottom: var(--space-4); }
+  .mode-head p { margin: 0; color: var(--ink-muted); font-size: var(--text-small-size); }
+  .mode-demo { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; }
+  .sw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-2); }
+  .sw { display: flex; gap: var(--space-2-5); align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-2); }
+  .chip-c { flex: none; width: 34px; height: 34px; border-radius: var(--radius-xs); border: 1px solid var(--line); }
   .sw-t { display: flex; flex-direction: column; line-height: 1.25; font-size: 13.5px; min-width: 0; }
   .sw-t .md-mono { color: var(--ink-muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .note { margin-top: 14px; color: var(--ink-muted); font-size: 15px; }
+  .note { margin-top: var(--space-3-5); color: var(--ink-muted); font-size: var(--text-small-size); }
+  .cat-panel { display: grid; gap: var(--space-3); }
+  .cat-panel > .md-tag { justify-self: start; }
+  .cat-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .cat-fill { padding: var(--space-1-5) var(--space-3-5); border: 2px solid var(--edge); border-radius: var(--radius-pill); color: var(--on-accent); font: var(--text-label); }
+  .cat-strong { padding: var(--space-1-5) var(--space-2); font: 700 var(--text-body-size)/1.2 var(--font-sans); }
 
-  /* Type, spacing, radius */
-  .ty { display: grid; grid-template-columns: 260px 1fr; gap: 20px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+  /* Type, spacing, radius, more tokens */
+  .ty { display: grid; grid-template-columns: 260px 1fr; gap: var(--space-5); align-items: center; padding: var(--space-3-5) 0; border-top: 1px solid var(--line); }
   .ty-meta { display: flex; flex-direction: column; font-size: 13.5px; color: var(--ink-muted); }
-  .ty-meta b { color: var(--ink); font-size: 15px; }
+  .ty-meta b { color: var(--ink); font-size: var(--text-small-size); }
+  .ty-meta code { color: var(--ink); }
   .ty-sample { overflow-wrap: anywhere; }
-  @media (max-width: 700px) { .ty { grid-template-columns: 1fr; gap: 6px; } }
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 700px) { .ty { grid-template-columns: 1fr; gap: var(--space-1-5); } }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4-5); }
   @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
-  .sp { display: grid; grid-template-columns: 120px 1fr 56px; gap: 10px; align-items: center; padding: 5px 0; }
-  .sp i { display: block; height: 14px; border-radius: 4px; background: var(--sky); }
-  .rds { display: flex; flex-wrap: wrap; gap: 14px; }
-  .rd { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; }
+  .sp { display: grid; grid-template-columns: 120px 1fr 56px; gap: var(--space-2-5); align-items: center; padding: 5px 0; }
+  .sp i { display: block; height: 14px; border-radius: var(--radius-2xs); background: var(--sky); }
+  .rds { display: flex; flex-wrap: wrap; gap: var(--space-3-5); }
+  .rd { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); font-size: 13px; }
   .rd i { width: 72px; height: 72px; background: var(--sun); border: 2px solid var(--edge); }
   .rd .md-mono { color: var(--ink-muted); }
+  .toks { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4-5); }
+  @media (max-width: 900px) { .toks { grid-template-columns: 1fr; } }
+  .tok { min-width: 0; }
+  .tok h3 { font-size: 1.2rem; margin-bottom: var(--space-2) !important; }
 
   /* Components and icons */
-  .demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .demo { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+  .demo-col { display: grid; gap: var(--space-3); }
+  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4-5); }
   @media (max-width: 800px) { .comp-grid { grid-template-columns: 1fr; } }
-  .comp-grid .md-card { padding: 20px; }
-  .comp-grid h3 { margin-bottom: 12px; }
-  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
-  .icons figure { margin: 0; background: #F6F7F9; border: 1px solid var(--line); border-radius: 14px; padding: 12px 6px 8px; text-align: center; }
-  .icons figcaption { font-size: 12px; color: #525C6E; margin-top: 4px; }
+  .comp-grid .md-card { padding: var(--space-5); min-width: 0; }
+  .comp-grid .md-card:hover { transform: none; }
+  .comp-grid h3 { margin-bottom: var(--space-3); }
+  .comp-grid .md-tile { min-width: 140px; }
+  /* The prose and popover samples sit inside demo cards, whose paragraphs are small and muted; on a real page they are body text */
+  .comp-grid .md-card :is(.md-prose, .md-popover) p { color: var(--ink); font-size: var(--text-body-size); line-height: var(--text-body-leading); }
+  .comp-grid .md-popover { max-width: none; }
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--space-2-5); }
+  .icons figure { margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-1-5) var(--space-2); text-align: center; }
+  .icons figcaption { font-size: 12px; color: var(--ink-muted); margin-top: var(--space-1); }
 
   /* Guidelines (rendered README) */
   .guide { max-width: 820px; overflow-wrap: break-word; }
-  .guide h2 { font-size: 1.7rem; margin: 40px 0 10px !important; }
-  .guide h3 { font-size: 1.2rem; margin: 26px 0 6px !important; }
-  .guide .tbl { overflow-x: auto; margin: 10px 0; border-radius: 8px; }
-  .guide table { border-collapse: collapse; width: 100%; font-size: 15px; }
-  .guide th, .guide td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-  .guide code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+  .guide h2 { font-size: 1.7rem; margin: 40px 0 var(--space-2-5) !important; }
+  .guide h3 { font-size: 1.2rem; margin: 26px 0 var(--space-1-5) !important; }
+  .tbl { overflow-x: auto; margin: var(--space-2-5) 0; border-radius: var(--radius-xs); }
+  .tbl table { border-collapse: collapse; width: 100%; font-size: var(--text-small-size); }
+  .tbl th, .tbl td { text-align: left; padding: var(--space-2) var(--space-2-5); border-bottom: 1px solid var(--line); vertical-align: top; }
+  .guide code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-alt); padding: 1px var(--space-1-5); border-radius: var(--radius-xs); overflow-wrap: anywhere; }
   .guide td code { overflow-wrap: normal; }
-  .guide pre { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; overflow-x: auto; }
+  .guide pre { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3-5); overflow-x: auto; }
   .guide pre code { background: none; padding: 0; }
-  .guide blockquote { margin: 14px 0; padding: 10px 16px; border-radius: 14px; background: color-mix(in srgb, var(--coral) 12%, transparent); }
+  .guide blockquote { margin: var(--space-3-5) 0; padding: var(--space-2-5) var(--space-4); border-radius: var(--radius-sm); background: color-mix(in srgb, var(--coral) 12%, transparent); }
   .guide a { color: var(--ink); }
-  footer { padding: 28px 0 40px; color: var(--ink-muted); font-size: 14px; }
+  footer { padding: var(--space-7) 0 40px; color: var(--ink-muted); font-size: var(--text-label-size); }
 </style>
 </head>
 <body class="md-page md-root">
 <a class="md-skip" href="#main">Skip to content</a>
 
-<header class="top">
-  <div class="md-wrap">
-    <a class="home" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="#4FB3A6" stroke="#151B2B" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="#fff"/><circle cx="40" cy="34" r="7" fill="#fff"/><circle cx="25" cy="35" r="3" fill="#151B2B"/><circle cx="41" cy="35" r="3" fill="#151B2B"/><path d="M32 14V9" stroke="#151B2B" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="#EE7A63" stroke="#151B2B" stroke-width="3"/></svg>Madhav</a>
-    <nav aria-label="Sections"><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav>
-    <button class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
-    <div class="md-modes" role="group" aria-label="Color mode">
-      <button data-mode="system" aria-pressed="true">System</button><button data-mode="light" aria-pressed="false">Daybreak</button><button data-mode="dark" aria-pressed="false">Deep Space</button>
-    </div>
+<header class="md-header">
+  <div class="md-wrap md-header-in">
+    <a class="md-brand" href="/" aria-label="Madhav, home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="14" width="48" height="40" rx="14" fill="var(--bolt-body)" stroke="var(--bolt-line)" stroke-width="3"/><circle cx="24" cy="34" r="7" fill="var(--bolt-eye)"/><circle cx="40" cy="34" r="7" fill="var(--bolt-eye)"/><circle cx="25" cy="35" r="3" fill="var(--bolt-line)"/><circle cx="41" cy="35" r="3" fill="var(--bolt-line)"/><path d="M32 14V9" stroke="var(--bolt-line)" stroke-width="3"/><circle cx="32" cy="7" r="5" fill="var(--bolt-accent)" stroke="var(--bolt-line)" stroke-width="3"/></svg><span class="md-brand-t"><!-- slot:brand -->Madhav<!-- /slot:brand --></span></a>
+    <!-- slot:nav --><nav class="md-nav" aria-label="Sections"><a href="#modes">Color modes</a><a href="#type">Type</a><a href="#tokens">Tokens</a><a href="#components">Components</a><a href="#guide">Guidelines</a></nav><!-- /slot:nav -->
+    <button type="button" class="xp-btn" id="exploreBtn" aria-label="Explore all pages"><svg class="xp-dots" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7l6 4 6-5M12 11l-3 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/><circle cx="6" cy="7" r="2.4" fill="var(--coral)"/><circle cx="12" cy="11" r="2.4" fill="var(--sun)" stroke="currentColor" stroke-width="1.2"/><circle cx="18" cy="6" r="2.4" fill="var(--teal)"/><circle cx="9" cy="18" r="2.4" fill="var(--sky)"/></svg><span class="xp-lbl"><span class="pro">Explore</span><span class="kid">Star map</span></span></button>
+    <button type="button" class="md-icon-btn md-theme" id="themeBtn" aria-label="Switch color scheme" title="Switch color scheme"><svg class="md-theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="var(--sun)" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg class="md-theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="var(--plum)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="17" cy="5" r="1.2" fill="currentColor"/><circle cx="20.5" cy="9" r=".9" fill="currentColor"/></svg></button>
+    <div class="md-header-end"><!-- slot:music --><!-- /slot:music --><!-- slot:end --><!-- /slot:end --></div>
   </div>
 </header>
 
@@ -115,12 +122,12 @@
   <div class="md-wrap">
     <div>
       <h1>Madhav</h1>
-      <p>Design system. Professional enough for recruiters, fun enough for kids.</p>
+      <p>Design system <span class="md-mono ver">v2.2.0</span>. Professional enough for recruiters, fun enough for kids.</p>
     </div>
     <div class="portrait" aria-hidden="true">
       <div class="blob"></div>
       <img src="/assets/profile.jpg" alt="" width="400" height="400">
-      <img class="bolt" src="icons/bolt.svg" alt="" width="160" height="170">
+      <img class="bolt md-bolt" src="icons/bolt.svg" alt="" width="160" height="170">
     </div>
     </div>
   </div>
@@ -130,7 +137,7 @@
   <div class="md-wrap">
     <span class="md-tag md-tag--plum">Color modes</span>
     <h2 class="md-heading">Two modes, one system</h2>
-    <p class="md-lede">Pages follow the visitor's system setting by default. The mode switch overrides it and remembers the choice; picking System again goes back to following the device. Both modes are shown here side by side, whatever this page is set to.</p>
+    <p class="md-lede">Pages follow the visitor's system setting by default. The round sun or moon button in the header switches scheme and remembers the choice; switching back to match the device clears it, so the page follows the device again. Both modes are shown here side by side, whatever this page is set to.</p>
     <div class="modes">
 <div class="mode mode-daybreak">
   <div class="mode-head"><div><span class="md-tag">Daybreak</span><h3>Daybreak</h3><p>Light. Cool slate-white ground, coral and teal accents, Fredoka headings.</p></div>
@@ -154,7 +161,28 @@
 <div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#0E6B63</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#B1432C</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#151B2B</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div></div>
+<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--scrim)"></span><span class="sw-t"><b>scrim</b><span class="md-mono">rgba(21,27,43,.45)</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--media-black)"></span><span class="sw-t"><b>media-black</b><span class="md-mono">#000000</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--media-ink)"></span><span class="sw-t"><b>media-ink</b><span class="md-mono">#FFFFFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-red)"></span><span class="sw-t"><b>cat-red</b><span class="md-mono">#F27A85</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-orange)"></span><span class="sw-t"><b>cat-orange</b><span class="md-mono">#F5A05A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-yellow)"></span><span class="sw-t"><b>cat-yellow</b><span class="md-mono">#F2CB4E</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-green)"></span><span class="sw-t"><b>cat-green</b><span class="md-mono">#74C487</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-blue)"></span><span class="sw-t"><b>cat-blue</b><span class="md-mono">#7FB0F0</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-purple)"></span><span class="sw-t"><b>cat-purple</b><span class="md-mono">#BC9AF0</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-red-strong)"></span><span class="sw-t"><b>cat-red-strong</b><span class="md-mono">#B42335</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-orange-strong)"></span><span class="sw-t"><b>cat-orange-strong</b><span class="md-mono">#9C4A00</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-yellow-strong)"></span><span class="sw-t"><b>cat-yellow-strong</b><span class="md-mono">#755A00</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-green-strong)"></span><span class="sw-t"><b>cat-green-strong</b><span class="md-mono">#1E7038</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-blue-strong)"></span><span class="sw-t"><b>cat-blue-strong</b><span class="md-mono">#1D5DB5</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-purple-strong)"></span><span class="sw-t"><b>cat-purple-strong</b><span class="md-mono">#6A45B5</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-body)"></span><span class="sw-t"><b>bolt-body</b><span class="md-mono">#4FB3A6</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-screen)"></span><span class="sw-t"><b>bolt-screen</b><span class="md-mono">#E9FBF8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-accent)"></span><span class="sw-t"><b>bolt-accent</b><span class="md-mono">#EE7A63</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-belly)"></span><span class="sw-t"><b>bolt-belly</b><span class="md-mono">#F2B544</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-eye)"></span><span class="sw-t"><b>bolt-eye</b><span class="md-mono">#FFFFFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-line)"></span><span class="sw-t"><b>bolt-line</b><span class="md-mono">#151B2B</span></span></div></div>
 </div>
 <div class="mode mode-deep-space">
   <div class="mode-head"><div><span class="md-tag">Deep Space</span><h3>Deep Space</h3><p>Dark. Calm slate night, soft coral and teal accents, Space Grotesk headings.</p></div>
@@ -178,26 +206,73 @@
 <div class="sw"><span class="chip-c" style="background:var(--sky-strong)"></span><span class="sw-t"><b>sky-strong</b><span class="md-mono">#6ED3C4</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--plum-strong)"></span><span class="sw-t"><b>plum-strong</b><span class="md-mono">#F59A86</span></span></div>
 <div class="sw"><span class="chip-c" style="background:var(--on-accent)"></span><span class="sw-t"><b>on-accent</b><span class="md-mono">#0F1218</span></span></div>
-<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div></div>
+<div class="sw"><span class="chip-c" style="background:var(--focus)"></span><span class="sw-t"><b>focus</b><span class="md-mono">= sky-strong</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--scrim)"></span><span class="sw-t"><b>scrim</b><span class="md-mono">rgba(0,0,0,.62)</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--media-black)"></span><span class="sw-t"><b>media-black</b><span class="md-mono">#000000</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--media-ink)"></span><span class="sw-t"><b>media-ink</b><span class="md-mono">#FFFFFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-red)"></span><span class="sw-t"><b>cat-red</b><span class="md-mono">#F58E98</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-orange)"></span><span class="sw-t"><b>cat-orange</b><span class="md-mono">#F7AE6E</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-yellow)"></span><span class="sw-t"><b>cat-yellow</b><span class="md-mono">#F4D06A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-green)"></span><span class="sw-t"><b>cat-green</b><span class="md-mono">#86D198</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-blue)"></span><span class="sw-t"><b>cat-blue</b><span class="md-mono">#8DBAF5</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-purple)"></span><span class="sw-t"><b>cat-purple</b><span class="md-mono">#C6A8F5</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-red-strong)"></span><span class="sw-t"><b>cat-red-strong</b><span class="md-mono">#F7A0A8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-orange-strong)"></span><span class="sw-t"><b>cat-orange-strong</b><span class="md-mono">#F8B87E</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-yellow-strong)"></span><span class="sw-t"><b>cat-yellow-strong</b><span class="md-mono">#F4D06A</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-green-strong)"></span><span class="sw-t"><b>cat-green-strong</b><span class="md-mono">#93D8A4</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-blue-strong)"></span><span class="sw-t"><b>cat-blue-strong</b><span class="md-mono">#9DC4F7</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--cat-purple-strong)"></span><span class="sw-t"><b>cat-purple-strong</b><span class="md-mono">#CFB5F7</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-body)"></span><span class="sw-t"><b>bolt-body</b><span class="md-mono">#4FB3A6</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-screen)"></span><span class="sw-t"><b>bolt-screen</b><span class="md-mono">#E9FBF8</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-accent)"></span><span class="sw-t"><b>bolt-accent</b><span class="md-mono">#EE7A63</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-belly)"></span><span class="sw-t"><b>bolt-belly</b><span class="md-mono">#F2B544</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-eye)"></span><span class="sw-t"><b>bolt-eye</b><span class="md-mono">#FFFFFF</span></span></div>
+<div class="sw"><span class="chip-c" style="background:var(--bolt-line)"></span><span class="sw-t"><b>bolt-line</b><span class="md-mono">#151B2B</span></span></div></div>
 </div>
     </div>
     <p class="note">How it works: <code class="md-mono">tokens.css</code> sets Daybreak on <code class="md-mono">:root</code>, switches to Deep Space under <code class="md-mono">prefers-color-scheme: dark</code>, and lets <code class="md-mono">&lt;html data-theme="light|dark"&gt;</code> override both. Add <code class="md-mono">class="mode-daybreak"</code> or <code class="md-mono">class="mode-deep-space"</code> to pin any block to one mode.</p>
   </div>
 </section>
 
-<section class="md-section md-band" id="type">
+<section class="md-section md-band" id="categories">
   <div class="md-wrap">
-    <span class="md-tag md-tag--sky">Typography</span>
-    <h2 class="md-heading">Type scale</h2>
-    <p class="md-lede">Headings use Fredoka in Daybreak and Space Grotesk in Deep Space through <code class="md-mono">var(--display)</code>. Body is Nunito Sans; code is JetBrains Mono.</p>
-    <div class="ty"><div class="ty-meta"><b>display-xl</b><span class="md-mono">70px / 1.1 / 600</span><span>Hero name only. clamp(2.6rem, 6vw, 4.4rem). Swap the family to display-space in Deep Space.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(70px,9vw);line-height:1.1;font-weight:600;letter-spacing:-0.01em;">Hi, I&#x27;m Madhav</div></div><div class="ty"><div class="ty-meta"><b>heading</b><span class="md-mono">43px / 1.1 / 600</span><span>Section titles. clamp(1.9rem, 4vw, 2.7rem).</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(43px,9vw);line-height:1.1;font-weight:600;letter-spacing:-0.01em;">Think first, then talk</div></div><div class="ty"><div class="ty-meta"><b>stat</b><span class="md-mono">35px / 1.1 / 700</span><span>Big numbers in stat tiles and scoreboards.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(35px,9vw);line-height:1.1;font-weight:700;">2 → 25</div></div><div class="ty"><div class="ty-meta"><b>title</b><span class="md-mono">24px / 1.1 / 600</span><span>Panel and result headings.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(24px,9vw);line-height:1.1;font-weight:600;">Capital One</div></div><div class="ty"><div class="ty-meta"><b>card-title</b><span class="md-mono">20px / 1.15 / 600</span><span>Card headings and section sub-heads.</span></div><div class="ty-sample" style="font-family:var(--display);font-size:min(20px,9vw);line-height:1.15;font-weight:600;">Agentic AI</div></div><div class="ty"><div class="ty-meta"><b>lede</b><span class="md-mono">19px / 1.6 / 400</span><span>Hero and section intros, in ink-muted.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(19px,9vw);line-height:1.6;font-weight:400;">I teach computers how to listen, think, and help people.</div></div><div class="ty"><div class="ty-meta"><b>body</b><span class="md-mono">17px / 1.6 / 400</span><span>Default paragraph text.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(17px,9vw);line-height:1.6;font-weight:400;">Pick your building blocks, stay within budget, then launch.</div></div><div class="ty"><div class="ty-meta"><b>small</b><span class="md-mono">15px / 1.5 / 400</span><span>Card descriptions, post-mortem lines.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(15px,9vw);line-height:1.5;font-weight:400;">Background processing kept uploads instant.</div></div><div class="ty"><div class="ty-meta"><b>label</b><span class="md-mono">14px / 1.4 / 700</span><span>Buttons, chips, toggles, nav links (nav at 15px/600).</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(14px,9vw);line-height:1.4;font-weight:700;">Explain it like I&#x27;m 8</div></div><div class="ty"><div class="ty-meta"><b>kicker</b><span class="md-mono">12.5px / 1.3 / 700</span><span>Uppercase labels above stats and lists, in ink-muted.</span></div><div class="ty-sample" style="font-family:var(--font-sans);font-size:min(12.5px,9vw);line-height:1.3;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">BUGS FIXED</div></div><div class="ty"><div class="ty-meta"><b>code</b><span class="md-mono">14px / 1.6 / 500</span><span>Agent thoughts, code backdrops, costs, demo disclaimers.</span></div><div class="ty-sample" style="font-family:var(--font-mono);font-size:min(14px,9vw);line-height:1.6;font-weight:500;">{ route: &quot;billing&quot;, confidence: 0.93 }</div></div>
+    <span class="md-tag md-tag--sky">Categories</span>
+    <h2 class="md-heading">Category colours</h2>
+    <p class="md-lede">Six distinct hues for things that need telling apart: belts, categories, legend keys. Fills carry <code class="md-mono">on-accent</code> text; the <code class="md-mono">-strong</code> shades are for text and marks. Every pairing meets AA in both schemes.</p>
+    <div class="modes">
+<div class="mode mode-daybreak cat-panel"><span class="md-tag">Daybreak</span><div class="cat-row"><span class="cat-fill" style="background:var(--cat-red)">Red</span><span class="cat-fill" style="background:var(--cat-orange)">Orange</span><span class="cat-fill" style="background:var(--cat-yellow)">Yellow</span><span class="cat-fill" style="background:var(--cat-green)">Green</span><span class="cat-fill" style="background:var(--cat-blue)">Blue</span><span class="cat-fill" style="background:var(--cat-purple)">Purple</span></div><div class="cat-row"><span class="cat-strong" style="color:var(--cat-red-strong)">Red</span><span class="cat-strong" style="color:var(--cat-orange-strong)">Orange</span><span class="cat-strong" style="color:var(--cat-yellow-strong)">Yellow</span><span class="cat-strong" style="color:var(--cat-green-strong)">Green</span><span class="cat-strong" style="color:var(--cat-blue-strong)">Blue</span><span class="cat-strong" style="color:var(--cat-purple-strong)">Purple</span></div></div>
+<div class="mode mode-deep-space cat-panel"><span class="md-tag">Deep Space</span><div class="cat-row"><span class="cat-fill" style="background:var(--cat-red)">Red</span><span class="cat-fill" style="background:var(--cat-orange)">Orange</span><span class="cat-fill" style="background:var(--cat-yellow)">Yellow</span><span class="cat-fill" style="background:var(--cat-green)">Green</span><span class="cat-fill" style="background:var(--cat-blue)">Blue</span><span class="cat-fill" style="background:var(--cat-purple)">Purple</span></div><div class="cat-row"><span class="cat-strong" style="color:var(--cat-red-strong)">Red</span><span class="cat-strong" style="color:var(--cat-orange-strong)">Orange</span><span class="cat-strong" style="color:var(--cat-yellow-strong)">Yellow</span><span class="cat-strong" style="color:var(--cat-green-strong)">Green</span><span class="cat-strong" style="color:var(--cat-blue-strong)">Blue</span><span class="cat-strong" style="color:var(--cat-purple-strong)">Purple</span></div></div>
+    </div>
   </div>
 </section>
 
-<section class="md-section">
+<section class="md-section" id="type">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--sky">Typography</span>
+    <h2 class="md-heading">Type scale</h2>
+    <p class="md-lede">Each style is a token: <code class="md-mono">font: var(--text-title)</code> plus <code class="md-mono">letter-spacing: var(--text-title-tracking)</code>, or the class <code class="md-mono">md-text-title</code>. Headings use Fredoka in Daybreak and Space Grotesk in Deep Space through <code class="md-mono">var(--display)</code>. Body is Nunito Sans; code is JetBrains Mono.</p>
+    <div class="ty"><div class="ty-meta"><b>display-xl</b><code class="md-mono">--text-display-xl</code><span class="md-mono">70px / 1.1 / 600</span><span>Hero name only. clamp(2.6rem, 6vw, 4.4rem). Swap the family to display-space in Deep Space.</span></div><div class="ty-sample" style="font:var(--text-display-xl);letter-spacing:var(--text-display-xl-tracking);">Hi, I&#x27;m Madhav</div></div><div class="ty"><div class="ty-meta"><b>display-l</b><code class="md-mono">--text-display-l</code><span class="md-mono">53px / 1.1 / 600</span><span>Page titles below the hero size: app and report heroes, the h1 of any page that is not the home page. clamp(2.1rem, 5vw, 3.3rem).</span></div><div class="ty-sample" style="font:var(--text-display-l);letter-spacing:var(--text-display-l-tracking);">Speed tricks for everyone</div></div><div class="ty"><div class="ty-meta"><b>heading</b><code class="md-mono">--text-heading</code><span class="md-mono">43px / 1.1 / 600</span><span>Section titles. clamp(1.9rem, 4vw, 2.7rem).</span></div><div class="ty-sample" style="font:var(--text-heading);letter-spacing:var(--text-heading-tracking);">Think first, then talk</div></div><div class="ty"><div class="ty-meta"><b>stat</b><code class="md-mono">--text-stat</code><span class="md-mono">35px / 1.1 / 700</span><span>Big numbers in stat tiles and scoreboards.</span></div><div class="ty-sample" style="font:var(--text-stat);letter-spacing:var(--text-stat-tracking);">2 → 25</div></div><div class="ty"><div class="ty-meta"><b>title</b><code class="md-mono">--text-title</code><span class="md-mono">24px / 1.1 / 600</span><span>Panel and result headings.</span></div><div class="ty-sample" style="font:var(--text-title);letter-spacing:var(--text-title-tracking);">Capital One</div></div><div class="ty"><div class="ty-meta"><b>card-title</b><code class="md-mono">--text-card-title</code><span class="md-mono">20px / 1.15 / 600</span><span>Card headings and section sub-heads.</span></div><div class="ty-sample" style="font:var(--text-card-title);letter-spacing:var(--text-card-title-tracking);">Agentic AI</div></div><div class="ty"><div class="ty-meta"><b>cta</b><code class="md-mono">--text-cta</code><span class="md-mono">22px / 1.1 / 800</span><span>The label of the one big call to action (md-btn--lg). clamp(1.2rem, 2.8vw, 1.4rem).</span></div><div class="ty-sample" style="font:var(--text-cta);letter-spacing:var(--text-cta-tracking);">Start learning</div></div><div class="ty"><div class="ty-meta"><b>lede</b><code class="md-mono">--text-lede</code><span class="md-mono">19px / 1.6 / 400</span><span>Hero and section intros, in ink-muted.</span></div><div class="ty-sample" style="font:var(--text-lede);letter-spacing:var(--text-lede-tracking);">I teach computers how to listen, think, and help people.</div></div><div class="ty"><div class="ty-meta"><b>body</b><code class="md-mono">--text-body</code><span class="md-mono">17px / 1.6 / 400</span><span>Default paragraph text.</span></div><div class="ty-sample" style="font:var(--text-body);letter-spacing:var(--text-body-tracking);">Pick your building blocks, stay within budget, then launch.</div></div><div class="ty"><div class="ty-meta"><b>small</b><code class="md-mono">--text-small</code><span class="md-mono">15px / 1.5 / 400</span><span>Card descriptions, post-mortem lines.</span></div><div class="ty-sample" style="font:var(--text-small);letter-spacing:var(--text-small-tracking);">Background processing kept uploads instant.</div></div><div class="ty"><div class="ty-meta"><b>nav</b><code class="md-mono">--text-nav</code><span class="md-mono">0.95rem / 1.6 / 600</span><span>Header nav links and app tabs (the shared header).</span></div><div class="ty-sample" style="font:var(--text-nav);letter-spacing:var(--text-nav-tracking);">Brain Lab</div></div><div class="ty"><div class="ty-meta"><b>label</b><code class="md-mono">--text-label</code><span class="md-mono">14px / 1.4 / 700</span><span>Buttons, chips, toggles, nav links (nav at 15px/600).</span></div><div class="ty-sample" style="font:var(--text-label);letter-spacing:var(--text-label-tracking);">Explain it like I&#x27;m 8</div></div><div class="ty"><div class="ty-meta"><b>label-sm</b><code class="md-mono">--text-label-sm</code><span class="md-mono">13.5px / 1.2 / 700</span><span>Compact controls: small buttons, switches, the Music pill, segmented controls.</span></div><div class="ty-sample" style="font:var(--text-label-sm);letter-spacing:var(--text-label-sm-tracking);">Kid mode</div></div><div class="ty"><div class="ty-meta"><b>kicker</b><code class="md-mono">--text-kicker</code><span class="md-mono">12.5px / 1.3 / 700</span><span>Uppercase labels above stats and lists, in ink-muted.</span></div><div class="ty-sample" style="font:var(--text-kicker);letter-spacing:var(--text-kicker-tracking);text-transform:uppercase;">BUGS FIXED</div></div><div class="ty"><div class="ty-meta"><b>code</b><code class="md-mono">--text-code</code><span class="md-mono">14px / 1.6 / 500</span><span>Agent thoughts, code backdrops, costs, demo disclaimers.</span></div><div class="ty-sample" style="font:var(--text-code);letter-spacing:var(--text-code-tracking);">{ route: &quot;billing&quot;, confidence: 0.93 }</div></div>
+  </div>
+</section>
+
+<section class="md-section md-band">
   <div class="md-wrap two">
-    <div><span class="md-tag md-tag--teal">Spacing</span><h2 class="md-heading" style="font-size:1.8rem">Spacing</h2><div style="margin-top:18px"><div class="sp"><span class="md-mono">space-1</span><i style="width:4px"></i><span class="md-mono">4px</span></div><div class="sp"><span class="md-mono">space-2</span><i style="width:8px"></i><span class="md-mono">8px</span></div><div class="sp"><span class="md-mono">space-3</span><i style="width:12px"></i><span class="md-mono">12px</span></div><div class="sp"><span class="md-mono">space-4</span><i style="width:16px"></i><span class="md-mono">16px</span></div><div class="sp"><span class="md-mono">space-5</span><i style="width:20px"></i><span class="md-mono">20px</span></div><div class="sp"><span class="md-mono">space-6</span><i style="width:24px"></i><span class="md-mono">24px</span></div><div class="sp"><span class="md-mono">space-7</span><i style="width:28px"></i><span class="md-mono">28px</span></div><div class="sp"><span class="md-mono">space-9</span><i style="width:48px"></i><span class="md-mono">48px</span></div><div class="sp"><span class="md-mono">space-section</span><i style="width:72px"></i><span class="md-mono">72px</span></div></div></div>
-    <div><span class="md-tag">Shape</span><h2 class="md-heading" style="font-size:1.8rem">Corners</h2><div class="rds" style="margin-top:18px"><div class="rd"><i style="border-radius:var(--radius-sm)"></i><b>radius-sm</b><span class="md-mono">12px</span></div><div class="rd"><i style="border-radius:var(--radius-md)"></i><b>radius-md</b><span class="md-mono">16px</span></div><div class="rd"><i style="border-radius:var(--radius-lg)"></i><b>radius-lg</b><span class="md-mono">22px</span></div><div class="rd"><i style="border-radius:var(--radius-xl)"></i><b>radius-xl</b><span class="md-mono">28px</span></div><div class="rd"><i style="border-radius:var(--radius-pill)"></i><b>radius-pill</b><span class="md-mono">999px</span></div></div></div>
+    <div><span class="md-tag md-tag--teal">Spacing</span><h2 class="md-heading" style="font-size:1.8rem">Spacing</h2><div style="margin-top:18px"><div class="sp"><span class="md-mono">space-1</span><i style="width:4px"></i><span class="md-mono">4px</span></div><div class="sp"><span class="md-mono">space-1-5</span><i style="width:6px"></i><span class="md-mono">6px</span></div><div class="sp"><span class="md-mono">space-2</span><i style="width:8px"></i><span class="md-mono">8px</span></div><div class="sp"><span class="md-mono">space-2-5</span><i style="width:10px"></i><span class="md-mono">10px</span></div><div class="sp"><span class="md-mono">space-3</span><i style="width:12px"></i><span class="md-mono">12px</span></div><div class="sp"><span class="md-mono">space-3-5</span><i style="width:14px"></i><span class="md-mono">14px</span></div><div class="sp"><span class="md-mono">space-4</span><i style="width:16px"></i><span class="md-mono">16px</span></div><div class="sp"><span class="md-mono">space-4-5</span><i style="width:18px"></i><span class="md-mono">18px</span></div><div class="sp"><span class="md-mono">space-5</span><i style="width:20px"></i><span class="md-mono">20px</span></div><div class="sp"><span class="md-mono">space-6</span><i style="width:24px"></i><span class="md-mono">24px</span></div><div class="sp"><span class="md-mono">space-7</span><i style="width:28px"></i><span class="md-mono">28px</span></div><div class="sp"><span class="md-mono">space-9</span><i style="width:48px"></i><span class="md-mono">48px</span></div><div class="sp"><span class="md-mono">space-section</span><i style="width:72px"></i><span class="md-mono">72px</span></div></div></div>
+    <div><span class="md-tag">Shape</span><h2 class="md-heading" style="font-size:1.8rem">Corners</h2><div class="rds" style="margin-top:18px"><div class="rd"><i style="border-radius:var(--radius-2xs)"></i><b>radius-2xs</b><span class="md-mono">4px</span></div><div class="rd"><i style="border-radius:var(--radius-xs)"></i><b>radius-xs</b><span class="md-mono">8px</span></div><div class="rd"><i style="border-radius:var(--radius-sm)"></i><b>radius-sm</b><span class="md-mono">12px</span></div><div class="rd"><i style="border-radius:var(--radius-md)"></i><b>radius-md</b><span class="md-mono">16px</span></div><div class="rd"><i style="border-radius:var(--radius-bubble)"></i><b>radius-bubble</b><span class="md-mono">18px</span></div><div class="rd"><i style="border-radius:var(--radius-lg)"></i><b>radius-lg</b><span class="md-mono">22px</span></div><div class="rd"><i style="border-radius:var(--radius-xl)"></i><b>radius-xl</b><span class="md-mono">28px</span></div><div class="rd"><i style="border-radius:var(--radius-pill)"></i><b>radius-pill</b><span class="md-mono">999px</span></div><div class="rd"><i style="border-radius:var(--radius-round)"></i><b>radius-round</b><span class="md-mono">50%</span></div></div></div>
+  </div>
+</section>
+
+<section class="md-section" id="tokens">
+  <div class="md-wrap">
+    <span class="md-tag md-tag--coral">Tokens</span>
+    <h2 class="md-heading">Depth, layers and motion</h2>
+    <p class="md-lede">Shadows and effects have a value per scheme; sizes, layers and motion are the same in both.</p>
+    <div class="toks">
+<div class="tok"><h3>Shadows and effects</h3><div class="tbl" tabindex="0" role="region" aria-label="Table: Shadows and effects"><table><thead><tr><th>Token</th><th>Use (a value per scheme, see tokens.json)</th></tr></thead><tbody><tr><td><code class="md-mono">--shadow-card</code></td><td>Cards and panels. A soft lift in both modes.</td></tr><tr><td><code class="md-mono">--shadow-ledge</code></td><td>Raised controls (buttons, chips, game boards use 5px). Hover: 5px and translateY(-2px). Active: 1px and translateY(2px).</td></tr><tr><td><code class="md-mono">--shadow-ledge-hover</code></td><td>Raised control on hover, with translateY(-2px).</td></tr><tr><td><code class="md-mono">--shadow-ledge-press</code></td><td>Raised control while pressed, with translateY(2px).</td></tr><tr><td><code class="md-mono">--shadow-modal</code></td><td>Dialogs, sheets, toasts and popovers: anything floating above the page.</td></tr><tr><td><code class="md-mono">--shadow-glow</code></td><td>A soft amber ring around the current or selected item (the current level, a hinted key). Decorative: never the only sign of state.</td></tr><tr><td><code class="md-mono">--bolt-glow</code></td><td>filter for Bolt and space illustrations: none in Daybreak, a faint coral glow in Deep Space.</td></tr></tbody></table></div></div>
+<div class="tok"><h3>Sizes</h3><div class="tbl" tabindex="0" role="region" aria-label="Table: Sizes"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code class="md-mono">--header-height</code></td><td><code class="md-mono">66px</code></td><td>Height of the shared site header row.</td></tr><tr><td><code class="md-mono">--control-height</code></td><td><code class="md-mono">40px</code></td><td>Round icon buttons, the Explore button, the theme button.</td></tr><tr><td><code class="md-mono">--control-height-sm</code></td><td><code class="md-mono">36px</code></td><td>The same controls on phones (600px and narrower).</td></tr><tr><td><code class="md-mono">--control-height-lg</code></td><td><code class="md-mono">56px</code></td><td>The one big call to action, md-btn--lg.</td></tr><tr><td><code class="md-mono">--touch-target</code></td><td><code class="md-mono">44px</code></td><td>Minimum height of a tappable button on phones, 600px and narrower.</td></tr><tr><td><code class="md-mono">--popover-max</code></td><td><code class="md-mono">380px</code></td><td>Widest a panel opened from the header or a coach mark gets; phones use the viewport minus the gutter.</td></tr><tr><td><code class="md-mono">--measure-prose</code></td><td><code class="md-mono">40em</code></td><td>Longest line of reading text; md-lede and md-prose use it.</td></tr></tbody></table></div></div>
+<div class="tok"><h3>Layers (z-index)</h3><div class="tbl" tabindex="0" role="region" aria-label="Table: Layers (z-index)"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code class="md-mono">--z-base</code></td><td><code class="md-mono">1</code></td><td>Page content above the space backdrop.</td></tr><tr><td><code class="md-mono">--z-header</code></td><td><code class="md-mono">50</code></td><td>The sticky site header.</td></tr><tr><td><code class="md-mono">--z-popover</code></td><td><code class="md-mono">60</code></td><td>Menus and panels that open from the header (the music panel).</td></tr><tr><td><code class="md-mono">--z-overlay</code></td><td><code class="md-mono">100</code></td><td>Non-modal overlays and sheets that are not a &lt;dialog&gt;.</td></tr><tr><td><code class="md-mono">--z-toast</code></td><td><code class="md-mono">120</code></td><td>The toast stack, above overlays.</td></tr><tr><td><code class="md-mono">--z-skip</code></td><td><code class="md-mono">400</code></td><td>The skip link, above everything.</td></tr></tbody></table></div></div>
+<div class="tok"><h3>Motion</h3><div class="tbl" tabindex="0" role="region" aria-label="Table: Motion"><table><thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead><tbody><tr><td><code class="md-mono">--duration-fast</code></td><td><code class="md-mono">.12s</code></td><td>Press and lift of raised controls.</td></tr><tr><td><code class="md-mono">--duration-medium</code></td><td><code class="md-mono">.25s</code></td><td>Switches, fades, small reveals.</td></tr><tr><td><code class="md-mono">--duration-slow</code></td><td><code class="md-mono">.4s</code></td><td>The theme button spin, dialogs and toasts entering.</td></tr><tr><td><code class="md-mono">--ease-spring</code></td><td><code class="md-mono">cubic-bezier(.5,1.6,.5,1)</code></td><td>Springy UI: switch knobs, the theme button, level nodes.</td></tr><tr><td><code class="md-mono">--ease-out</code></td><td><code class="md-mono">cubic-bezier(.2,.8,.2,1)</code></td><td>Things entering: dialogs, toasts, sections fading up.</td></tr></tbody></table></div></div>
+    </div>
   </div>
 </section>
 
@@ -205,14 +280,28 @@
   <div class="md-wrap">
     <span class="md-tag md-tag--coral">Components</span>
     <h2 class="md-heading">Components</h2>
-    <p class="md-lede">Live, from <code class="md-mono">components.css</code>. Switch modes at the top to see each one change.</p>
+    <p class="md-lede">Live, from <code class="md-mono">components.css</code>. The header at the top of this page is the shared site header. Switch scheme with the sun or moon to see each one change.</p>
     <div class="comp-grid">
-      <div class="md-card"><h3>Button</h3><div class="demo"><button class="md-btn md-btn--primary">See how my agents think</button><button class="md-btn">Squash some bugs</button><button class="md-btn md-btn--sm">Undo</button></div></div>
+      <div class="md-card"><h3>Button</h3><div class="demo"><button class="md-btn md-btn--primary">See how my agents think</button><button class="md-btn" id="demoBtn">Squash some bugs</button><button class="md-btn md-btn--sm" id="demoBtnSm">Undo</button><button class="md-btn md-btn--primary md-btn--lg" id="demoLarge">Start learning<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+      <div class="md-card"><h3>Actions row</h3><div class="md-actions md-actions--stack" id="demoActions"><button type="button" class="md-btn md-btn--primary">Save progress</button><button type="button" class="md-btn">Not now</button><button type="button" class="md-link">Why we ask</button></div></div>
       <div class="md-card"><h3>Chip</h3><div class="demo"><button class="md-chip" aria-pressed="true">The Ticket Drop</button><button class="md-chip" aria-pressed="false">The App Went Viral</button></div></div>
       <div class="md-card"><h3>Tag</h3><div class="demo"><span class="md-tag">About</span><span class="md-tag md-tag--sky">Brain Lab</span><span class="md-tag md-tag--coral">Bug Hunt</span><span class="md-tag md-tag--plum">Design Lab</span><span class="md-tag md-tag--teal">Journey</span></div></div>
       <div class="md-card"><h3>Switch</h3><div class="demo"><button class="md-switch" role="switch" aria-checked="false" id="demoSwitch"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button></div></div>
       <div class="md-card"><h3>Stat</h3><div class="demo"><div class="md-stat"><div class="md-kicker">Years building</div><div class="md-value">17</div><p>Since 2009</p></div><div class="md-stat"><div class="md-kicker">AI squad</div><div class="md-value">2 → 25</div><p>Engineers, QA, design</p></div></div></div>
       <div class="md-card"><h3>Bubble</h3><div class="demo" style="padding-top:12px"><div class="md-bubble">Hi, I'm Bolt. I route requests so the big model does not have to.</div></div></div>
+      <div class="md-card"><h3>Raised tile</h3><div class="demo" id="demoTiles" role="group" aria-label="Tiles"><button class="md-tile" aria-pressed="true"><span class="md-tile-t">Grade 3</span><span class="md-tile-s">Times tables</span></button><button class="md-tile" aria-pressed="false"><span class="md-tile-t">Grade 4</span><span class="md-tile-s">Long division</span></button><button class="md-tile md-tile--fill" aria-pressed="false" style="--tile-fill:var(--cat-blue)"><span class="md-tile-t">Blue belt</span><span class="md-tile-s">Three tricks</span></button><button class="md-tile md-tile--fill" id="demoFillPressed" aria-pressed="true" style="--tile-fill:var(--cat-purple)"><span class="md-tile-t">Purple belt</span><span class="md-tile-s">Selected</span></button></div></div>
+      <div class="md-card"><h3>Text input</h3><div class="demo-col"><div><label class="md-label" for="demoName">Nickname</label><input class="md-input" id="demoName" placeholder="Swift Otter" aria-describedby="demoNameHint"><span class="md-hint" id="demoNameHint">Leaderboards only see this name.</span></div><div><label class="md-label" for="demoGrade">Grade</label><select class="md-input" id="demoGrade"><option>Grade 3</option><option>Grade 4</option></select></div></div></div>
+      <div class="md-card"><h3>Music pill</h3><div class="demo" id="demoMusic"><div class="md-music" role="group" aria-label="Music"><button type="button" class="md-music-btn" id="demoMusicBtn" aria-pressed="false" aria-label="Play music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/></svg><span class="md-music-lbl">Music</span><span class="md-eq" aria-hidden="true"><i></i><i></i><i></i></span></button><button type="button" class="md-music-next" id="demoNext" aria-label="Next track" title="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6l8 6-8 6z" fill="currentColor"/><path d="M18 6v12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><span class="md-music is-on" role="group" aria-label="Music (panel style)"><button type="button" class="md-music-btn" aria-expanded="false" aria-label="Calm music"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l11-2v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="17.5" cy="16" r="2.5" fill="currentColor"/></svg><span class="md-music-lbl">Music</span><span class="md-eq" aria-hidden="true"><i></i><i></i><i></i></span></button></span></div></div>
+      <div class="md-card"><h3>Round icon button and link button</h3><div class="demo"><button type="button" class="md-icon-btn" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><button type="button" class="md-icon-btn md-icon-btn--sm" aria-label="Flip back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><p style="margin:0">Progress stays here. <button type="button" class="md-link">Reset play mode</button></p></div></div>
+      <div class="md-card"><h3>Progress bar</h3><div class="demo-col"><div class="md-progress" role="progressbar" aria-label="Quest progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"><span style="--value:60%"></span></div><div class="md-progress md-progress--sm" role="progressbar" aria-label="Time left" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35" style="--bar:var(--sun-strong)"><span style="--value:35%"></span></div><progress class="md-progress md-progress--lg" value="80" max="100" aria-label="Lesson progress">80%</progress></div></div>
+      <div class="md-card"><h3>Dialog and toast</h3><div class="demo"><button type="button" class="md-btn" id="demoDialogBtn">Open a dialog</button><button type="button" class="md-btn" id="demoToastBtn">Show a toast</button></div>
+        <dialog class="md-dialog" id="demoDialog" aria-labelledby="demoDialogT"><div class="md-dialog-head"><h2 id="demoDialogT">Sutra of the day</h2><button type="button" class="md-icon-btn md-icon-btn--sm" id="demoDialogX" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p style="margin:0">By one more than the one before. A dialog has a scrim behind it, a modal shadow and a close button.</p><div class="md-dialog-foot"><button type="button" class="md-btn md-btn--primary" id="demoDialogOk">Got it</button></div></dialog></div>
+      <div class="md-card"><h3>Segmented control and kicker</h3><div class="demo-col"><div class="md-seg" role="group" aria-label="Leaderboard" id="demoSeg"><button aria-pressed="true">Today</button><button aria-pressed="false">This week</button><button aria-pressed="false">All time</button></div><span class="md-kicker">Kicker on its own</span><p class="md-sr-only">Screen-reader-only text sits here: read aloud, never shown.</p></div></div>
+      <div class="md-card"><h3>Popover</h3><div class="md-popover" id="demoPopover" role="dialog" aria-labelledby="demoPopoverT"><span class="md-kicker">Quick tour, 1 of 3</span><h4 class="md-text-card-title" id="demoPopoverT" style="margin:var(--space-1) 0 var(--space-2)">This is your belt</h4><p style="margin:0">It fills as you learn tricks. Tap it any time to see what comes next.</p><div class="md-actions" style="margin-bottom:0"><button type="button" class="md-btn md-btn--primary md-btn--sm">Next</button><button type="button" class="md-btn md-btn--sm">Skip tour</button></div></div></div>
+      <div class="md-card"><h3>Prose</h3><div class="md-prose" id="demoProse"><h2>Why the tricks work</h2><p>Every Vedic sutra is a rule about place value. Once you see the rule, the <a href="#type">shortcut</a> stops feeling like magic.</p><h3>By one more than the one before</h3><ul><li>Squaring a number that ends in 5</li><li>Multiplying two numbers whose first digits match</li></ul><blockquote>Say the rule out loud before you use it. The words carry the maths.</blockquote><hr><p>Try it on 35 × 35, then on 65 × 65.</p></div></div>
+      <div class="md-card"><h3>Table</h3><div class="md-table md-table--stack" id="demoTable" tabindex="0" role="region" aria-label="Belts, table"><table><thead><tr><th>Belt</th><th>Tricks</th><th>Earned by</th></tr></thead><tbody><tr><td data-label="Belt">White</td><td data-label="Tricks">3</td><td data-label="Earned by">Everyone who starts</td></tr><tr><td data-label="Belt">Yellow</td><td data-label="Tricks">6</td><td data-label="Earned by">Finishing Grade 3</td></tr><tr><td data-label="Belt">Green</td><td data-label="Tricks">10</td><td data-label="Earned by">Three perfect rounds</td></tr></tbody></table></div></div>
+      <div class="md-card"><h3>Footer</h3><footer class="md-foot" id="demoFoot" style="padding-bottom:0"><div><p>Learn Vedic Math is free and open source. No ads, nothing sold.</p><nav aria-label="Site"><ul><li><a href="#guide">Privacy</a></li><li><a href="#guide">Terms</a></li><li><a href="#guide">For parents</a></li><li><a href="#guide">GitHub</a></li></ul></nav></div></footer></div>
+      <div class="md-card"><h3>Highlight</h3><h4 class="md-text-heading" id="demoHl" style="margin:0">Speed tricks for <span class="md-hl">everyone</span></h4></div>
     </div>
   </div>
 </section>
@@ -221,8 +310,8 @@
   <div class="md-wrap">
     <span class="md-tag md-tag--teal">Icons</span>
     <h2 class="md-heading">Icons and mascot</h2>
-    <p class="md-lede">32 by 32 line icons with 2.4px round strokes. Files live in <code class="md-mono">icons/</code>.</p>
-    <div class="icons"><figure><img src="icons/agent.svg" alt="" width="40" height="40"><figcaption>agent</figcaption></figure><figure><img src="icons/bank.svg" alt="" width="40" height="40"><figcaption>bank</figcaption></figure><figure><img src="icons/book.svg" alt="" width="40" height="40"><figcaption>book</figcaption></figure><figure><img src="icons/briefcase.svg" alt="" width="40" height="40"><figcaption>briefcase</figcaption></figure><figure><img src="icons/bug.svg" alt="" width="40" height="40"><figcaption>bug</figcaption></figure><figure><img src="icons/code.svg" alt="" width="40" height="40"><figcaption>code</figcaption></figure><figure><img src="icons/coin.svg" alt="" width="40" height="40"><figcaption>coin</figcaption></figure><figure><img src="icons/hardware.svg" alt="" width="40" height="40"><figcaption>hardware</figcaption></figure><figure><img src="icons/health.svg" alt="" width="40" height="40"><figcaption>health</figcaption></figure><figure><img src="icons/house.svg" alt="" width="40" height="40"><figcaption>house</figcaption></figure><figure><img src="icons/idea.svg" alt="" width="40" height="40"><figcaption>idea</figcaption></figure><figure><img src="icons/interface.svg" alt="" width="40" height="40"><figcaption>interface</figcaption></figure><figure><img src="icons/mystery.svg" alt="" width="40" height="40"><figcaption>mystery</figcaption></figure><figure><img src="icons/shield.svg" alt="" width="40" height="40"><figcaption>shield</figcaption></figure><figure><img src="icons/sneaker.svg" alt="" width="40" height="40"><figcaption>sneaker</figcaption></figure><figure><img src="icons/sound.svg" alt="" width="40" height="40"><figcaption>sound</figcaption></figure><figure><img src="icons/star.svg" alt="" width="40" height="40"><figcaption>star</figcaption></figure><figure><img src="icons/voice.svg" alt="" width="40" height="40"><figcaption>voice</figcaption></figure><figure><img src="icons/bolt.svg" alt="Bolt the robot" width="40" height="42"><figcaption>bolt</figcaption></figure></div>
+    <p class="md-lede">32 by 32 line icons with 2.4px round strokes. Files live in <code class="md-mono">icons/</code>. Shown on a Daybreak ground in both schemes, since they are drawn in navy.</p>
+    <div class="icons mode-daybreak"><figure><img src="icons/agent.svg" alt="" width="40" height="40"><figcaption>agent</figcaption></figure><figure><img src="icons/bank.svg" alt="" width="40" height="40"><figcaption>bank</figcaption></figure><figure><img src="icons/book.svg" alt="" width="40" height="40"><figcaption>book</figcaption></figure><figure><img src="icons/briefcase.svg" alt="" width="40" height="40"><figcaption>briefcase</figcaption></figure><figure><img src="icons/bug.svg" alt="" width="40" height="40"><figcaption>bug</figcaption></figure><figure><img src="icons/code.svg" alt="" width="40" height="40"><figcaption>code</figcaption></figure><figure><img src="icons/coin.svg" alt="" width="40" height="40"><figcaption>coin</figcaption></figure><figure><img src="icons/hardware.svg" alt="" width="40" height="40"><figcaption>hardware</figcaption></figure><figure><img src="icons/health.svg" alt="" width="40" height="40"><figcaption>health</figcaption></figure><figure><img src="icons/house.svg" alt="" width="40" height="40"><figcaption>house</figcaption></figure><figure><img src="icons/idea.svg" alt="" width="40" height="40"><figcaption>idea</figcaption></figure><figure><img src="icons/interface.svg" alt="" width="40" height="40"><figcaption>interface</figcaption></figure><figure><img src="icons/mystery.svg" alt="" width="40" height="40"><figcaption>mystery</figcaption></figure><figure><img src="icons/shield.svg" alt="" width="40" height="40"><figcaption>shield</figcaption></figure><figure><img src="icons/sneaker.svg" alt="" width="40" height="40"><figcaption>sneaker</figcaption></figure><figure><img src="icons/sound.svg" alt="" width="40" height="40"><figcaption>sound</figcaption></figure><figure><img src="icons/star.svg" alt="" width="40" height="40"><figcaption>star</figcaption></figure><figure><img src="icons/voice.svg" alt="" width="40" height="40"><figcaption>voice</figcaption></figure><figure><img src="icons/bolt.svg" alt="Bolt the robot" width="40" height="42"><figcaption>bolt</figcaption></figure></div>
   </div>
 </section>
 
@@ -234,13 +323,23 @@
 <p>The design system behind sbmadhav.com: professional enough for recruiters, fun enough for kids. Every new page should feel like part of the same site, in both color schemes, in both grown-up and kid mode.</p>
 <h2>Start a new page</h2>
 <ol>
-<li>Copy <a href="template.html"><code>template.html</code></a> to the new page's folder (for example <code>/projects/index.html</code>).</li>
-<li>Keep its <code>&lt;head&gt;</code> as is: the theme script, the font preloads, <code>/design-system/tokens.css</code> and <code>/design-system/components.css</code>, in that order. Never add a Google Fonts link; <code>tokens.css</code> already declares the self-hosted faces.</li>
+<li>Copy <a href="template.html"><code>template.html</code></a> to the new page's folder (for example <code>/projects/index.html</code>). Keep <code>&lt;body class="md-page md-root"&gt;</code>: both are required. <code>md-page</code> carries the <code>--page</code> ground, the heading faces and weights and the base type; <code>md-root</code> carries the font and colour, the 3px focus ring and the base link style. Add <code>md-fill</code> on a short page so its footer sits at the bottom of the viewport instead of mid-screen.</li>
+<li>Keep its <code>&lt;head&gt;</code> as is: the theme script, the font preloads, then the pinned <code>/design-system/v/&lt;version&gt;/tokens.css</code> and <code>components.css</code>, in that order. Never add a Google Fonts link or <code>@font-face</code> rules; <code>tokens.css</code> already declares the self-hosted faces.</li>
+<li>Keep the shared header between <code>&lt;!-- md-header --&gt;</code> and <code>&lt;!-- /md-header --&gt;</code>. Put the page's own parts in its slots (brand, nav, music, end) and run <code>python3 compose.py header.html page.html</code> with the pinned <code>header.html</code> (see Header below). Load the pinned <code>header.js</code> with <code>defer</code>.</li>
 <li>Write every piece of copy twice: <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>.</li>
-<li>Build from the components below; add page-specific styles with tokens only (<code>var(--coral)</code>, <code>var(--space-6)</code>, <code>var(--radius-lg)</code>), never raw hex.</li>
+<li>Build from the components below; add page-specific styles with tokens only (<code>var(--coral)</code>, <code>var(--space-6)</code>, <code>var(--radius-lg)</code>, <code>font: var(--text-title)</code>), never raw hex or raw font sizes.</li>
 <li>Add the page to the Explore menu: one entry in <code>PAGES</code> at the top of <code>/assets/explore.js</code> in the sbmadhav.github.io repo (path, icon, grown-up and kid title and one-line description).</li>
 <li>Check both schemes (sun/moon button), kid mode, a 390px-wide phone, and reduced motion before publishing.</li>
 </ol>
+<h2>Versions</h2>
+<p>Every release is published twice: at <code>/design-system/&lt;file&gt;</code> (the latest, which changes with every release) and at <code>/design-system/v/&lt;version&gt;/&lt;file&gt;</code>, which never changes once published. The current version is <strong>2.2.0</strong>; <code>versions.json</code> lists every version.</p>
+<ul>
+<li><strong>Pin a version</strong> in every page: <code>/design-system/v/2.2.0/tokens.css</code>, <code>components.css</code>, <code>header.html</code>, <code>header.js</code>. A design-system release then changes nothing on a page until that page moves to the new version on purpose, in its own change, and each site can roll back alone.</li>
+<li><strong>Pinned files</strong> per version: <code>tokens.css</code>, <code>tokens.json</code>, <code>components.css</code>, <code>header.html</code>, <code>music.html</code>, <code>header.js</code> and <code>compose.py</code>.</li>
+<li><strong>Version numbers</strong> follow semver: a new token, class or component is a minor version; a fix that changes nothing a page relies on is a patch; renaming or removing a token or class is a major version. Existing token names and classes keep working within a major version.</li>
+<li>The unversioned paths stay published for older pages, and the main site's worker precaches them. New pages should not use them.</li>
+</ul>
+<p>The decision and its alternatives are in <code>docs/adr/0001-versioned-releases-and-shared-header.md</code> in the repo.</p>
 <h2>Files</h2>
 <div class="tbl" tabindex="0" role="region" aria-label="Table: Files"><table>
 <thead>
@@ -252,7 +351,7 @@
 <tbody>
 <tr>
 <td><code>tokens.json</code></td>
-<td>The source of truth: every color (both schemes), type style, spacing step, radius and shadow, each with a usage note.</td>
+<td>The source of truth: every color (both schemes), type style, spacing step, radius, shadow, size, layer and motion token, each with a usage note. Its <code>version</code> is the release version.</td>
 </tr>
 <tr>
 <td><code>tokens.css</code></td>
@@ -260,19 +359,39 @@
 </tr>
 <tr>
 <td><code>components.css</code></td>
-<td>The <code>md-</code> components plus page basics (<code>md-page</code>, <code>md-wrap</code>, <code>md-section</code>, <code>md-band</code>, <code>md-grid</code>) and the kid-mode <code>.pro</code> / <code>.kid</code> swap.</td>
+<td>The <code>md-</code> components, the shared header, page basics (<code>md-page</code>, <code>md-wrap</code>, <code>md-section</code>, <code>md-band</code>, <code>md-grid</code>, <code>md-fill</code>), reading patterns (<code>md-prose</code>, <code>md-table</code>, <code>md-foot</code>), type classes (<code>md-text-*</code>) and the kid-mode <code>.pro</code> / <code>.kid</code> swap.</td>
+</tr>
+<tr>
+<td><code>header.html</code></td>
+<td>The shared site header as markup with slots. Pages compose it in at build time.</td>
+</tr>
+<tr>
+<td><code>header.js</code></td>
+<td>The header's color scheme button (and nothing else).</td>
+</tr>
+<tr>
+<td><code>music.html</code></td>
+<td>The Music pill's markup, to put in the header's music slot.</td>
+</tr>
+<tr>
+<td><code>compose.py</code></td>
+<td>Puts <code>header.html</code> into a page and keeps it in step: <code>python3 compose.py header.html page.html</code>. Standard library only.</td>
 </tr>
 <tr>
 <td><code>template.html</code></td>
-<td>A starter page wired up with the color mode picker and kid mode.</td>
+<td>A starter page wired up with the shared header, the theme button and kid mode.</td>
 </tr>
 <tr>
 <td><code>index.html</code></td>
-<td>The reference page at /design-system/: color modes side by side, type, spacing, live components, icons and these guidelines. Generated.</td>
+<td>The reference page at /design-system/: color modes side by side, category colours, type, spacing, tokens, live components, icons and these guidelines. Generated.</td>
+</tr>
+<tr>
+<td><code>v/&lt;version&gt;/</code>, <code>versions.json</code></td>
+<td>The published, immutable copy of each release, and the list of releases. Generated.</td>
 </tr>
 <tr>
 <td><code>build.py</code></td>
-<td>Regenerates <code>tokens.css</code> and <code>index.html</code> from <code>tokens.json</code> and this README: <code>python3 build.py</code>.</td>
+<td>Regenerates <code>tokens.css</code>, <code>index.html</code>, the header in <code>template.html</code> and <code>v/&lt;version&gt;/</code>, then checks contrast, token coverage and raw colours: <code>python3 build.py</code>.</td>
 </tr>
 <tr>
 <td><code>icons/</code></td>
@@ -283,11 +402,12 @@
 <h3>This repo</h3>
 <p>The design system lives in its own repo, <a href="https://github.com/sbmadhav/design-system">sbmadhav/design-system</a>, and GitHub Pages publishes it as a project site. Under the user site's custom domain that is <strong>sbmadhav.com/design-system/</strong>, the same URLs every page already links. <code>_config.yml</code> keeps <code>README.md</code>, <code>CLAUDE.md</code> and <code>build.py</code> out of the published site; <code>tokens.json</code> is published so other repos can read it.</p>
 <ul>
-<li><strong>Build.</strong> <code>pip install markdown</code>, then <code>python3 build.py</code>. Commit <code>tokens.css</code> and <code>index.html</code> with the change that produced them.</li>
+<li><strong>Build.</strong> <code>pip install markdown</code>, then <code>python3 build.py</code>. Commit the generated files (<code>tokens.css</code>, <code>index.html</code>, <code>template.html</code>, <code>v/&lt;version&gt;/</code>, <code>versions.json</code>) with the change that produced them.</li>
+<li><strong>Release.</strong> Any change to a published file needs a new <code>version</code> in <code>tokens.json</code> (semver, see Versions). <code>build.py</code> writes <code>v/&lt;version&gt;/</code>; CI fails if a version already on <code>main</code> would gain, lose or change a file (<code>python3 build.py --check-immutable origin/main</code>). Unit tests for that check, for <code>compose.py</code> and for the rules <code>components.css</code> must keep (the focus ring's shape, tokens for every padding and control height, the 2.2 classes) live in <code>tests/</code>: <code>python3 -m unittest discover -s tests</code>.</li>
 <li><strong>Content-Security-Policy.</strong> <code>build.py</code> writes a <code>&lt;meta http-equiv="Content-Security-Policy"&gt;</code> into <code>index.html</code> with the sha256 of each inline script, so never edit it by hand. It allows this origin and GoatCounter's beacon host only; a new origin needs a change to <code>CSP</code> in <code>build.py</code>, and <code>e2e/tests/csp.spec.ts</code> fails on any violation. <code>template.html</code> carries no policy: pages copied from it get theirs from their own repo's build.</li>
-<li><strong>Checks.</strong> A pre-commit hook in <code>.githooks/</code> and the workflow in <code>.github/workflows/build.yml</code> both run <code>build.py</code> and fail if it changed a file. Enable the hook once per clone: <code>git config core.hooksPath .githooks</code>.</li>
+<li><strong>Checks.</strong> <code>build.py</code> fails if an accent fill or <code>-strong</code> shade misses its contrast floor or a category colour misses AA in either scheme, if a token is missing from a scheme block of <code>tokens.css</code>, or if a hand-written file uses a raw colour. A pre-commit hook in <code>.githooks/</code> and the workflow in <code>.github/workflows/build.yml</code> both run it and fail if it changed a file. Enable the hook once per clone: <code>git config core.hooksPath .githooks</code>.</li>
 <li><strong>Shared files from the site.</strong> Fonts (<code>/assets/fonts/</code>), the profile photo, the app icon, the Explore menu (<code>/assets/explore.js</code>) and analytics (<code>/assets/analytics.js</code>) are served by the sbmadhav.github.io repo. Keep those paths there.</li>
-<li><strong>Preview locally.</strong> Absolute <code>/assets/</code> and <code>/design-system/</code> paths need the whole site. Put this repo next to a sbmadhav.github.io checkout, link it in with <code>ln -s ../design-system sbmadhav.github.io/design-system</code>, then run <code>python3 -m http.server 8000</code> in sbmadhav.github.io and open http://localhost:8000/design-system/.</li>
+<li><strong>Preview locally.</strong> Absolute <code>/assets/</code> and <code>/design-system/</code> paths need the whole site. Run <code>node e2e/local-server.mjs</code> and open http://127.0.0.1:8123/design-system/: it serves this checkout and takes everything else from the live site. The end-to-end tests run against it with <code>BASE_URL=http://127.0.0.1:8123</code>.</li>
 <li><strong>The site's color check.</strong> The home page inlines its colors for a fast first paint. sbmadhav.github.io keeps a pinned copy of <code>tokens.json</code> and compares against it; after changing a color here, refresh that copy there with <code>python3 scripts/check-tokens.py --refresh</code>.</li>
 </ul>
 <p>The interactive version of this system, with live previews of every component, is kept privately in Claude.</p>
@@ -404,10 +524,89 @@
 <td>navy</td>
 <td>near-black</td>
 </tr>
+<tr>
+<td>Focus ring</td>
+<td><code>focus</code></td>
+<td>alias of <code>sky-strong</code></td>
+<td>alias of <code>sky-strong</code></td>
+</tr>
+<tr>
+<td>Behind dialogs</td>
+<td><code>scrim</code></td>
+<td>navy at 45%</td>
+<td>black at 62%</td>
+</tr>
+<tr>
+<td>Behind video and media</td>
+<td><code>media-black</code>, <code>media-ink</code></td>
+<td>fixed black, fixed white</td>
+<td>the same</td>
+</tr>
+<tr>
+<td>Categories and belts</td>
+<td><code>cat-red</code>, <code>cat-orange</code>, <code>cat-yellow</code>, <code>cat-green</code>, <code>cat-blue</code>, <code>cat-purple</code> (fills) and <code>cat-*-strong</code></td>
+<td>mid tones / deep shades</td>
+<td>soft tones / light shades</td>
+</tr>
+<tr>
+<td>Bolt the mascot</td>
+<td><code>bolt-body</code>, <code>bolt-screen</code>, <code>bolt-accent</code>, <code>bolt-belly</code>, <code>bolt-eye</code>, <code>bolt-line</code></td>
+<td>fixed</td>
+<td>the same (fixed)</td>
+</tr>
 </tbody>
 </table></div>
-<p>The palette is called Harbor: three hues. Coral leads, deep teal supports, and amber (<code>sun</code>) is only for highlights. <code>sky</code> shares teal's values and <code>plum</code> shares coral's; they keep their own names so a page can still say what a color means (thinking, play) and the five tag and fill classes keep working.
-| Focus ring | <code>focus</code> | alias of <code>sky-strong</code> | alias of <code>sky-strong</code> |</p>
+<p>The palette is called Harbor: three hues. Coral leads, deep teal supports, and amber (<code>sun</code>) is only for highlights. <code>sky</code> shares teal's values and <code>plum</code> shares coral's; they keep their own names so a page can still say what a color means (thinking, play) and the five tag and fill classes keep working. Because they look the same, never use <code>sky</code> and <code>teal</code> (or <code>plum</code> and <code>coral</code>) to tell two things apart: use the category colours.</p>
+<h3>Category colours</h3>
+<p>Six distinct hues for anything that must be told apart at a glance: belts, categories, balloon or tile colours in games, legend keys. They are the one place a page may show more than three hues.</p>
+<ul>
+<li><strong>Fill</strong> (<code>cat-red</code> to <code>cat-purple</code>): belts, tiles, chips, legend swatches. Always with <code>on-accent</code> text, and with a 2px <code>edge</code> border when the fill is the only boundary.</li>
+<li><strong>Strong</strong> (<code>cat-*-strong</code>): text, icons, chart lines and marks on <code>bg</code>, <code>bg-alt</code> or <code>card</code>.</li>
+<li>Belts: white and black stay as the page's own fixed colours; yellow, orange, green, blue and purple use <code>cat-yellow</code>, <code>cat-orange</code>, <code>cat-green</code>, <code>cat-blue</code> and <code>cat-purple</code>.</li>
+<li>Always pair colour with a word or shape (a belt name, a legend label). Colour alone never carries meaning.</li>
+</ul>
+<p>Measured contrast (Daybreak / Deep Space). <code>build.py</code> and the end-to-end tests fail if any falls under 4.5, or if two of the six get too alike (CIE76 distance under 20).</p>
+<div class="tbl" tabindex="0" role="region" aria-label="Table: Category colours"><table>
+<thead>
+<tr>
+<th>Colour</th>
+<th><code>on-accent</code> on the fill</th>
+<th><code>-strong</code> on its worst ground</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>red</td>
+<td>6.5 / 8.2</td>
+<td>5.6 / 8.3</td>
+</tr>
+<tr>
+<td>orange</td>
+<td>8.2 / 10.0</td>
+<td>5.4 / 9.6</td>
+</tr>
+<tr>
+<td>yellow</td>
+<td>11.0 / 12.6</td>
+<td>5.7 / 11.1</td>
+</tr>
+<tr>
+<td>green</td>
+<td>8.2 / 10.4</td>
+<td>5.3 / 9.9</td>
+</tr>
+<tr>
+<td>blue</td>
+<td>7.7 / 9.4</td>
+<td>5.5 / 9.2</td>
+</tr>
+<tr>
+<td>purple</td>
+<td>7.4 / 9.2</td>
+<td>5.8 / 9.1</td>
+</tr>
+</tbody>
+</table></div>
 <p><strong>Page background</strong> is a gradient, not a flat fill: a faint amber glow top right and a faint teal glow left in Daybreak; faint coral, aqua and amber haze in Deep Space. It ships as <code>--page</code> in <code>tokens.css</code>; use <code>background: var(--page); background-attachment: fixed;</code> on <code>body</code>.</p>
 <h3>How the colors stay accessible</h3>
 <p>The system follows the approach Stripe describes in <a href="https://stripe.com/blog/accessible-color-systems">Designing accessible color systems</a>: every hue gets the same few lightness levels, so any color at a given level has the same contrast as every other hue at that level. Pick a level by job, not by hue, and contrast takes care of itself.</p>
@@ -507,7 +706,7 @@
 <p><strong>State rules</strong>
 - <strong>Hover:</strong> buttons lift (transform and a deeper ledge); colors stay the same. Chips fill with <code>sun</code> and switch text to <code>on-accent</code>. Links keep their color and gain an underline.
 - <strong>Pressed or selected:</strong> fill with <code>ink</code>, text flips to <code>bg</code> (16.0:1 / 16.0:1).
-- <strong>Focus:</strong> 3px <code>focus</code> outline with a 3px offset, on every interactive element.
+- <strong>Focus:</strong> 3px <code>focus</code> outline with a 3px offset, on every interactive element, following the element's own shape.
 - <strong>Disabled:</strong> 45% opacity. Disabled controls are exempt from contrast rules, but never rely on disabled styling alone to explain why something is unavailable.</p>
 <p><strong>Accent rules</strong>
 - Fills carry <code>on-accent</code> text; text, icons and chart marks use <code>*-strong</code>. White text on any fill fails and is not allowed.
@@ -516,7 +715,7 @@
 - Section tags take one accent each: <code>sun</code> for About, <code>sky</code> for Brain Lab, <code>coral</code> for Bug Hunt, <code>plum</code> for games, <code>teal</code> for Journey.
 - <code>line</code> is decorative. A control's boundary must come from <code>edge</code> (or a fill with at least 3:1 against its ground).</p>
 <h2>Typography</h2>
-<p>Four families, self-hosted as WOFF2 in <code>/assets/fonts/</code> so pages make no third-party font requests. <code>tokens.css</code> declares every <code>@font-face</code> (generated by <code>build.py</code>), so linking it is enough. Preload the two faces that render first:</p>
+<p>Four families, self-hosted as WOFF2 in <code>/assets/fonts/</code> so pages make no third-party font requests. <code>tokens.css</code> declares every <code>@font-face</code> (generated by <code>build.py</code>), so linking it is enough. Do not repeat the <code>@font-face</code> rules in a page. Preload the two faces that render first:</p>
 <pre tabindex="0" role="region" aria-label="Code sample: Typography"><code class="language-html">&lt;link rel=&quot;preload&quot; href=&quot;/assets/fonts/fredoka-latin-600-normal.woff2&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin&gt;
 &lt;link rel=&quot;preload&quot; href=&quot;/assets/fonts/nunito-sans-latin-wght-normal.woff2&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin&gt;
 </code></pre>
@@ -547,7 +746,7 @@
 <tr>
 <td>JetBrains Mono</td>
 <td><code>jetbrains-mono-latin-500-normal.woff2</code></td>
-<td>500</td>
+<td>500 only: never ask for 600 or 700, the browser fakes the bold</td>
 </tr>
 </tbody>
 </table></div>
@@ -556,28 +755,114 @@
 <li><strong>Display</strong> is Fredoka in Daybreak and <strong>Space Grotesk in Deep Space.</strong> <code>tokens.css</code> swaps it through one variable, <code>--display</code>; every heading uses <code>font-family: var(--display)</code>. This font swap is a big part of why the two schemes feel so different.</li>
 <li><strong>Nunito Sans</strong> for all body text, buttons and labels.</li>
 <li><strong>JetBrains Mono</strong> for agent thoughts, code, costs and disclaimers.</li>
-<li>Headings are weight 600, tracked in slightly (-0.01em; -0.025em in Deep Space). Body is 17px at 1.6.</li>
-<li>Highlight one word in a hero heading with a <code>sun</code> underline band (Daybreak) or a coral-to-teal gradient fill (Deep Space). Use it once per page.</li>
+<li>Headings are weight 600, tracked in slightly: <code>--tracking-heading</code> is -0.01em in Daybreak and -0.025em in Deep Space, applied by <code>components.css</code> to <code>.md-page</code> headings. Body is 17px at 1.6.</li>
+<li>Highlight one word in a hero heading with <code>md-hl</code>: a <code>sun</code> band behind the lower half of the word, the same in both schemes. Use it once per page.</li>
 </ul>
+<h3>Type tokens</h3>
+<p>Every style in the scale is a set of tokens, so a page never writes its own font size, and a change here reaches every page:</p>
+<div class="tbl" tabindex="0" role="region" aria-label="Table: Type tokens"><table>
+<thead>
+<tr>
+<th>Token</th>
+<th>What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--text-&lt;style&gt;</code></td>
+<td>The whole <code>font</code> shorthand: weight, size, line height and family. Use <code>font: var(--text-title);</code></td>
+</tr>
+<tr>
+<td><code>--text-&lt;style&gt;-size</code>, <code>-weight</code>, <code>-leading</code>, <code>-tracking</code></td>
+<td>Each part on its own, for when only one changes (<code>font-size: var(--text-small-size)</code>).</td>
+</tr>
+<tr>
+<td><code>.md-text-&lt;style&gt;</code></td>
+<td>A class that sets the font and the tracking (and uppercase for <code>kicker</code>).</td>
+</tr>
+</tbody>
+</table></div>
+<p>Styles: <code>display-xl</code> (hero name), <code>display-l</code> (page titles below the hero size, new in 2.1), <code>heading</code> (section titles), <code>stat</code>, <code>title</code>, <code>card-title</code>, <code>cta</code> (the label of the one big call to action, <code>md-btn--lg</code>: 22px, weight 800, new in 2.2), <code>lede</code>, <code>body</code>, <code>small</code>, <code>nav</code> (header links and app tabs), <code>label</code>, <code>label-sm</code> (compact controls), <code>kicker</code>, <code>code</code>. Aliases by role: <code>--text-display</code> is <code>display-xl</code>, <code>--text-h1</code> is <code>display-l</code>, <code>--text-h2</code> is <code>heading</code>, <code>--text-h3</code> is <code>title</code>, <code>--text-h4</code> is <code>card-title</code>.</p>
+<p><code>display-xl</code>, <code>display-l</code>, <code>heading</code> and <code>cta</code> are fluid (<code>clamp()</code>), so they shrink on phones without a media query. Set <code>letter-spacing</code> from the matching <code>-tracking</code> token: the font shorthand does not include it. Kickers also need <code>text-transform: uppercase</code> (the <code>md-kicker</code> and <code>md-text-kicker</code> classes do both).</p>
 <h2>Layout and spacing</h2>
 <ul>
 <li>Content max width <code>content-max</code> (1120px), gutter <code>space-6</code> (24px), <code>space-4</code> (16px) on phones.</li>
 <li>Every section: <code>space-section</code> (72px) top and bottom padding; alternate plain sections with <code>bg-alt</code> bands that have a 1px <code>line</code> top and bottom.</li>
 <li>Section header: a tag, a <code>heading</code>, then a <code>lede</code> in <code>ink-muted</code> at most 40em wide, then <code>space-7</code> (28px) before content.</li>
 <li>Cards in grids: 4 across on desktop, 2 under 980px, 1 under 560px.</li>
-<li>No horizontal scroll at 390px. The sticky header collapses its nav links under 1180px and keeps the scheme, music and kid-mode controls.</li>
+<li>No horizontal scroll at 390px (or 320px). The shared header hides its section links under 1180px and keeps Explore, the scheme button, music and the end controls.</li>
 </ul>
+<div class="tbl" tabindex="0" role="region" aria-label="Table: Layout and spacing"><table>
+<thead>
+<tr>
+<th>Token</th>
+<th>Value</th>
+<th>Token</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>space-1</code></td>
+<td>4px</td>
+<td><code>space-1-5</code></td>
+<td>6px</td>
+</tr>
+<tr>
+<td><code>space-2</code></td>
+<td>8px</td>
+<td><code>space-2-5</code></td>
+<td>10px</td>
+</tr>
+<tr>
+<td><code>space-3</code></td>
+<td>12px</td>
+<td><code>space-3-5</code></td>
+<td>14px</td>
+</tr>
+<tr>
+<td><code>space-4</code></td>
+<td>16px</td>
+<td><code>space-4-5</code></td>
+<td>18px</td>
+</tr>
+<tr>
+<td><code>space-5</code></td>
+<td>20px</td>
+<td><code>space-6</code></td>
+<td>24px</td>
+</tr>
+<tr>
+<td><code>space-7</code></td>
+<td>28px</td>
+<td><code>space-9</code></td>
+<td>48px</td>
+</tr>
+<tr>
+<td><code>space-section</code></td>
+<td>72px</td>
+<td><code>content-max</code></td>
+<td>1120px</td>
+</tr>
+</tbody>
+</table></div>
+<p>The half steps (<code>space-1-5</code> to <code>space-4-5</code>, new in 2.1) cover the 6, 10, 14 and 18px gaps that dense controls need. Prefer the whole steps for layout.</p>
+<p>Sizes: <code>header-height</code> (66px), <code>control-height</code> (40px: buttons, round icon buttons, Explore, the theme button), <code>control-height-sm</code> (36px, the same controls on phones) and, new in 2.2, <code>control-height-lg</code> (56px, the one big call to action, <code>md-btn--lg</code>), <code>touch-target</code> (44px, the least a tappable button is on phones), <code>popover-max</code> (380px, the widest a header panel or coach mark gets) and <code>measure-prose</code> (40em, the longest line of reading text; <code>md-lede</code> and <code>md-prose</code> use it).</p>
 <h2>Shape and depth</h2>
 <ul>
-<li>Radius ladder: <code>radius-sm</code> 12, <code>radius-md</code> 16, <code>radius-lg</code> 22, <code>radius-xl</code> 28, <code>radius-pill</code>.</li>
-<li>Raised controls (buttons, chips, palette blocks, game boards) get a 2px <code>edge</code> border and a solid <code>shadow-ledge</code>. They lift on hover and press down on click.</li>
+<li>Radius ladder: <code>radius-2xs</code> 4, <code>radius-xs</code> 8, <code>radius-sm</code> 12, <code>radius-md</code> 16, <code>radius-bubble</code> 18 (speech bubbles), <code>radius-lg</code> 22, <code>radius-xl</code> 28, <code>radius-pill</code>, and <code>radius-round</code> (50%, circles).</li>
+<li>Raised controls (buttons, chips, tiles, palette blocks, game boards) get a 2px <code>edge</code> border and a solid <code>shadow-ledge</code>. They lift on hover (<code>translateY(-2px)</code> with <code>shadow-ledge-hover</code>) and press down on click (<code>translateY(2px)</code> with <code>shadow-ledge-press</code>).</li>
 <li>Cards and panels get a 1px <code>line</code> border, <code>shadow-card</code>, and lift 4px with a tiny tilt (-0.4deg) on hover.</li>
-<li>Deep Space adds <code>backdrop-filter: blur(8px)</code> to cards and controls so the starfield shows through softly.</li>
+<li>Anything floating above the page (dialogs, sheets, toasts, popovers) gets <code>shadow-modal</code>. A soft amber ring around the current or selected item is <code>shadow-glow</code>.</li>
+<li>Deep Space adds <code>backdrop-filter: blur(8px)</code> (<code>--glass</code>) to cards and controls so the starfield shows through softly.</li>
 </ul>
+<h3>Layers</h3>
+<p>Use the z-index tokens, never a number: <code>z-base</code> (1, content above the space backdrop), <code>z-header</code> (50), <code>z-popover</code> (60, panels that open from the header), <code>z-overlay</code> (100, sheets that are not a <code>&lt;dialog&gt;</code>), <code>z-toast</code> (120) and <code>z-skip</code> (400, the skip link). A <code>&lt;dialog&gt;</code> opened with <code>showModal()</code> sits in the top layer and needs none.</p>
 <h2>Motion</h2>
 <ul>
 <li>Gentle and looping: Bolt bobs (3.4s), planets drift (45 to 130s per crossing), stars twinkle, the hero blob morphs (12s).</li>
-<li>Springy UI: toggles and level nodes use <code>cubic-bezier(.5,1.6,.5,1)</code>.</li>
+<li>Springy UI: toggles, the theme button and level nodes use <code>--ease-spring</code> (<code>cubic-bezier(.5,1.6,.5,1)</code>).</li>
+<li>Durations: <code>--duration-fast</code> (.12s, press and lift), <code>--duration-medium</code> (.25s, switches and fades), <code>--duration-slow</code> (.4s, the theme button, dialogs and toasts entering). Things entering use <code>--ease-out</code>.</li>
 <li>Sections fade up 18px on first scroll into view.</li>
 <li><code>prefers-reduced-motion: reduce</code> turns all of it off. Nothing essential may depend on motion.</li>
 <li><strong>Pause motion</strong> in the Explore menu does the same on every page (WCAG 2.2.2). It sets <code>class="motion-paused"</code> on <code>&lt;html&gt;</code> and remembers it; <code>components.css</code> stops CSS animation under it. Give every page-level reduced-motion rule an <code>html.motion-paused</code> twin, and have scripts that animate decoration check <code>window.siteMotion.paused()</code> and listen for the <code>sitemotion</code> event on <code>document</code>.</li>
@@ -585,10 +870,10 @@
 <h2>Interaction patterns</h2>
 <ul>
 <li><strong>Kid mode:</strong> write both versions side by side as <code>&lt;span class="pro"&gt;…&lt;/span&gt;&lt;span class="kid"&gt;…&lt;/span&gt;</code>; <code>body.kidmode</code> swaps them. Remember the choice; <code>?kid</code> in the URL starts in kid mode.</li>
-<li><strong>Color modes:</strong> Daybreak (light) and Deep Space (dark). Pages follow the visitor's system setting by default. The <code>md-modes</code> picker (System, Daybreak, Deep Space) overrides it and saves <code>light</code> or <code>dark</code>; System clears the override. Set <code>data-theme</code> from a tiny inline script in <code>&lt;head&gt;</code> to avoid a flash. Pin any block to one mode with <code>class="mode-daybreak"</code> or <code>class="mode-deep-space"</code>.</li>
+<li><strong>Color modes:</strong> Daybreak (light) and Deep Space (dark). Pages follow the visitor's system setting by default. The round sun/moon button in the header (<code>md-theme</code>, run by <code>header.js</code>) is the one theme control on every page: a click switches scheme; a choice that differs from the system is saved in localStorage <code>theme</code> (<code>light</code> or <code>dark</code>), and switching back to match the system clears it. Set <code>data-theme</code> from a tiny inline script in <code>&lt;head&gt;</code> to avoid a flash. Pin any block to one mode with <code>class="mode-daybreak"</code> or <code>class="mode-deep-space"</code>. There is no System / Daybreak / Deep Space picker any more.</li>
 <li><strong>Explore menu:</strong> every page has an Explore button (Star map in kid mode) that opens a panel listing every page as a card, jump links to the home page's sections, and LinkedIn, GitHub and Install app. It slides in from the right on desktop and up from the bottom on phones. The page list lives in one place, <code>/assets/explore.js</code>.</li>
 <li><strong>Bolt</strong> (the robot mascot) reacts to actions in a speech bubble under him. A tap-hint pill and a halo show until the first click.</li>
-<li><strong>Music</strong> is generated in the browser, never auto-plays, and pauses when the tab is hidden. Games may take over the music while they run and give it back after.</li>
+<li><strong>Music</strong> is generated in the browser, never auto-plays, and pauses when the tab is hidden. Every site uses the same Music pill in its header; each brings its own tracks and panel. Games may take over the music while they run and give it back after.</li>
 </ul>
 <h2>Iconography</h2>
 <ul>
@@ -600,24 +885,35 @@
 <h2>Accessibility</h2>
 <ul>
 <li>Text meets 4.5:1 in both schemes: <code>ink</code> and <code>ink-muted</code> on <code>bg</code>, <code>bg-alt</code> and <code>card</code>.</li>
-<li>Focus: <code>outline: 3px solid var(--focus); outline-offset: 3px</code>.</li>
+<li>Focus: <code>outline: 3px solid var(--focus); outline-offset: 3px</code>, following the element's own shape: a pill's ring is a pill, a card's ring keeps its corners. A target scripts move focus to with <code>tabindex="-1"</code> (main after the skip link, a section or a heading after a view swap) shows no ring, since Tab never reaches it; a page that wants one adds its own rule. Only those landmarks and headings lose the ring: an interactive element with <code>tabindex="-1"</code> (a roving-tabindex tab, tile or key reached with the arrow keys) keeps it.</li>
 <li>Toggles use <code>role="switch"</code> and <code>aria-checked</code>; chips and toggle buttons use <code>aria-pressed</code>; live results use <code>aria-live="polite"</code>.</li>
 <li>Every game and animation has a still, keyboard-usable path.</li>
 <li>Pages with repeated navigation start with <code>&lt;a class="md-skip" href="#main"&gt;Skip to content&lt;/a&gt;</code> and a <code>&lt;main id="main" tabindex="-1"&gt;</code>.</li>
-<li>Anything that scrolls sideways (code samples, wide tables) is focusable and named: <code>tabindex="0" role="region" aria-label="…"</code>.</li>
+<li>Anything that scrolls sideways (code samples, wide tables) is focusable and named: <code>tabindex="0" role="region" aria-label="…"</code>. For tables that box is <code>md-table</code>.</li>
+<li>Buttons are at least <code>touch-target</code> (44px) tall on phones (600px and narrower); only <code>md-btn--sm</code>, for tools and games, stays 32px.</li>
 <li>At 320px wide nothing scrolls sideways: header controls wrap to a second row, and a control whose label is hidden on phones keeps an <code>aria-label</code>.</li>
+<li>Text that is only for screen readers uses <code>md-sr-only</code>. Toasts are announced from a <code>role="status"</code> stack and never block taps.</li>
 </ul>
 <h2>Components</h2>
 <h3>Button</h3>
-<p>Classes: <code>md-btn</code>, <code>md-btn--primary</code>, <code>md-btn--sm</code>.</p>
+<p>Classes: <code>md-btn</code>, <code>md-btn--primary</code>, <code>md-btn--sm</code>, <code>md-btn--lg</code>.</p>
 <p>A pill with a 2px edge and a solid ledge underneath that lifts on hover and presses down on click.</p>
 <ul>
 <li><strong>Primary</strong> (<code>md-btn md-btn--primary</code>): one per view, the main call to action. Coral in both modes. Label in <code>on-accent</code>.</li>
 <li><strong>Secondary</strong> (<code>md-btn</code>): card background. Use for every other action.</li>
 <li><strong>Small</strong> (<code>md-btn--sm</code>): inside tools and games (Undo, Clear, Reset).</li>
+<li><strong>Large</strong> (<code>md-btn--lg</code>): the one big call to action on a landing or a start screen, 56px tall (<code>control-height-lg</code>) with the <code>cta</code> label style. One per page, and it is the primary.</li>
+<li>Heights sit on the control scale: 40px (<code>control-height</code>) by default, 32px small, 56px large. On phones (600px and narrower) every button but the small one is at least <code>touch-target</code> (44px) tall.</li>
 <li>Labels are verbs in sentence case and can have kid and grown-up versions ("See how my agents think" / "Peek inside a robot brain").</li>
-<li>Icons go before the label at 18px.</li>
+<li>Icons go before the label at 18px (1.1em in the large size, where an arrow may follow the label).</li>
 <li>The consumer provides the label, the click handler and <code>disabled</code> when the action is not available.</li>
+</ul>
+<h3>Actions</h3>
+<p>Classes: <code>md-actions</code>, <code>md-actions--stack</code>.</p>
+<p>The row of buttons under a heading or at the end of a card: <code>&lt;div class="md-actions"&gt;&lt;button class="md-btn md-btn--primary"&gt;Start&lt;/button&gt;&lt;button class="md-btn"&gt;Not now&lt;/button&gt;&lt;/div&gt;</code>.</p>
+<ul>
+<li>Buttons wrap with <code>space-3</code> gaps; the row gets <code>space-5</code> above and below.</li>
+<li><code>md-actions--stack</code> stacks them full width under 560px, in markup order. Put the primary first in the markup when it should come first: there is no CSS reordering, so focus order and visual order stay the same (WCAG 2.4.3).</li>
 </ul>
 <h3>Chip</h3>
 <p>Classes: <code>md-chip</code> with <code>aria-pressed</code>.</p>
@@ -667,6 +963,117 @@
 <li>One or two short sentences, in the current mode's voice. Auto-hide after about 4 seconds.</li>
 <li>Announce it with <code>role="status"</code> and <code>aria-live="polite"</code>.</li>
 </ul>
+<h3>Header</h3>
+<p>Files: <code>header.html</code> (markup), <code>components.css</code> (<code>md-header</code> and friends), <code>header.js</code> (the theme button).</p>
+<p>The sticky bar at the top of every page on sbmadhav.com, the same everywhere: Bolt's head and the name (a link home), the page's own nav, the Explore button, the sun/moon theme button, the Music pill and the page's end controls. 66px tall, <code>bg</code> at 88% with a blur, a 1px <code>line</code> under it.</p>
+<pre tabindex="0" role="region" aria-label="Code sample: Header"><code class="language-html">&lt;!-- md-header --&gt;
+&lt;!-- slot:nav --&gt;&lt;nav class=&quot;md-nav&quot; aria-label=&quot;Sections&quot;&gt;&lt;a href=&quot;#work&quot;&gt;About&lt;/a&gt;&lt;a href=&quot;#lab&quot;&gt;Brain Lab&lt;/a&gt;&lt;/nav&gt;&lt;!-- /slot:nav --&gt;
+&lt;!-- slot:end --&gt;&lt;button class=&quot;md-switch&quot; id=&quot;kidBtn&quot; role=&quot;switch&quot; aria-checked=&quot;false&quot; aria-label=&quot;Kid mode&quot;&gt;…&lt;/button&gt;&lt;!-- /slot:end --&gt;
+&lt;!-- /md-header --&gt;
+</code></pre>
+<ul>
+<li><strong>Compose it at build time</strong>, never by hand (a malformed, duplicated or unclosed slot marker is an error, so page content is never dropped): <code>python3 compose.py header.html page.html</code> (with the pinned <code>header.html</code>) fills the block from the partial and keeps the page's slots. Run it again after moving to a new version; <code>--check</code> fails when a page's header differs from the partial, for CI.</li>
+<li><strong>Slots:</strong> <code>brand</code> (the name next to the logo, default "Madhav"), <code>nav</code>, <code>music</code> (the Music pill) and <code>end</code> (a kid mode switch, a Player chip). Everything outside the slots is fixed.</li>
+<li><strong>Nav:</strong> <code>&lt;nav class="md-nav"&gt;</code> with plain links; mark the current one <code>aria-current="page"</code> (or <code>"true"</code> for app routes) and it fills with <code>ink</code>. Section links hide under 1180px (the Explore menu lists them). For <strong>app tabs</strong> that must always show, add <code>md-header--tabs</code> to <code>&lt;header&gt;</code>: under 1180px the tabs move to their own rows and wrap.</li>
+<li><strong>Phones:</strong> under 600px the controls shrink to 36px and Explore and Music show their icon only; under 420px the end controls wrap to a second row; under 360px the name hides and the logo keeps the link's name. In a tabs header the brand pushes Explore, the theme button and the end controls together to the right end of the first row at every width, and the tabs take their own rows.</li>
+<li>No Shadow DOM: the header is plain markup, so kid mode, Pause motion and the fonts work in it like anywhere else.</li>
+</ul>
+<h3>Theme button</h3>
+<p>Classes: <code>md-icon-btn md-theme</code> (in the header).</p>
+<p>The round sun (Daybreak) or moon (Deep Space) button. <code>header.js</code> handles the click, the saved choice, <code>theme-color</code>, and the button's name ("Switch to Deep Space (dark) scheme"). Pages can listen for the <code>sitetheme</code> event on <code>document</code> (to have Bolt say something), and set <code>data-track="&lt;area&gt;"</code> on the button to record the switch with <code>siteTrack</code>.</p>
+<h3>Music pill</h3>
+<p>Markup: <code>music.html</code>. Classes: <code>md-music</code>, <code>md-music-btn</code>, <code>md-music-lbl</code>, <code>md-eq</code>, <code>md-music-next</code>.</p>
+<p>A pill with a note icon, the word "Music" and a three-bar equalizer, plus an optional next-track button. It never plays on its own.</p>
+<ul>
+<li><strong>Play and pause</strong> (the home page): the button has <code>aria-pressed</code>; <code>"true"</code> while playing fills the pill with <code>ink</code> and makes the equalizer dance.</li>
+<li><strong>Open a panel</strong> (Vedic Math): the button has <code>aria-expanded</code> and <code>aria-controls</code>; add the class <code>is-on</code> to <code>.md-music</code> while music plays.</li>
+<li>On phones only the note shows; the button keeps its <code>aria-label</code>.</li>
+</ul>
+<h3>Raised tile</h3>
+<p>Classes: <code>md-tile</code>, <code>md-tile-t</code>, <code>md-tile-s</code>, <code>md-tile--fill</code>, <code>md-tile--center</code>.</p>
+<p>A card-sized control with a button's edge, ledge, lift and press: grade and game pickers, mode cards, keypad keys, belts.</p>
+<ul>
+<li>A <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>. Title in <code>md-tile-t</code> (<code>card-title</code>), an optional line in <code>md-tile-s</code>.</li>
+<li>Selected: <code>aria-pressed="true"</code> (or <code>aria-current</code>) tints it with <code>sun</code>.</li>
+<li><code>md-tile--fill</code> fills it with <code>--tile-fill</code> (default <code>sun</code>) and switches text to <code>on-accent</code>: <code>style="--tile-fill: var(--cat-blue)"</code>. A selected fill tile keeps its fill and shows an <code>ink</code> ring instead.</li>
+</ul>
+<h3>Text input</h3>
+<p>Classes: <code>md-input</code> (on <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code> or <code>&lt;textarea&gt;</code>), <code>md-label</code>, <code>md-hint</code>.</p>
+<ul>
+<li>Always with a visible <code>md-label</code> tied by <code>for</code>; put help in <code>md-hint</code> and link it with <code>aria-describedby</code>.</li>
+<li>2px <code>edge</code> border, <code>radius-sm</code>, 40px tall. <code>aria-invalid="true"</code> turns the border <code>coral-strong</code>; say what is wrong in words too.</li>
+</ul>
+<h3>Dialog</h3>
+<p>Classes: <code>md-dialog</code> on a <code>&lt;dialog&gt;</code> opened with <code>showModal()</code>, <code>md-dialog-head</code>, <code>md-dialog-foot</code>.</p>
+<ul>
+<li>A <code>scrim</code> behind it, <code>radius-xl</code>, <code>shadow-modal</code>, solid <code>card</code> (never see-through). Name it with <code>aria-labelledby</code> pointing at its <code>&lt;h2&gt;</code>.</li>
+<li>A round close button in the head (<code>md-icon-btn md-icon-btn--sm</code>, <code>aria-label="Close"</code>); Escape closes it too.</li>
+</ul>
+<h3>Popover</h3>
+<p>Classes: <code>md-popover</code>.</p>
+<p>The solid floating surface for a panel opened from the header (the music panel, a settings panel) and for a coach mark. A card is glass in Deep Space and is for content; a popover is never see-through.</p>
+<ul>
+<li><code>card</code> over <code>bg</code>, 1px <code>line</code>, <code>radius-xl</code> (<code>radius-lg</code> on phones), <code>shadow-modal</code>, <code>z-popover</code>, <code>space-4</code> padding, at most <code>popover-max</code> (380px) wide; on phones let it take the viewport minus the gutter.</li>
+<li>The page positions it and gives it a max-height; it scrolls inside.</li>
+<li>Name it: <code>role="dialog" aria-labelledby="…"</code> for a coach mark or a panel that takes focus, <code>role="region"</code> for one that does not. Close it on Escape and on a click outside.</li>
+</ul>
+<h3>Progress bar</h3>
+<p>Classes: <code>md-progress</code>, <code>md-progress--sm</code> (6px), <code>md-progress--lg</code> (16px).</p>
+<ul>
+<li><code>&lt;div class="md-progress" role="progressbar" aria-label="…" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60"&gt;&lt;span style="--value:60%"&gt;&lt;/span&gt;&lt;/div&gt;</code>, or a native <code>&lt;progress class="md-progress"&gt;</code>.</li>
+<li>The track is <code>line</code>, the fill <code>teal-strong</code>; change it with <code>--bar</code> (for example <code>--bar: var(--sun-strong)</code> for a timer).</li>
+</ul>
+<h3>Toast</h3>
+<p>Classes: <code>md-toasts</code> (the stack), <code>md-toast</code>.</p>
+<ul>
+<li>One stack per page: <code>&lt;div class="md-toasts" role="status" aria-live="polite"&gt;</code>. Append a <code>md-toast</code>, remove it after about 3 seconds (add <code>is-leaving</code> first to fade it).</li>
+<li>The stack and the toasts have <code>pointer-events: none</code>, so a toast never blocks a tap on the page under it. A link or button inside a toast still works.</li>
+</ul>
+<h3>Round icon button</h3>
+<p>Classes: <code>md-icon-btn</code>, <code>md-icon-btn--sm</code>.</p>
+<p>A 40px circle (32px small) with one 20px icon: close, flip back, play. Always give it an <code>aria-label</code>.</p>
+<h3>Link button</h3>
+<p>Classes: <code>md-link</code>.</p>
+<p>A <code>&lt;button&gt;</code> that reads as a link, for small inline actions ("Reset play mode"). Underlined in <code>coral</code>, so it is told apart by more than colour. Bare links (an <code>&lt;a&gt;</code> with no class) on an <code>md-root</code> page share this look, ink and bold with the coral underline, so a link and a link button match; a page's own rule for its links still wins.</p>
+<h3>Prose</h3>
+<p>Classes: <code>md-prose</code>.</p>
+<p>Long-form reading: privacy, terms, a guide, a parents page. Wrap the text in <code>&lt;div class="md-prose"&gt;</code>.</p>
+<ul>
+<li>Every child keeps to <code>measure-prose</code> (40em); tables (<code>md-table</code>), figures and code samples may run the full width.</li>
+<li>Headings come from the type scale: <code>h1</code> is <code>--text-h1</code> (<code>display-l</code>), <code>h2</code> is <code>--text-h3</code> (<code>title</code>) with <code>space-9</code> above and a scroll margin that clears the sticky header, <code>h3</code> is <code>--text-h4</code> (<code>card-title</code>). Headings on every <code>md-page</code> balance their lines (<code>text-wrap: balance</code>).</li>
+<li>Paragraphs and lists get <code>space-4</code> below and list items <code>space-1-5</code> between; a rule (<code>hr</code>) gets <code>space-7</code> around; a blockquote gets a 4px <code>sun</code> bar on a soft sun tint. Inline code is <code>font-mono</code> at 0.9em.</li>
+</ul>
+<h3>Table</h3>
+<p>Classes: <code>md-table</code>, <code>md-table--stack</code>.</p>
+<p>A data table that may be wider than a phone: <code>&lt;div class="md-table" tabindex="0" role="region" aria-label="Belts, table"&gt;&lt;table&gt;…&lt;/table&gt;&lt;/div&gt;</code>. The box scrolls sideways, keyboard users can reach it, and a shadow on each edge shows only where there is more to scroll.</p>
+<ul>
+<li>Cells have 1px <code>line</code> borders and <code>space-2</code> by <code>space-2-5</code> padding in the <code>small</code> style; header cells sit on <code>bg-alt</code> in bold.</li>
+<li><code>md-table--stack</code> turns each row into a block under 560px with the column heading before each cell: give every <code>td</code> a <code>data-label="&lt;column heading&gt;"</code>. The <code>thead</code> stays in the accessibility tree.</li>
+</ul>
+<h3>Footer</h3>
+<p>Classes: <code>md-foot</code>.</p>
+<p>The site footer: a <code>line</code> on top, <code>space-7</code> of padding, muted <code>small</code> text and a row of bold links with no text separators between them.</p>
+<pre tabindex="0" role="region" aria-label="Code sample: Footer"><code class="language-html">&lt;footer class=&quot;md-foot&quot;&gt;&lt;div class=&quot;md-wrap&quot;&gt;
+  &lt;p&gt;One line about the site.&lt;/p&gt;
+  &lt;nav aria-label=&quot;Site&quot;&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=&quot;/privacy/&quot;&gt;Privacy&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;/terms/&quot;&gt;Terms&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/nav&gt;
+&lt;/div&gt;&lt;/footer&gt;
+</code></pre>
+<ul>
+<li>Links are <code>ink</code>, bold, at least <code>control-height-sm</code> (36px) tall, and underline in <code>coral</code> on hover.</li>
+<li>On a short page add <code>md-fill</code> to <code>&lt;body&gt;</code> so the footer sits at the bottom of the viewport.</li>
+</ul>
+<h3>Highlight</h3>
+<p>Classes: <code>md-hl</code>.</p>
+<p>One word in a display heading with a <code>sun</code> band behind its lower half: <code>&lt;h1&gt;Speed tricks for &lt;span class="md-hl"&gt;everyone&lt;/span&gt;&lt;/h1&gt;</code>. The same in both schemes. Once per page, and only in a display heading: over the band the text measures 11.2:1 in Daybreak and 3.4:1 in Deep Space, enough for large text, not for body text.</p>
+<h3>Segmented control</h3>
+<p>Classes: <code>md-seg</code> (or the older name <code>md-modes</code>) with <code>&lt;button aria-pressed&gt;</code>.</p>
+<p>One choice from two to four: leaderboard periods, units. Not for the color scheme, which is the theme button.</p>
+<h3>Kicker and screen-reader-only text</h3>
+<p>Classes: <code>md-kicker</code>, <code>md-sr-only</code>.</p>
+<ul>
+<li><code>md-kicker</code> is the uppercase label (<code>kicker</code> style, <code>ink-muted</code>) and works anywhere, not only in a stat.</li>
+<li><code>md-sr-only</code> hides text visually but keeps it for screen readers.</li>
+</ul>
 <h2>Icons</h2>
 <p>The line icons from sbmadhav.com, exported from its inline SVG sprite. 32×32 grid, 2.4px round-capped strokes, drawn here in <code>ink</code> navy (#151B2B).</p>
 <ul>
@@ -676,8 +1083,10 @@
 <h2>Mascot</h2>
 <p>Bolt, the site's original robot mascot: teal body and arms, pale mint face, coral antenna and cheeks, amber chest, navy outlines.</p>
 <ul>
+<li>The header logo is Bolt's head, drawn with the same tokens.</li>
 <li>Bolt speaks through the Bubble component and reacts to what people do (switching schemes, playing music, winning games).</li>
-<li>Keep Bolt's colors fixed in both schemes; in Deep Space add a faint glow (<code>drop-shadow(0 0 10px rgba(240,140,119,.22))</code>).</li>
+<li>Keep Bolt's colors fixed in both schemes with the <code>bolt-*</code> tokens: <code>bolt-body</code>, <code>bolt-screen</code>, <code>bolt-accent</code>, <code>bolt-belly</code>, <code>bolt-eye</code> and <code>bolt-line</code>. Never <code>white</code> or <code>card</code> for his eyes (card is dark in Deep Space).</li>
+<li>For the faint Deep Space glow, use <code>filter: var(--bolt-glow)</code> (or the class <code>md-bolt</code>): a soft coral drop shadow in Deep Space and nothing in Daybreak, whichever way the scheme was chosen.</li>
 <li>Never put words on Bolt or change his shape; poses come from small transforms (bob, tilt, eyes following the pointer).</li>
 </ul>
     </div>
@@ -685,29 +1094,42 @@
 </section>
 </main>
 
-<footer><div class="md-wrap">Generated by <code class="md-mono">build.py</code> from <code class="md-mono">tokens.json</code> and <code class="md-mono">README.md</code>. <a href="/" style="color:var(--ink);font-weight:700">Back to sbmadhav.com</a></div></footer>
+<div class="md-toasts" id="demoToasts" role="status" aria-live="polite"></div>
+
+<footer><div class="md-wrap">Version 2.2.0. Generated by <code class="md-mono">build.py</code> from <code class="md-mono">tokens.json</code> and <code class="md-mono">README.md</code>. <a href="/" style="color:var(--ink);font-weight:700">Back to sbmadhav.com</a></div></footer>
 
 <script>
 (() => {
-  const root = document.documentElement, meta = document.querySelector('meta[name="theme-color"]');
-  const mq = matchMedia('(prefers-color-scheme: dark)');
-  const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
-                  set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
-  const btns = document.querySelectorAll('.md-modes button');
-  function apply(mode) {
-    if (mode === 'system') delete root.dataset.theme; else root.dataset.theme = mode;
-    store.set('theme', mode === 'system' ? '' : mode);
-    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
-    const dark = mode === 'dark' || (mode === 'system' && mq.matches);
-    meta.setAttribute('content', dark ? '#0F1218' : '#F6F7F9');
-  }
-  btns.forEach(b => b.addEventListener('click', () => apply(b.dataset.mode)));
-  mq.addEventListener('change', () => { if (!root.dataset.theme) apply('system'); });
-  apply(root.dataset.theme || 'system');
-  const sw = document.getElementById('demoSwitch');
+  const $ = s => document.getElementById(s);
+  const sw = $('demoSwitch');
   sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true')));
+  const music = $('demoMusicBtn');
+  music.addEventListener('click', () => {
+    const on = music.getAttribute('aria-pressed') !== 'true';
+    music.setAttribute('aria-pressed', String(on));
+    music.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+  });
+  const press = group => group.addEventListener('click', ev => {
+    const b = ev.target.closest('button[aria-pressed]');
+    if (!b) return;
+    group.querySelectorAll('button[aria-pressed]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  });
+  press($('demoSeg')); press($('demoTiles'));
+  const dlg = $('demoDialog');
+  $('demoDialogBtn').addEventListener('click', () => dlg.showModal());
+  $('demoDialogX').addEventListener('click', () => dlg.close());
+  $('demoDialogOk').addEventListener('click', () => dlg.close());
+  const toasts = $('demoToasts');
+  $('demoToastBtn').addEventListener('click', () => {
+    const t = document.createElement('div');
+    t.className = 'md-toast';
+    t.textContent = 'Saved. Nice streak!';
+    toasts.append(t);
+    setTimeout(() => { t.classList.add('is-leaving'); setTimeout(() => t.remove(), 300); }, 2600);
+  });
 })();
 </script>
+<script src="header.js" defer></script>
 <script src="/assets/explore.js" defer></script>
 <script src="/assets/analytics.js" defer></script>
 </body>

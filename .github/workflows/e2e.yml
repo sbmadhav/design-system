@@ -38,7 +38,7 @@ jobs:
         if: github.event_name == 'push'
         working-directory: .
         run: |
-          files="tokens.css components.css index.html"
+          files="tokens.css components.css index.html versions.json"
           for i in $(seq 1 45); do
             pending=""
             for f in $files; do
