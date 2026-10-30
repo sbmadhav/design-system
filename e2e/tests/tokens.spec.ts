@@ -42,8 +42,8 @@ test.describe('tokens.css from this checkout', () => {
       for (const n of [...THEMED, ...TYPE_THEMED, 'tracking-heading']) expect(names.has(n), `--${n} in ${label}`).toBe(true);
     }
     for (const n of [...STATIC, ...TYPE_STATIC, ...TYPE_PLAIN]) expect(stat.has(n), `--${n} in the static :root`).toBe(true);
-    // v2.1 additions, named explicitly so a rename cannot slip through
-    for (const n of ['space-1-5', 'space-2-5', 'space-3-5', 'space-4-5', 'radius-2xs', 'radius-xs', 'radius-bubble', 'z-header', 'z-popover', 'z-toast', 'z-overlay', 'z-skip', 'duration-fast', 'duration-medium', 'duration-slow', 'ease-spring', 'text-display-l-size', 'text-kicker', 'text-label', 'text-body'])
+    // v2.1 and v2.2 additions, named explicitly so a rename cannot slip through
+    for (const n of ['space-1-5', 'space-2-5', 'space-3-5', 'space-4-5', 'radius-2xs', 'radius-xs', 'radius-bubble', 'z-header', 'z-popover', 'z-toast', 'z-overlay', 'z-skip', 'duration-fast', 'duration-medium', 'duration-slow', 'ease-spring', 'text-display-l-size', 'text-kicker', 'text-label', 'text-body', 'control-height-lg', 'touch-target', 'popover-max', 'measure-prose', 'text-cta', 'text-cta-size'])
       expect(stat.has(n), `--${n}`).toBe(true);
     for (const n of ['scrim', 'media-black', 'shadow-ledge-hover', 'shadow-ledge-press', 'shadow-modal', 'shadow-glow', 'bolt-eye', 'bolt-glow', 'text-heading', 'text-h1', 'text-display'])
       expect(daybreak.has(n), `--${n}`).toBe(true);
@@ -144,4 +144,23 @@ test('Bolt colours are the same in both schemes; scrim, shadows and heading trac
   dark.themed.forEach((v, i) => expect(v, `themed ${i}`).not.toBe(light.themed[i]));
   expect(light.tracking).toBeCloseTo(-0.01, 3);
   expect(dark.tracking).toBeCloseTo(-0.025, 3);
+});
+
+test('the 2.2 size tokens and the cta style resolve on the page', async ({ page }) => {
+  await page.goto('/design-system/');
+  const v = await page.evaluate(() => {
+    const cs = getComputedStyle(document.documentElement);
+    return ['control-height-lg', 'touch-target', 'popover-max', 'measure-prose', 'text-cta', 'text-cta-tracking'].map(n => cs.getPropertyValue(`--${n}`).trim());
+  });
+  expect(v.slice(0, 4)).toEqual(['56px', '44px', '380px', '40em']);
+  expect(v[4]).toMatch(/^800 clamp\(1\.2rem, 2\.8vw, 1\.4rem\)\s*\/\s*1\.1 "Nunito Sans"/);
+  expect(v[5]).toBe('0');
+  const cta = await page.evaluate(() => {
+    const el = document.createElement('p'); el.className = 'md-text-cta'; el.textContent = 'x'; document.body.append(el);
+    const cs = getComputedStyle(el); const r = [cs.fontWeight, parseFloat(cs.fontSize), cs.fontFamily]; el.remove(); return r;
+  });
+  expect(cta[0]).toBe('800');
+  expect(cta[1] as number).toBeGreaterThanOrEqual(19.2);
+  expect(cta[1] as number).toBeLessThanOrEqual(22.4);
+  expect(cta[2]).toMatch(/Nunito Sans/);
 });

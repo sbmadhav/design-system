@@ -2,7 +2,10 @@
    Theme differences come from tokens (--display, --primary-bg, --glass, --tracking-heading, the --text-* type styles),
    so almost nothing here needs a theme selector: the sun/moon swap of the theme button is the one exception. */
 .md-root { font-family: var(--font-sans); color: var(--ink); font-size: var(--text-body-size); line-height: var(--text-body-leading); -webkit-font-smoothing: antialiased; }
-.md-root :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: var(--radius-xs); }
+/* Focus ring: 3px focus, 3px out, following the element's own shape (a pill stays a pill, a card keeps its corners).
+   Only bare links and link buttons, which have no shape of their own, get rounded ring corners. */
+.md-root :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.md-root :is(a:not([class]), .md-link):focus-visible { border-radius: var(--radius-xs); }
 .md-card, .md-btn, .md-chip, .md-switch, .md-stat, .md-bubble, .md-tile, .md-input { backdrop-filter: var(--glass); }
 
 /* Type styles as classes: font plus tracking from the --text-* tokens. Kicker also uppercases. */
@@ -12,6 +15,7 @@
 .md-text-stat { font: var(--text-stat); letter-spacing: var(--text-stat-tracking); }
 .md-text-title { font: var(--text-title); letter-spacing: var(--text-title-tracking); }
 .md-text-card-title { font: var(--text-card-title); letter-spacing: var(--text-card-title-tracking); }
+.md-text-cta { font: var(--text-cta); letter-spacing: var(--text-cta-tracking); }
 .md-text-lede { font: var(--text-lede); letter-spacing: var(--text-lede-tracking); }
 .md-text-body { font: var(--text-body); letter-spacing: var(--text-body-tracking); }
 .md-text-small { font: var(--text-small); letter-spacing: var(--text-small-tracking); }
@@ -24,18 +28,33 @@
 /* Kicker: the uppercase label above stats, lists and panels. Works anywhere, not only in .md-stat. */
 .md-kicker { display: block; color: var(--ink-muted); }
 
-/* Button */
-.md-btn { display: inline-flex; align-items: center; gap: var(--space-2); font: 700 15px/1.2 var(--font-sans); color: var(--ink); text-decoration: none; background: var(--card); border: 2px solid var(--edge); border-radius: var(--radius-pill); padding: 9px var(--space-4-5); box-shadow: var(--shadow-ledge); cursor: pointer; transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
+/* Button, on the control scale: 40px (--control-height) by default, 32px small (the same as md-icon-btn--sm), 56px
+   large (--control-height-lg) for the one big call to action. On phones every button but the small one is at least
+   --touch-target tall. */
+.md-btn { display: inline-flex; align-items: center; gap: var(--space-2); box-sizing: border-box; min-height: var(--control-height); font: 700 15px/1.2 var(--font-sans); color: var(--ink); text-decoration: none; background: var(--card); border: 2px solid var(--edge); border-radius: var(--radius-pill); padding: var(--space-2) var(--space-4-5); box-shadow: var(--shadow-ledge); cursor: pointer; transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
 .md-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-ledge-hover); }
 .md-btn:active { transform: translateY(2px); box-shadow: var(--shadow-ledge-press); }
 .md-btn--primary { background: var(--primary-bg); border-color: var(--primary-border); color: var(--on-accent); }
-.md-btn--sm { padding: 5px var(--space-3); font-size: var(--text-label-sm-size); }
+.md-btn--sm { min-height: 32px; padding: var(--space-1) var(--space-3); font-size: var(--text-label-sm-size); }
+.md-btn--lg { min-height: var(--control-height-lg); padding: 0 var(--space-7); gap: var(--space-2-5); font: var(--text-cta); letter-spacing: var(--text-cta-tracking); }
 .md-btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
 .md-btn svg { width: 18px; height: 18px; }
+.md-btn--lg svg { width: 1.1em; height: 1.1em; }
+@media (max-width: 600px) { .md-btn:not(.md-btn--sm, .md-btn--lg) { min-height: var(--touch-target); } }
+
+/* Actions row: the buttons under a heading or at the end of a card. They wrap; md-actions--stack stacks them full
+   width on phones. Put the primary first in the markup when it should come first: no CSS reordering, so focus order
+   stays the visual order. */
+.md-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin: var(--space-5) 0; }
+@media (max-width: 560px) { .md-actions--stack { flex-direction: column; align-items: stretch; } .md-actions--stack > .md-btn { justify-content: center; } }
 
 /* Link button: a <button> that reads as a link (inline actions such as "Reset play mode") */
 .md-link { display: inline; padding: 0; margin: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--coral); cursor: pointer; }
 .md-link:hover { text-decoration-color: currentColor; }
+/* Bare links (no class) on an md-root page share the link button's look instead of the browser's blue: ink, bold, a 2px
+   coral underline that turns ink on hover. Specificity (0,0,1), so any rule a page writes for its links still wins. */
+:where(.md-root) a:where(:not([class])) { color: inherit; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--coral); }
+:where(.md-root) a:where(:not([class]):hover) { text-decoration-color: currentColor; }
 
 /* Round icon button: one icon, no label (close, play, flip back). Always give it an aria-label. */
 .md-icon-btn { display: inline-grid; place-items: center; flex: none; width: var(--control-height); height: var(--control-height); padding: 0; border: 2px solid var(--edge); border-radius: var(--radius-round); background: var(--card); color: var(--ink); cursor: pointer; transition: transform var(--duration-fast), background-color var(--duration-fast); }
@@ -52,7 +71,7 @@
 .md-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 
 /* Tag (section label) */
-.md-tag { display: inline-block; font: 600 var(--text-label-size)/1.3 var(--display); padding: 3px var(--space-3); border-radius: var(--radius-pill); color: var(--on-accent); background: var(--sun); }
+.md-tag { display: inline-block; font: 600 var(--text-label-size)/1.3 var(--display); padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); color: var(--on-accent); background: var(--sun); }
 .md-tag--sky { background: var(--sky); } .md-tag--coral { background: var(--coral); } .md-tag--plum { background: var(--plum); } .md-tag--teal { background: var(--teal); }
 
 /* Card */
@@ -128,6 +147,11 @@ progress.md-progress::-moz-progress-bar { background: var(--bar, var(--teal-stro
 @media (max-width: 600px) { .md-dialog { padding: var(--space-5); border-radius: var(--radius-lg); } }
 @keyframes md-pop { from { opacity: 0; transform: translateY(12px) scale(.98); } }
 
+/* Popover: the solid floating surface for a panel opened from the header and for a coach mark. md-card is glass in
+   Deep Space and is for content; a popover is never see-through. The page positions it and gives it a max-height. */
+.md-popover { box-sizing: border-box; max-width: var(--popover-max); padding: var(--space-4); overflow: auto; border: 1px solid var(--line); border-radius: var(--radius-xl); background: linear-gradient(var(--card), var(--card)), var(--bg); color: var(--ink); box-shadow: var(--shadow-modal); z-index: var(--z-popover); }
+@media (max-width: 600px) { .md-popover { border-radius: var(--radius-lg); } }
+
 /* Toast: short messages in a stack that never blocks taps on the page underneath */
 .md-toasts { position: fixed; left: 50%; bottom: var(--space-6); z-index: var(--z-toast); display: flex; flex-direction: column; align-items: center; gap: var(--space-2); width: max-content; max-width: calc(100vw - 2 * var(--space-4)); transform: translateX(-50%); pointer-events: none; }
 .md-toast { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-2-5) var(--space-4-5); border-radius: var(--radius-pill); background: var(--ink); color: var(--bg); font: var(--text-label); box-shadow: var(--shadow-modal); pointer-events: none; animation: md-toast-in var(--duration-slow) var(--ease-spring); }
@@ -141,7 +165,7 @@ progress.md-progress::-moz-progress-bar { background: var(--bar, var(--teal-stro
 .md-modes, .md-seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; border: 2px solid var(--edge); border-radius: var(--radius-pill); overflow: hidden; background: var(--card); backdrop-filter: var(--glass); flex: 0 1 auto; }
 .md-modes button, .md-seg button { flex: 1 1 auto; border: 0; background: none; color: var(--ink); font: 700 var(--text-label-sm-size)/1 var(--font-sans); padding: var(--space-2) var(--space-3); cursor: pointer; }
 .md-modes button[aria-pressed="true"], .md-seg button[aria-pressed="true"], .md-seg button[aria-selected="true"] { background: var(--ink); color: var(--bg); }
-@media (max-width: 480px) { .md-modes button, .md-seg button { padding: var(--space-2) 7px; font-size: 12px; } }
+@media (max-width: 480px) { .md-modes button, .md-seg button { padding: var(--space-2) var(--space-1-5); font-size: 12px; } }
 
 /* Explore menu button (the menu itself comes from /assets/explore.js) */
 .xp-btn { display: inline-flex; align-items: center; gap: var(--space-2); flex: none; height: var(--control-height); padding: 0 var(--space-3-5) 0 var(--space-2-5); border: 2px solid var(--edge); border-radius: var(--radius-pill); background: var(--card); color: var(--ink); font: 700 var(--text-label-size)/1 var(--font-sans); cursor: pointer; box-shadow: var(--shadow-ledge); transition: transform var(--duration-fast), box-shadow var(--duration-fast); }
@@ -206,29 +230,76 @@ html.md-theme-anim body, html.md-theme-anim body * { transition: background-colo
   .md-music { min-height: var(--control-height-sm); }
   .md-music .md-music-lbl, .md-music .md-eq { display: none; }
   .md-music button { padding: var(--space-1-5) var(--space-2); }
-  .md-music .md-music-next { padding: var(--space-1-5) 7px; }
-  .md-header--tabs .md-nav a { padding: var(--space-1-5) 9px; }
+  .md-music .md-music-next { padding: var(--space-1-5) var(--space-2); }
+  .md-header--tabs .md-nav a { padding: var(--space-1-5) var(--space-2); }
 }
-/* Narrow phones (320px): the end controls wrap to a second row instead of running off the screen */
+/* Narrow phones (320px): the end controls wrap to a second row instead of running off the screen. In a tabs header the
+   brand's auto margin already pushes the controls right; a second auto margin would leave the theme button alone mid-row. */
 @media (max-width: 420px) {
   .md-header:not(.md-header--tabs) .md-header-in { flex-wrap: wrap; height: auto; min-height: var(--header-height); padding-block: var(--space-2-5); row-gap: var(--space-2); }
-  .md-header-end { margin-left: auto; }
+  .md-header:not(.md-header--tabs) .md-header-end { margin-left: auto; }
 }
 @media (max-width: 360px) { .md-brand-t { display: none; } }
 
 /* Page basics */
 .md-page { margin: 0; background: var(--page); background-attachment: fixed; color: var(--ink); font-family: var(--font-sans); font-size: var(--text-body-size); line-height: var(--text-body-leading); -webkit-font-smoothing: antialiased; }
-.md-page h1, .md-page h2, .md-page h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; letter-spacing: var(--tracking-heading); margin: 0; }
+.md-page h1, .md-page h2, .md-page h3 { font-family: var(--display); font-weight: 600; line-height: 1.1; letter-spacing: var(--tracking-heading); margin: 0; text-wrap: balance; }
 .md-wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6); }
 @media (max-width: 600px) { .md-wrap { padding: 0 var(--space-4); } }
 .md-section { padding: var(--space-section) 0; }
 .md-band { background: color-mix(in srgb, var(--bg-alt) 72%, transparent); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .md-heading { font-size: var(--text-heading-size); margin-top: var(--space-2-5) !important; }
-.md-lede { color: var(--ink-muted); max-width: 40em; margin: var(--space-2) 0 var(--space-7); }
+.md-lede { font: var(--text-lede); letter-spacing: var(--text-lede-tracking); color: var(--ink-muted); max-width: var(--measure-prose); margin: var(--space-2) 0 var(--space-7); }
 .md-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4-5); }
 @media (max-width: 980px) { .md-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .md-grid { grid-template-columns: 1fr; } }
 .md-mono { font-family: var(--font-mono); font-size: .82em; }
+
+/* Page shell, opt in: a short page keeps its footer at the bottom of the viewport instead of mid-screen */
+.md-page.md-fill { min-height: 100dvh; display: flex; flex-direction: column; }
+.md-fill > main { flex: 1 0 auto; }
+
+/* Prose: long-form reading pages (privacy, terms, a guide). Every child keeps to the measure, headings come from the
+   type scale, blocks get room. Tables, figures and code samples may run the full width. */
+.md-prose > * { max-width: var(--measure-prose); }
+.md-prose > :is(.md-table, figure, pre) { max-width: none; }
+.md-prose :is(p, ul, ol) { margin: 0 0 var(--space-4); }
+.md-prose :is(ul, ol) { padding-left: var(--space-6); }
+.md-prose li + li { margin-top: var(--space-1-5); }
+.md-prose h1 { font: var(--text-h1); letter-spacing: var(--text-h1-tracking); margin: 0 0 var(--space-3); }
+.md-prose h2 { font: var(--text-h3); letter-spacing: var(--text-h3-tracking); margin: var(--space-9) 0 var(--space-3); scroll-margin-top: calc(var(--header-height) + var(--space-4)); }
+.md-prose h3 { font: var(--text-h4); letter-spacing: var(--text-h4-tracking); margin: var(--space-7) 0 var(--space-2); }
+.md-prose hr { border: 0; border-top: 1px solid var(--line); margin: var(--space-7) 0; }
+.md-prose blockquote { margin: var(--space-4) 0; padding: var(--space-3) var(--space-4); border-left: 4px solid var(--sun); background: color-mix(in srgb, var(--sun) 14%, var(--card)); border-radius: var(--radius-sm); }
+.md-prose code { font-family: var(--font-mono); font-size: .9em; }
+.md-prose > :first-child { margin-top: 0; }
+.md-prose > :last-child { margin-bottom: 0; }
+
+/* Table: a wide table scrolls sideways inside a focusable, named box (tabindex="0" role="region" aria-label="…");
+   the edge shadows show only where there is more to scroll. md-table--stack turns each row into a block on phones,
+   with every td carrying data-label="<column heading>". */
+.md-table { overflow-x: auto; margin: var(--space-4) 0; border-radius: var(--radius-sm); background: linear-gradient(to right, var(--card) 30%, transparent) left / 40px 100% local, linear-gradient(to left, var(--card) 30%, transparent) right / 40px 100% local, linear-gradient(to right, color-mix(in srgb, var(--ink) 12%, transparent), transparent) left / 16px 100% scroll, linear-gradient(to left, color-mix(in srgb, var(--ink) 12%, transparent), transparent) right / 16px 100% scroll; background-repeat: no-repeat; background-color: var(--card); }
+.md-table table { border-collapse: collapse; width: 100%; font: var(--text-small); }
+.md-table :is(th, td) { border: 1px solid var(--line); padding: var(--space-2) var(--space-2-5); text-align: left; vertical-align: top; }
+.md-table th { background: var(--bg-alt); font-weight: 700; }
+@media (max-width: 560px) {
+  .md-table--stack thead { position: absolute; clip-path: inset(50%); }
+  .md-table--stack tr { display: block; border: 1px solid var(--line); border-radius: var(--radius-sm); margin-bottom: var(--space-3); }
+  .md-table--stack td { display: grid; grid-template-columns: 9em 1fr; gap: var(--space-2); border: 0; border-top: 1px solid var(--line); }
+  .md-table--stack td:first-child { border-top: 0; }
+  .md-table--stack td::before { content: attr(data-label); font-weight: 700; color: var(--ink-muted); }
+}
+
+/* Site footer: a hairline, muted small text and a row of bold links (each at least --control-height-sm tall), no
+   text separators. <footer class="md-foot"><div class="md-wrap"><nav aria-label="Site"><ul><li><a>…</a></li></ul></nav></div></footer> */
+.md-foot { border-top: 1px solid var(--line); padding: var(--space-7) 0; color: var(--ink-muted); font: var(--text-small); }
+.md-foot p { margin: 0 0 var(--space-3); }
+.md-foot ul { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); list-style: none; margin: 0; padding: 0; }
+.md-foot a { display: inline-flex; align-items: center; min-height: var(--control-height-sm); color: var(--ink); font-weight: 700; text-decoration: none; }
+.md-foot a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--coral); }
+
+/* Highlight: one word in a display heading, a sun band behind its lower half. One treatment for both schemes. */
+.md-hl { background: linear-gradient(transparent 60%, color-mix(in srgb, var(--sun) 60%, transparent) 60%); border-radius: var(--radius-2xs); padding-inline: .08em; margin-inline: -.08em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 
 /* Screen-reader-only text: read aloud, never shown */
 .md-sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
@@ -236,7 +307,10 @@ html.md-theme-anim body, html.md-theme-anim body * { transition: background-colo
 /* Skip link: the first thing in <body> on pages with repeated navigation; shows on keyboard focus */
 .md-skip { position: absolute; left: var(--space-3); top: -80px; z-index: var(--z-skip); padding: var(--space-2-5) var(--space-4); border-radius: var(--radius-pill); background: var(--ink); color: var(--bg); font: 700 15px/1.2 var(--font-sans); text-decoration: none; }
 .md-skip:focus { top: var(--space-3); }
-main[tabindex="-1"]:focus { outline: none; }
+/* A target scripts move focus to (main after the skip link, a section or a heading after a view swap) is never
+   Tab-reachable, so it shows no ring; a page that wants one adds its own rule. Only those landmarks and headings:
+   an interactive element with tabindex="-1" (a roving-tabindex tab, tile or key reached with the arrow keys) keeps its ring. */
+.md-root :is(main, section, article, h1, h2, h3, h4, h5, h6)[tabindex="-1"]:focus { outline: none; }
 
 /* Kid mode: write both versions, body.kidmode swaps them */
 .kid { display: none; }

@@ -131,3 +131,23 @@ test.describe('Music pill', () => {
     await expect(page.locator('#demoMusicBtn')).toHaveAccessibleName('Play music');
   });
 });
+
+test('in a tabs header on phones the Explore, theme and end controls stay together at the right', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto('/design-system/template.html');
+  await page.evaluate(() => {
+    const h = document.querySelector('.md-header')!;
+    h.classList.add('md-header--tabs');
+    const nav = document.createElement('nav');
+    nav.className = 'md-nav'; nav.setAttribute('aria-label', 'App');
+    nav.innerHTML = ['Home', 'Learn', 'Dojo', 'Arena'].map(t => `<a href="#${t}">${t}</a>`).join('');
+    h.querySelector('.md-brand')!.after(nav);
+  });
+  const r = await page.evaluate(() => ['#exploreBtn', '#themeBtn', '.md-header-end'].map(s => { const b = document.querySelector(s)!.getBoundingClientRect(); return { left: b.left, right: b.right, mid: b.top + b.height / 2 }; }));
+  // One 8px gap between each, on one row: no auto margin splits them
+  expect(r[1].left - r[0].right).toBeCloseTo(8, 0);
+  expect(r[2].left - r[1].right).toBeCloseTo(8, 0);
+  expect(r[1].mid).toBeCloseTo(r[0].mid, 0);
+  expect(r[2].mid).toBeCloseTo(r[1].mid, 0);
+  expect(r[2].right).toBeLessThanOrEqual(390);
+});

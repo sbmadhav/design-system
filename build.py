@@ -10,8 +10,8 @@ Writes tokens.css     (CSS custom properties, Daybreak default, Deep Space for d
        template.html  (its header block, re-composed from header.html, and its pinned version)
        v/<version>/   (an immutable copy of the published files for this version, see docs/adr/0001)
        versions.json  (every published version and the latest)
-Checks every themed token is emitted in each scheme block, the category colours' contrast and distinctness,
-and that hand-written files use tokens (no raw hex or rgb colours).
+Checks every themed token is emitted in each scheme block, the accent fills' and category colours' contrast
+(and the category colours' distinctness), and that hand-written files use tokens (no raw hex or rgb colours).
 Requires: pip install markdown
 """
 import html, itertools, json, math, pathlib, re, shutil, subprocess, sys
@@ -366,6 +366,9 @@ page = f"""<!doctype html>
   .comp-grid .md-card:hover {{ transform: none; }}
   .comp-grid h3 {{ margin-bottom: var(--space-3); }}
   .comp-grid .md-tile {{ min-width: 140px; }}
+  /* The prose and popover samples sit inside demo cards, whose paragraphs are small and muted; on a real page they are body text */
+  .comp-grid .md-card :is(.md-prose, .md-popover) p {{ color: var(--ink); font-size: var(--text-body-size); line-height: var(--text-body-leading); }}
+  .comp-grid .md-popover {{ max-width: none; }}
   .icons {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--space-2-5); }}
   .icons figure {{ margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-1-5) var(--space-2); text-align: center; }}
   .icons figcaption {{ font-size: 12px; color: var(--ink-muted); margin-top: var(--space-1); }}
@@ -467,7 +470,8 @@ page = f"""<!doctype html>
     <h2 class="md-heading">Components</h2>
     <p class="md-lede">Live, from <code class="md-mono">components.css</code>. The header at the top of this page is the shared site header. Switch scheme with the sun or moon to see each one change.</p>
     <div class="comp-grid">
-      <div class="md-card"><h3>Button</h3><div class="demo"><button class="md-btn md-btn--primary">See how my agents think</button><button class="md-btn">Squash some bugs</button><button class="md-btn md-btn--sm">Undo</button></div></div>
+      <div class="md-card"><h3>Button</h3><div class="demo"><button class="md-btn md-btn--primary">See how my agents think</button><button class="md-btn" id="demoBtn">Squash some bugs</button><button class="md-btn md-btn--sm" id="demoBtnSm">Undo</button><button class="md-btn md-btn--primary md-btn--lg" id="demoLarge">Start learning<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+      <div class="md-card"><h3>Actions row</h3><div class="md-actions md-actions--stack" id="demoActions"><button type="button" class="md-btn md-btn--primary">Save progress</button><button type="button" class="md-btn">Not now</button><button type="button" class="md-link">Why we ask</button></div></div>
       <div class="md-card"><h3>Chip</h3><div class="demo"><button class="md-chip" aria-pressed="true">The Ticket Drop</button><button class="md-chip" aria-pressed="false">The App Went Viral</button></div></div>
       <div class="md-card"><h3>Tag</h3><div class="demo"><span class="md-tag">About</span><span class="md-tag md-tag--sky">Brain Lab</span><span class="md-tag md-tag--coral">Bug Hunt</span><span class="md-tag md-tag--plum">Design Lab</span><span class="md-tag md-tag--teal">Journey</span></div></div>
       <div class="md-card"><h3>Switch</h3><div class="demo"><button class="md-switch" role="switch" aria-checked="false" id="demoSwitch"><span>Kid mode</span><span class="md-track"><span class="md-knob"></span></span></button></div></div>
@@ -481,6 +485,11 @@ page = f"""<!doctype html>
       <div class="md-card"><h3>Dialog and toast</h3><div class="demo"><button type="button" class="md-btn" id="demoDialogBtn">Open a dialog</button><button type="button" class="md-btn" id="demoToastBtn">Show a toast</button></div>
         <dialog class="md-dialog" id="demoDialog" aria-labelledby="demoDialogT"><div class="md-dialog-head"><h2 id="demoDialogT">Sutra of the day</h2><button type="button" class="md-icon-btn md-icon-btn--sm" id="demoDialogX" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div><p style="margin:0">By one more than the one before. A dialog has a scrim behind it, a modal shadow and a close button.</p><div class="md-dialog-foot"><button type="button" class="md-btn md-btn--primary" id="demoDialogOk">Got it</button></div></dialog></div>
       <div class="md-card"><h3>Segmented control and kicker</h3><div class="demo-col"><div class="md-seg" role="group" aria-label="Leaderboard" id="demoSeg"><button aria-pressed="true">Today</button><button aria-pressed="false">This week</button><button aria-pressed="false">All time</button></div><span class="md-kicker">Kicker on its own</span><p class="md-sr-only">Screen-reader-only text sits here: read aloud, never shown.</p></div></div>
+      <div class="md-card"><h3>Popover</h3><div class="md-popover" id="demoPopover" role="dialog" aria-labelledby="demoPopoverT"><span class="md-kicker">Quick tour, 1 of 3</span><h4 class="md-text-card-title" id="demoPopoverT" style="margin:var(--space-1) 0 var(--space-2)">This is your belt</h4><p style="margin:0">It fills as you learn tricks. Tap it any time to see what comes next.</p><div class="md-actions" style="margin-bottom:0"><button type="button" class="md-btn md-btn--primary md-btn--sm">Next</button><button type="button" class="md-btn md-btn--sm">Skip tour</button></div></div></div>
+      <div class="md-card"><h3>Prose</h3><div class="md-prose" id="demoProse"><h2>Why the tricks work</h2><p>Every Vedic sutra is a rule about place value. Once you see the rule, the <a href="#type">shortcut</a> stops feeling like magic.</p><h3>By one more than the one before</h3><ul><li>Squaring a number that ends in 5</li><li>Multiplying two numbers whose first digits match</li></ul><blockquote>Say the rule out loud before you use it. The words carry the maths.</blockquote><hr><p>Try it on 35 × 35, then on 65 × 65.</p></div></div>
+      <div class="md-card"><h3>Table</h3><div class="md-table md-table--stack" id="demoTable" tabindex="0" role="region" aria-label="Belts, table"><table><thead><tr><th>Belt</th><th>Tricks</th><th>Earned by</th></tr></thead><tbody><tr><td data-label="Belt">White</td><td data-label="Tricks">3</td><td data-label="Earned by">Everyone who starts</td></tr><tr><td data-label="Belt">Yellow</td><td data-label="Tricks">6</td><td data-label="Earned by">Finishing Grade 3</td></tr><tr><td data-label="Belt">Green</td><td data-label="Tricks">10</td><td data-label="Earned by">Three perfect rounds</td></tr></tbody></table></div></div>
+      <div class="md-card"><h3>Footer</h3><footer class="md-foot" id="demoFoot" style="padding-bottom:0"><div><p>Learn Vedic Math is free and open source. No ads, nothing sold.</p><nav aria-label="Site"><ul><li><a href="#guide">Privacy</a></li><li><a href="#guide">Terms</a></li><li><a href="#guide">For parents</a></li><li><a href="#guide">GitHub</a></li></ul></nav></div></footer></div>
+      <div class="md-card"><h3>Highlight</h3><h4 class="md-text-heading" id="demoHl" style="margin:0">Speed tricks for <span class="md-hl">everyone</span></h4></div>
     </div>
   </div>
 </section>
@@ -614,11 +623,23 @@ def lab(c):
     return (116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z)))
 
 
-# 1. Category colours: on-accent text on each fill, each -strong shade on every ground, all six distinct
+# 1. Accent fills (the floor the README states: on-accent at least 6.2:1 on coral, teal, sun, sky and plum) and their
+#    -strong shades on every ground; category colours: on-accent text on each fill, each -strong shade on every
+#    ground, all six distinct
+FILLS = ["coral", "teal", "sun", "sky", "plum"]
+MIN_FILL = 6.2
 MIN_DE = 20  # CIE76 distance between any two category colours in the same scheme
 for theme in THEMES:
     bg = next(c for c in COLORS if c["name"] == "bg")["value"][theme]
     grounds = {g: color(g, theme, bg) for g in ("bg", "bg-alt", "card")}
+    for n in FILLS:
+        r = contrast(color("on-accent", theme), color(n, theme))
+        if r < MIN_FILL:
+            problems.append(f"{theme}: on-accent on {n} is {r:.2f}:1 (needs {MIN_FILL})")
+        for g, gc in grounds.items():
+            r = contrast(color(f"{n}-strong", theme), gc)
+            if r < 4.5:
+                problems.append(f"{theme}: {n}-strong on {g} is {r:.2f}:1 (needs 4.5)")
     for n in CATS:
         r = contrast(color("on-accent", theme), color(f"cat-{n}", theme))
         if r < 4.5:
