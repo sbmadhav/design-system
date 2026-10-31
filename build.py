@@ -13,8 +13,13 @@ Writes tokens.css     (CSS custom properties, Daybreak default, Deep Space for d
 Checks every themed token is emitted in each scheme block, the accent fills' and category colours' contrast
 (and the category colours' distinctness), and that hand-written files use tokens (no raw hex or rgb colours).
 Requires: pip install markdown
+
+index.html gets a Content-Security-Policy <meta> (and an explicit Referrer-Policy) right after
+<meta charset>, with the sha256 of each inline script computed here, so never edit the hashes by
+hand. GitHub Pages cannot send headers, so the policy has to be a <meta>; it cannot carry
+frame-ancestors, report-uri or sandbox.
 """
-import html, itertools, json, math, pathlib, re, shutil, subprocess, sys
+import base64, hashlib, html, itertools, json, math, pathlib, re, shutil, subprocess, sys
 import markdown
 
 import compose
@@ -555,7 +560,67 @@ page = f"""<!doctype html>
 </body>
 </html>
 """
-(HERE / "index.html").write_text(page)
+# ---------- Content-Security-Policy ----------
+# Everything the page loads is on this origin (this repo, plus /assets/ from sbmadhav.github.io:
+# fonts, icons, the Explore menu, analytics and GoatCounter's count.js). The only third party is
+# GoatCounter's beacon: sendBeacon (connect-src), or an <img> when that fails (img-src). Styles
+# need 'unsafe-inline' for the style="" attributes in the reference page.
+GOATCOUNTER = "https://sbmadhav.goatcounter.com"
+CSP = "; ".join([
+    "default-src 'self'",
+    "script-src 'self' INLINE_SCRIPTS",
+    "style-src 'self' 'unsafe-inline'",
+    f"img-src 'self' data: {GOATCOUNTER}",
+    "font-src 'self'",
+    f"connect-src 'self' {GOATCOUNTER}",
+    "manifest-src 'self'",
+    "frame-src 'none'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+])
+
+
+# The type strings HTML runs as classic JavaScript (the JavaScript MIME type essences), plus "module":
+# https://html.spec.whatwg.org/multipage/scripting.html#prepare-the-script-element
+JS_TYPES = {f"{top}/{sub}" for top in ("application", "text") for sub in (
+    "ecmascript", "javascript", "x-ecmascript", "x-javascript")} | {f"text/{sub}" for sub in (
+    "javascript1.0", "javascript1.1", "javascript1.2", "javascript1.3", "javascript1.4", "javascript1.5",
+    "jscript", "livescript")} | {"module"}
+
+
+def attr(attrs, name):
+    """An attribute's value in a tag's attribute text, "" when it has no value, None when it is absent."""
+    m = re.search(rf"""(?:^|\s){name}(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?(?=\s|/|$)""", attrs, re.I)
+    return None if not m else next((g for g in m.groups() if g is not None), "")
+
+
+def runs(attrs):
+    """True when HTML runs an inline <script> with these attributes as script (else it is a data block)."""
+    t = attr(attrs, "type")
+    if t is None:
+        lang = attr(attrs, "language")
+        t = f"text/{lang}" if lang else ""
+    t = t.strip().lower()
+    return t == "" or t in JS_TYPES  # an exact match: a type with parameters is a data block
+
+
+def add_csp(text):
+    """The CSP and referrer <meta> tags after <meta charset>, allowing each inline script by hash."""
+    if re.search(r"""<[a-z][^>]*\s(on[a-z]+)\s*=""", text, re.I) or re.search(r"""(href|src)\s*=\s*["']?\s*javascript:""", text, re.I):
+        sys.exit("build.py: index.html has an inline event handler or a javascript: URL, which the CSP blocks")
+    hashes = []
+    for attrs, body in re.findall(r"<script\b([^>]*)>(.*?)</script>", text, re.S | re.I):
+        if attr(attrs, "src") is not None or not runs(attrs):
+            continue  # an external script is allowed by its source, and a data block never runs
+        hashes.append("'sha256-" + base64.b64encode(hashlib.sha256(body.encode()).digest()).decode() + "'")
+    policy = CSP.replace("INLINE_SCRIPTS", " ".join(dict.fromkeys(hashes)))
+    charset = '<meta charset="utf-8">\n'
+    return text.replace(charset, charset + f'<meta http-equiv="Content-Security-Policy" content="{policy}">\n'
+                        '<meta name="referrer" content="strict-origin-when-cross-origin">\n', 1)
+
+
+(HERE / "index.html").write_text(add_csp(page))
 
 # ---------- template.html: the header block and the pinned version ----------
 template_path = HERE / "template.html"
