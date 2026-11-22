@@ -34,7 +34,7 @@ test('Explore marks Design system as "You are here" and links every page', async
   await expect(here).toContainText('Design system');
   const label = await here.evaluate(e => getComputedStyle(e, '::after').content);
   expect(label).toBe('"You are here"');
-  for (const href of ['/', '/state-of-voice-agents/', '/vedic-math/', '/design-system/']) {
+  for (const href of ['/', '/state-of-voice-agents/', 'https://learnvedicmath.com/', '/design-system/']) {
     await expect(dlg.locator(`a.xp-page[href="${href}"]`)).toHaveCount(1);
   }
 });
